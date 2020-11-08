@@ -11,7 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ModelingActivity"></activity>
         <activity android:name=".StatisticsActivity" />
-        <activity android:name=".InformationActivity" />
+        <activity android:name=".BriefActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
