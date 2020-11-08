@@ -27,8 +27,9 @@ public class MainActivity extends AppCompatActivity {
         countryBriefButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent briefIntent = new Intent(getApplicationContext(), BriefActivity.class);
-                startActivity(briefIntent);
+                Intent intent = new Intent(getApplicationContext(), BriefActivity.class);
+                intent.putExtra("Region", "Poland");
+                startActivity(intent);
             }
         });
 
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), BriefActivity.class);
+                intent.putExtra("Region", "World");
                 startActivity(intent);
             }
         });
@@ -43,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         createModelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent modelingIntent = new Intent(getApplicationContext(), ModelingActivity.class);
-                startActivity(modelingIntent);
+                Intent intent = new Intent(getApplicationContext(), ModelingActivity.class);
+                startActivity(intent);
             }
         });
     }
