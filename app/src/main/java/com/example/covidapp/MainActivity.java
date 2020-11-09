@@ -9,19 +9,45 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button briefActivityButton;
+
+    Button countryBriefButton;
+    Button worldBriefButton;
+    Button createModelButton;
+    Button settingsButton;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        briefActivityButton = findViewById(R.id.briefActivityButton);
-        briefActivityButton.setOnClickListener(new View.OnClickListener()
-        {
+
+        countryBriefButton = (Button)findViewById(R.id.countryBriefButton);
+        worldBriefButton = (Button)findViewById(R.id.worldBriefButton);
+        createModelButton = (Button)findViewById(R.id.createModelButton);
+        settingsButton = (Button)findViewById(R.id.settingsButton);
+
+        countryBriefButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(view.getContext(), BriefActivity.class);
-                view.getContext().startActivity(intent);
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), BriefActivity.class);
+                intent.putExtra("Region", "Poland");
+                startActivity(intent);
+            }
+        });
+
+        worldBriefButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), BriefActivity.class);
+                intent.putExtra("Region", "World");
+                startActivity(intent);
+            }
+        });
+
+        createModelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ModelingActivity.class);
+                startActivity(intent);
             }
         });
     }
