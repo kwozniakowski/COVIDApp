@@ -39,11 +39,7 @@ public class BriefActivity extends AppCompatActivity {
         CSVFile csvFile = new CSVFile(inputStream);
         List scoreList = csvFile.read();
 
-        totalInfectionsText.setText((Integer) scoreList.get(0));
-
-        
-
-        
+        //totalInfectionsText.setText(scoreList.get(2));
 
     }
 
