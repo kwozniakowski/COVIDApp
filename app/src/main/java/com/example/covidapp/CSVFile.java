@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 public class CSVFile {
     InputStream inputStream;
@@ -14,15 +13,16 @@ public class CSVFile {
         this.inputStream = inputStream;
     }
 
-    public List read(){
-        List resultList = new ArrayList();
+    public ArrayList<String[]> read(){
+        ArrayList<String[]> resultList = new ArrayList();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
             String csvLine;
             while ((csvLine = reader.readLine()) != null) {
                 String[] row = csvLine.split(",");
+                //System.out.println(csvLine);
                 resultList.add(row);
-                System.out.println(row[2]);
+                //System.out.println(row[2]);
             }
         }
         catch (IOException ex) {
@@ -36,6 +36,7 @@ public class CSVFile {
                 throw new RuntimeException("Error while closing input stream: "+e);
             }
         }
+        System.out.println("Chuuuuuuuj");
         return resultList;
     }
 }
