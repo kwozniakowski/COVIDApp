@@ -47,10 +47,8 @@ public class BriefActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String region = intent.getStringExtra("Region");
-
-        InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
-        CSVFile csvFile = new CSVFile(inputStream);
-        final ArrayList<String[]> scoreList = csvFile.read();
+        
+        final ArrayList<String[]> scoreList = DataHolder.getScoreList();
 
         listDividedByCountries = divideListIntoCountries(scoreList);
         List<String> countries = updateCountryList(listDividedByCountries);
