@@ -9,12 +9,11 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-
     Button countryBriefButton;
     Button worldBriefButton;
     Button createModelButton;
     Button settingsButton;
-	
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,5 +50,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 }
