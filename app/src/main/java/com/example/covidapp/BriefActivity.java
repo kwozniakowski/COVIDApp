@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +16,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class BriefActivity extends AppCompatActivity {
 
     EditText countryInputText;
+    Spinner spinner;
     TextView totalInfectionsText;
     TextView newInfectionsText;
     TextView totalDeathsText;
@@ -30,31 +36,38 @@ public class BriefActivity extends AppCompatActivity {
         newInfectionsText = findViewById(R.id.newInfectionsText);
         totalDeathsText = findViewById(R.id.totalDeathsText);
         newDeathsText = findViewById(R.id.newDeathsText);
-        countryInputText = (EditText)findViewById(R.id.countryInputText);
+        // countryInputText = (EditText)findViewById(R.id.countryInputText);
+        spinner = (Spinner)findViewById(R.id.spinner);
 
         Intent intent = getIntent();
         String region = intent.getStringExtra("Region");
-        countryInputText.setText(region);
+        // countryInputText.setText(region);
 
         InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
         CSVFile csvFile = new CSVFile(inputStream);
         final ArrayList<String[]> scoreList = csvFile.read();
-        setTextsForCountry(countryInputText.getText().toString(),scoreList,totalInfectionsText,newInfectionsText,totalDeathsText,newDeathsText);
 
-        countryInputText.addTextChangedListener(new TextWatcher() {
+        List<String> countries = updateCountryList(scoreList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countries);
+        spinner.setAdapter(adapter);
+
+        if(countries.indexOf(region) >= 0) {
+            spinner.setSelection(countries.indexOf(region));
+        }
+
+        setTextsForCountry(spinner.getSelectedItem().toString(),scoreList,totalInfectionsText,newInfectionsText,totalDeathsText,newDeathsText);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                setTextsForCountry(spinner.getSelectedItem().toString(),scoreList,totalInfectionsText,newInfectionsText,totalDeathsText,newDeathsText);
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                setTextsForCountry(countryInputText.getText().toString(),scoreList,totalInfectionsText,newInfectionsText,totalDeathsText,newDeathsText);
             }
         });
-
-        System.out.println(Arrays.toString(scoreList.get(2)));
     }
 
     public void setTextsForCountry(String country, ArrayList<String[]> scoreList, TextView a,TextView b,TextView c,TextView d){
@@ -70,9 +83,27 @@ public class BriefActivity extends AppCompatActivity {
                     b.setText("+" +scoreList.get(i)[5]);
                     c.setText(scoreList.get(i)[7]);
                     d.setText("+" + scoreList.get(i)[8]);
-
                 }
             }
         }
+    }
+
+    public List<String> updateCountryList(ArrayList<String[]> scoreList) {
+        List<String> countries = new ArrayList<String>();
+        countries.add(scoreList.get(1)[2]);
+        for(int recordNr = 2; recordNr < scoreList.size(); recordNr++) {
+            String recordCountry = scoreList.get(recordNr)[2];
+            if( !(recordCountry.equals(countries.get(countries.size() - 1))) ) {
+                if(recordCountry.equals("World")) {
+                    if(!(countries.get(0).equals("World"))) {
+                        countries.add(0, recordCountry);
+                    }
+                }
+                else {
+                    countries.add(recordCountry);
+                }
+            }
+        }
+        return countries;
     }
 }
