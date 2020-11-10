@@ -85,10 +85,15 @@ public class BriefActivity extends AppCompatActivity {
                 if(scoreList.get(i)[3].equals(latestDate))
                 {
                     dateText.setText(latestDate);
-                    a.setText(scoreList.get(i)[4]);
-                    b.setText("+" +scoreList.get(i)[5]);
-                    c.setText(scoreList.get(i)[7]);
-                    d.setText("+" + scoreList.get(i)[8]);
+
+                    String aStr = removeFloatingPointFromString(scoreList.get(i)[4]);
+                    a.setText(aStr);
+                    String bStr = removeFloatingPointFromString(scoreList.get(i)[5]);
+                    b.setText("+" + bStr);
+                    String cStr = removeFloatingPointFromString(scoreList.get(i)[7]);
+                    c.setText(cStr);
+                    String dStr = removeFloatingPointFromString(scoreList.get(i)[8]);
+                    d.setText("+" + dStr);
                 }
             }
         }
@@ -141,5 +146,12 @@ public class BriefActivity extends AppCompatActivity {
         }
 
         return scoreList.get(scoreList.size() - 1)[3];
+    }
+
+    public String removeFloatingPointFromString(String text) {
+        if(text.indexOf(".") >= 0) {
+            text = text.substring(0, text.indexOf("."));
+        }
+        return text;
     }
 }
