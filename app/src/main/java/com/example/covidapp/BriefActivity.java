@@ -14,18 +14,24 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class BriefActivity extends AppCompatActivity {
 
-    EditText countryInputText;
     Spinner spinner;
     TextView totalInfectionsText;
     TextView newInfectionsText;
     TextView totalDeathsText;
     TextView newDeathsText;
+    TextView dateText;
+
+    ArrayList<ArrayList<String[]>> listDividedByCountries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +42,18 @@ public class BriefActivity extends AppCompatActivity {
         newInfectionsText = findViewById(R.id.newInfectionsText);
         totalDeathsText = findViewById(R.id.totalDeathsText);
         newDeathsText = findViewById(R.id.newDeathsText);
-        // countryInputText = (EditText)findViewById(R.id.countryInputText);
+        dateText = findViewById(R.id.textView4);
         spinner = (Spinner)findViewById(R.id.spinner);
 
         Intent intent = getIntent();
         String region = intent.getStringExtra("Region");
-        // countryInputText.setText(region);
 
         InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
         CSVFile csvFile = new CSVFile(inputStream);
         final ArrayList<String[]> scoreList = csvFile.read();
 
-        List<String> countries = updateCountryList(scoreList);
+        listDividedByCountries = divideListIntoCountries(scoreList);
+        List<String> countries = updateCountryList(listDividedByCountries);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countries);
         spinner.setAdapter(adapter);
 
@@ -75,10 +81,10 @@ public class BriefActivity extends AppCompatActivity {
         {
             if( scoreList.get(i)[2].equals(country) )
             {
-                //Na sztywno zadeklarowalem 8 listopada. Trzeba bedzie to zmienic na date dzisiejsza, jakos z systemu pobrac i zapisac w
-                //odpowiednim formacie
-                if(scoreList.get(i)[3].equals("2020-11-08"))
+                String latestDate = checkLatestDate(country, listDividedByCountries);
+                if(scoreList.get(i)[3].equals(latestDate))
                 {
+                    dateText.setText(latestDate);
                     a.setText(scoreList.get(i)[4]);
                     b.setText("+" +scoreList.get(i)[5]);
                     c.setText(scoreList.get(i)[7]);
@@ -88,22 +94,52 @@ public class BriefActivity extends AppCompatActivity {
         }
     }
 
-    public List<String> updateCountryList(ArrayList<String[]> scoreList) {
+    public List<String> updateCountryList(ArrayList<ArrayList<String[]>> dividedList) {
         List<String> countries = new ArrayList<String>();
-        countries.add(scoreList.get(1)[2]);
-        for(int recordNr = 2; recordNr < scoreList.size(); recordNr++) {
-            String recordCountry = scoreList.get(recordNr)[2];
-            if( !(recordCountry.equals(countries.get(countries.size() - 1))) ) {
-                if(recordCountry.equals("World")) {
-                    if(!(countries.get(0).equals("World"))) {
-                        countries.add(0, recordCountry);
-                    }
-                }
-                else {
-                    countries.add(recordCountry);
+        countries.add(dividedList.get(0).get(0)[2]);
+        for(int countryNr = 1; countryNr < dividedList.size(); countryNr++) {
+            String countryName = dividedList.get(countryNr).get(0)[2];
+            if(countryName.equals("World")) {
+                if(!(countries.get(0).equals("World"))) {
+                    countries.add(0, countryName);
                 }
             }
+            countries.add(dividedList.get(countryNr).get(0)[2]);
         }
         return countries;
+    }
+
+    // Dzieli cala liste na poszczegolne kraje: z postaci lista[nrRekordu][nrDanej]
+    // powstaje lista[nrKraju][nrRekordu][nrDanej]
+    public ArrayList<ArrayList<String[]>> divideListIntoCountries(ArrayList<String[]> scoreList) {
+        ArrayList<ArrayList<String[]>> dividedList = new ArrayList<ArrayList<String[]>>();
+        dividedList.add(new ArrayList<String[]>());
+        dividedList.get(0).add(scoreList.get(1));
+        int countryNr = 0;
+        for(int recordNr = 2; recordNr < scoreList.size(); recordNr++) {
+            String[] record = scoreList.get(recordNr);
+            String recordCountry = record[2];
+            if(recordCountry.equals(dividedList.get(countryNr).get(0)[2]) ) {
+                dividedList.get(countryNr).add(record);
+            } else {
+                dividedList.add(new ArrayList<String[]>());
+                countryNr++;
+                dividedList.get(countryNr).add(record);
+            }
+        }
+        return dividedList;
+    }
+
+    public String checkLatestDate(String country, ArrayList<ArrayList<String[]>> dividedList) {
+        ArrayList<String[]> scoreList = new ArrayList<String[]>();
+
+        for(int countryNr = 0; countryNr < dividedList.size(); countryNr++) {
+            if(dividedList.get(countryNr).get(0)[2].equals(country)) {
+                scoreList = dividedList.get(countryNr);
+                break;
+            }
+        }
+
+        return scoreList.get(scoreList.size() - 1)[3];
     }
 }
