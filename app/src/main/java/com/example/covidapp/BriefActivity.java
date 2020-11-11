@@ -1,17 +1,20 @@
 package com.example.covidapp;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class BriefActivity extends AppCompatActivity {
@@ -26,9 +29,13 @@ public class BriefActivity extends AppCompatActivity {
     TextView newTestsText;
     TextView dateText;
 
+    private int mDate, mMonth, mYear;
+
     ArrayList<ArrayList<String[]>> listDividedByCountries;
     ArrayList<String[]> chosenCountryList;
     String chosenCountryName;
+    String chosenDate;
+    String[] chosenRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +68,8 @@ public class BriefActivity extends AppCompatActivity {
         listDividedByCountries = DataHolder.getListDividedByCountries();
         ArrayList<String> countries = DataHolder.getCountryNameList();
         chosenCountryList = DataHolder.getChosenCountryList(chosenCountryName);
+        chosenDate = DataHolder.getChosenDate();
+        chosenRecord = DataHolder.getChosenRecord();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countries);
         spinner.setAdapter(adapter);
 
@@ -68,7 +77,7 @@ public class BriefActivity extends AppCompatActivity {
             spinner.setSelection(countries.indexOf(chosenCountryName));
         }
 
-        setTextsForCountry(chosenCountryName,totalInfectionsText,newInfectionsText,
+        setTextsForCountry(totalInfectionsText,newInfectionsText,
                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -76,7 +85,9 @@ public class BriefActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 chosenCountryName = spinner.getSelectedItem().toString();
                 chosenCountryList = DataHolder.getChosenCountryList(chosenCountryName);
-                setTextsForCountry(chosenCountryName,totalInfectionsText,newInfectionsText,
+                chosenDate = DataHolder.getChosenDate();
+                chosenRecord = DataHolder.getChosenRecord();
+                setTextsForCountry(totalInfectionsText,newInfectionsText,
                         totalDeathsText,newDeathsText,totalTestsText,newTestsText);
             }
 
@@ -85,22 +96,54 @@ public class BriefActivity extends AppCompatActivity {
 
             }
         });
+
+        dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final Calendar calendar = Calendar.getInstance();
+                mDate = calendar.get(Calendar.DATE);
+                mMonth = calendar.get(Calendar.MONTH);
+                mYear = calendar.get(Calendar.YEAR);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(BriefActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        String yearStr = String.valueOf(year);
+                        String monthStr = "";
+                        String dateStr = "";
+                        if(month < 10) {
+                            monthStr += "0";
+                        }
+                        month++;
+                        monthStr += String.valueOf(month);
+                        if(date < 10) {
+                            dateStr += "0";
+                        }
+                        dateStr += String.valueOf(date);
+                        String newDate = yearStr + "-" + monthStr + "-" + dateStr;
+                        DataHolder.updateChosenDate(newDate);
+                        DataHolder.updateChosenRecord();
+                        chosenDate = DataHolder.getChosenDate();
+                        chosenRecord = DataHolder.getChosenRecord();
+                        setTextsForCountry(totalInfectionsText,newInfectionsText,
+                                totalDeathsText,newDeathsText,totalTestsText,newTestsText);
+                    }
+                }, mYear, mMonth, mDate);
+                datePickerDialog.show();
+            }
+        });
     }
 
-    public void setTextsForCountry(String country, TextView a,TextView b,TextView c,TextView d, TextView e, TextView f){
-        String[] latestRecord = chosenCountryList.get(chosenCountryList.size() - 1);
-        String latestDate = latestRecord[3];
-
-        dateText.setText(latestDate);
+    public void setTextsForCountry(TextView a,TextView b,TextView c,TextView d, TextView e, TextView f){
+        dateText.setText(chosenDate);
 
         // String aStr = removeFloatingPointFromString(latestRecord[4]);
-        a.setText(latestRecord[4]);
+        a.setText(chosenRecord[4]);
         // String bStr = removeFloatingPointFromString(latestRecord[5]);
-        b.setText("+" + latestRecord[5]);
+        b.setText("+" + chosenRecord[5]);
         // String cStr = removeFloatingPointFromString(latestRecord[7]);
-        c.setText(latestRecord[7]);
+        c.setText(chosenRecord[7]);
         // String dStr = removeFloatingPointFromString(latestRecord[8]);
-        d.setText("+" + latestRecord[8]);
+        d.setText("+" + chosenRecord[8]);
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
         e.setText(eStr);

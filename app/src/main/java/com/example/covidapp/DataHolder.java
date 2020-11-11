@@ -4,13 +4,25 @@ import java.util.ArrayList;
 
 public class DataHolder {
     static ArrayList<String[]> scoreList;
+
     static boolean isDividedListReady = false;
     static ArrayList<ArrayList<String[]>> listDividedByCountries = new ArrayList<ArrayList<String[]>>();
+
     static boolean isCountryNameListReady = false;
     static ArrayList<String> countryNameList = new ArrayList<String>();
+
     static boolean isChosenCountryListReady = false;
     static ArrayList<String[]> chosenCountryList = new ArrayList<String[]>();
-    static String currentlyChosenCountryName = "";
+    static String chosenCountryName = "";
+
+    static boolean isChosenDateReady = false;
+    static String chosenDate = "";
+
+    // Obecny rekord to ten wybrany na podstawie kraju i daty
+    static boolean isChosenRecordReady = false;
+    static String[] chosenRecord;
+
+
 
     public static void setScoreList(ArrayList<String[]> data) { scoreList = data; }
     public static ArrayList<String[]> getScoreList() { return scoreList; }
@@ -37,23 +49,46 @@ public class DataHolder {
         }
     }
 
-
     // Tutaj sprawdzam tez, czy wybrany kraj sie zmienil. Jesli tak, to aktualizuje liste.
-    public static ArrayList<String[]> getChosenCountryList(String countryName) {
+    public static ArrayList<String[]> getChosenCountryList(String newCountryName) {
         if(isChosenCountryListReady) {
-            if(countryName.equals(currentlyChosenCountryName)) {
+            if(newCountryName.equals(chosenCountryName)) {
                 return chosenCountryList;
             }
             else {
-                updateChosenCountryList(countryName);
+                updateChosenCountryList(newCountryName);
                 return chosenCountryList;
             }
         }
         else {
-            updateChosenCountryList(countryName);
+            updateChosenCountryList(newCountryName);
             return chosenCountryList;
         }
     }
+
+    public static String getChosenDate() {
+        if(isChosenDateReady) {
+            return chosenDate;
+        }
+        else {
+            updateChosenDate();
+            if(isChosenDateReady) {
+                return chosenDate;
+            }
+            // To nigdy nie powinno sie wykonac, ale na wszelki wypadek jest
+            else return null;
+        }
+    }
+
+    public static String[] getChosenRecord() {
+        updateChosenRecord();
+        if(isChosenRecordReady) {
+            return chosenRecord;
+        }
+        else return null;
+    }
+
+
 
     // Ponizej funkcje przygotowujace dla list
 
@@ -104,22 +139,23 @@ public class DataHolder {
 
     // Jesli podana nazwa kraju znajduje sie w listDividedByCountry,
     // do chosenCountryList zostana wpisane wszystkie rekordy z tego kraju
-    public static void updateChosenCountryList(String newChosenCountryName) {
+    public static void updateChosenCountryList(String newCountryName) {
         if(isDividedListReady) {
             for(int countryNr = 0; countryNr < listDividedByCountries.size(); countryNr++) {
                 String countryName = listDividedByCountries.get(countryNr).get(0)[2];
-                if(countryName.equals(newChosenCountryName)) {
-                    chosenCountryList = listDividedByCountries.get(countryNr);
+                if(countryName.equals(newCountryName)) {
+                    chosenCountryList.clear();
+                    chosenCountryList = (ArrayList<String[]>) listDividedByCountries.get(countryNr).clone();
                     removeFloatingPointsFromList();
                     break;
                 }
             }
-            currentlyChosenCountryName = newChosenCountryName;
+            chosenCountryName = newCountryName;
             isChosenCountryListReady = true;
         }
         else {
             divideListIntoCountries();
-            updateChosenCountryList(newChosenCountryName);
+            updateChosenCountryList(newCountryName);
         }
     }
 
@@ -137,10 +173,56 @@ public class DataHolder {
         if(text.indexOf(".") >= 0) {
             text = text.substring(0, text.indexOf("."));
         }
-        if(text.length() > 3) {
+        if(text.length() > 3 && text.indexOf(",") < 0) {
             int number = Integer.parseInt(text);
             text = String.format("%,d", number);
         }
         return text;
+    }
+
+    // W tym przypadku zostanie przypisana najnowsza data z wybranego kraju,
+    // o ile kraj zostal wybrany
+    public static void updateChosenDate() {
+        if(isChosenCountryListReady) {
+            chosenDate = chosenCountryList.get(chosenCountryList.size() - 1)[3];
+            isChosenDateReady = true;
+            chosenRecord = chosenCountryList.get(chosenCountryList.size() - 1);
+            isChosenRecordReady = true;
+        }
+    }
+
+    public static void updateChosenDate(String newDate) {
+        if(isChosenCountryListReady) {
+            for(int recordNr = 0; recordNr < chosenCountryList.size(); recordNr++) {
+                String[] currentRecord = chosenCountryList.get(recordNr);
+                if(currentRecord[3].equals(newDate)) {
+                    chosenDate = newDate;
+                    chosenRecord = currentRecord;
+                    break;
+                }
+            }
+            isChosenDateReady = true;
+            isChosenRecordReady = true;
+        }
+    }
+
+    public static void updateChosenRecord() {
+        isChosenRecordReady = false;
+        if(isChosenCountryListReady) {
+            if(isChosenDateReady) {
+                for(int recordNr = 0; recordNr < chosenCountryList.size(); recordNr++) {
+                    String currentRecordDate = chosenCountryList.get(recordNr)[3];
+                    if(currentRecordDate.equals(chosenDate)) {
+                        chosenRecord = chosenCountryList.get(recordNr);
+                        isChosenRecordReady = true;
+                        break;
+                    }
+                }
+            }
+            else {
+                updateChosenDate();
+                updateChosenRecord();
+            }
+        }
     }
 }
