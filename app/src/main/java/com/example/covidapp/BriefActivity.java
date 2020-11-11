@@ -2,33 +2,28 @@ package com.example.covidapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class BriefActivity extends AppCompatActivity {
 
     Spinner spinner;
+    Button statisticsActivityButton;
     TextView totalInfectionsText;
     TextView newInfectionsText;
     TextView totalDeathsText;
     TextView newDeathsText;
+    TextView totalTestsText;
+    TextView newTestsText;
     TextView dateText;
 
     ArrayList<ArrayList<String[]>> listDividedByCountries;
@@ -42,8 +37,19 @@ public class BriefActivity extends AppCompatActivity {
         newInfectionsText = findViewById(R.id.newInfectionsText);
         totalDeathsText = findViewById(R.id.totalDeathsText);
         newDeathsText = findViewById(R.id.newDeathsText);
+        totalTestsText = findViewById(R.id.totalTestsText);
+        newTestsText = findViewById(R.id.newTestsText);
         dateText = findViewById(R.id.textView4);
-        spinner = (Spinner)findViewById(R.id.spinner);
+        spinner = (Spinner)findViewById(R.id.countrySpinner);
+        statisticsActivityButton = findViewById(R.id.statisticsActivityButton);
+        statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
+                intent.putExtra("Region", spinner.getSelectedItem().toString());
+                startActivity(intent);
+            }
+        });
 
         Intent intent = getIntent();
         String region = intent.getStringExtra("Region");
@@ -59,12 +65,14 @@ public class BriefActivity extends AppCompatActivity {
             spinner.setSelection(countries.indexOf(region));
         }
 
-        setTextsForCountry(spinner.getSelectedItem().toString(),scoreList,totalInfectionsText,newInfectionsText,totalDeathsText,newDeathsText);
+        setTextsForCountry(spinner.getSelectedItem().toString(),scoreList,totalInfectionsText,newInfectionsText,
+                totalDeathsText,newDeathsText,totalTestsText,newTestsText);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                setTextsForCountry(spinner.getSelectedItem().toString(),scoreList,totalInfectionsText,newInfectionsText,totalDeathsText,newDeathsText);
+                setTextsForCountry(spinner.getSelectedItem().toString(),scoreList,totalInfectionsText,newInfectionsText,
+                        totalDeathsText,newDeathsText,totalTestsText,newTestsText);
             }
 
             @Override
@@ -74,7 +82,7 @@ public class BriefActivity extends AppCompatActivity {
         });
     }
 
-    public void setTextsForCountry(String country, ArrayList<String[]> scoreList, TextView a,TextView b,TextView c,TextView d){
+    public void setTextsForCountry(String country, ArrayList<String[]> scoreList, TextView a,TextView b,TextView c,TextView d, TextView e, TextView f){
         for(int i=0; i<scoreList.size(); i++)
         {
             if( scoreList.get(i)[2].equals(country) )
@@ -92,6 +100,11 @@ public class BriefActivity extends AppCompatActivity {
                     c.setText(cStr);
                     String dStr = removeFloatingPointFromString(scoreList.get(i)[8]);
                     d.setText("+" + dStr);
+                    //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
+                    /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
+                    e.setText(eStr);
+                    String fStr = removeFloatingPointFromString(scoreList.get(i)[25]);
+                    f.setText("+" + fStr);*/
                 }
             }
         }
