@@ -1,5 +1,6 @@
 package com.example.covidapp;
 
+import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,12 +14,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class BriefActivity extends AppCompatActivity {
 
@@ -136,13 +139,38 @@ public class BriefActivity extends AppCompatActivity {
         dateText.setText(chosenDate);
 
         // String aStr = removeFloatingPointFromString(latestRecord[4]);
-        a.setText(chosenRecord[4]);
+        // a.setText(chosenRecord[4]);
+        NumberFormat numberFormat = NumberFormat.getInstance(Locale.UK);
+        try {
+            int infectedTotal = numberFormat.parse(chosenRecord[4]).intValue();
+            startCountAnimation(a, infectedTotal, "");
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
         // String bStr = removeFloatingPointFromString(latestRecord[5]);
-        b.setText("+" + chosenRecord[5]);
+        //b.setText("+" + chosenRecord[5]);
+        try {
+            int infectedDaily = numberFormat.parse(chosenRecord[5]).intValue();
+            startCountAnimation(b, infectedDaily, "+");
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
         // String cStr = removeFloatingPointFromString(latestRecord[7]);
-        c.setText(chosenRecord[7]);
+        //c.setText(chosenRecord[7]);
+        try {
+            int deathsTotal = numberFormat.parse(chosenRecord[7]).intValue();
+            startCountAnimation(c, deathsTotal, "");
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
         // String dStr = removeFloatingPointFromString(latestRecord[8]);
-        d.setText("+" + chosenRecord[8]);
+        //d.setText("+" + chosenRecord[8]);
+        try {
+            int deathsDaily = numberFormat.parse(chosenRecord[8]).intValue();
+            startCountAnimation(d, deathsDaily, "+");
+        } catch (ParseException ex) {
+            ex.printStackTrace();
+        }
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
         e.setText(eStr);
@@ -206,5 +234,19 @@ public class BriefActivity extends AppCompatActivity {
         parts[1]--;
         parts[2] = Integer.parseInt(date.substring(8,10));
         return parts;
+    }
+
+    private void startCountAnimation(final TextView textView, final int finalValue, final String additionalText) {
+        ValueAnimator animator = ValueAnimator.ofInt(0, finalValue);
+        animator.setDuration(3000);
+        final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.UK);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                String newText = additionalText;
+                newText += numberFormat.format(animation.getAnimatedValue());
+                textView.setText(newText);
+            }
+        });
+        animator.start();
     }
 }
