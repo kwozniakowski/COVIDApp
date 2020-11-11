@@ -147,6 +147,7 @@ public class DataHolder {
                     chosenCountryList.clear();
                     chosenCountryList = (ArrayList<String[]>) listDividedByCountries.get(countryNr).clone();
                     removeFloatingPointsFromList();
+                    updateChosenDate(chosenDate);
                     break;
                 }
             }
@@ -193,16 +194,18 @@ public class DataHolder {
 
     public static void updateChosenDate(String newDate) {
         if(isChosenCountryListReady) {
+            isChosenDateReady = false;
             for(int recordNr = 0; recordNr < chosenCountryList.size(); recordNr++) {
                 String[] currentRecord = chosenCountryList.get(recordNr);
                 if(currentRecord[3].equals(newDate)) {
                     chosenDate = newDate;
-                    chosenRecord = currentRecord;
+                    isChosenDateReady = true;
                     break;
                 }
             }
-            isChosenDateReady = true;
-            isChosenRecordReady = true;
+            if(!isChosenDateReady) {
+                updateChosenDate();
+            }
         }
     }
 

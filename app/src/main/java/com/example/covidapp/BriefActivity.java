@@ -13,8 +13,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class BriefActivity extends AppCompatActivity {
@@ -104,22 +107,12 @@ public class BriefActivity extends AppCompatActivity {
                 mDate = calendar.get(Calendar.DATE);
                 mMonth = calendar.get(Calendar.MONTH);
                 mYear = calendar.get(Calendar.YEAR);
+                long minDate = getChosenCountryMinTime();
+                long maxDate = getChosenCountryMaxTime();
                 DatePickerDialog datePickerDialog = new DatePickerDialog(BriefActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        String yearStr = String.valueOf(year);
-                        String monthStr = "";
-                        String dateStr = "";
-                        if(month < 10) {
-                            monthStr += "0";
-                        }
-                        month++;
-                        monthStr += String.valueOf(month);
-                        if(date < 10) {
-                            dateStr += "0";
-                        }
-                        dateStr += String.valueOf(date);
-                        String newDate = yearStr + "-" + monthStr + "-" + dateStr;
+                        String newDate = calendarDateToString(year, month, date);
                         DataHolder.updateChosenDate(newDate);
                         DataHolder.updateChosenRecord();
                         chosenDate = DataHolder.getChosenDate();
@@ -128,6 +121,12 @@ public class BriefActivity extends AppCompatActivity {
                                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
                     }
                 }, mYear, mMonth, mDate);
+                datePickerDialog.getDatePicker().setMinDate(minDate);
+                datePickerDialog.getDatePicker().setMaxDate(maxDate);
+                if(!(chosenDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
+                    int[] parts = stringDateToInt(chosenDate);
+                    datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
+                }
                 datePickerDialog.show();
             }
         });
@@ -156,5 +155,56 @@ public class BriefActivity extends AppCompatActivity {
             text = text.substring(0, text.indexOf("."));
         }
         return text;
+    }
+
+    public long getChosenCountryMinTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateStr = chosenCountryList.get(0)[3] + " 00:00:00";
+        Date date = null;
+        try {
+            date = sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long millis = date.getTime();
+        return millis;
+    }
+
+    public long getChosenCountryMaxTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
+        Date date = null;
+        try {
+            date = sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long millis = date.getTime();
+        return millis;
+    }
+
+    public String calendarDateToString(int year, int month, int date) {
+        String yearStr = String.valueOf(year);
+        String monthStr = "";
+        String dateStr = "";
+        if(month < 10) {
+            monthStr += "0";
+        }
+        month++;
+        monthStr += String.valueOf(month);
+        if(date < 10) {
+            dateStr += "0";
+        }
+        dateStr += String.valueOf(date);
+        return yearStr + "-" + monthStr + "-" + dateStr;
+    }
+
+    public int[] stringDateToInt(String date) {
+        int[] parts = new int[3];
+        parts[0] = Integer.parseInt(date.substring(0,4));
+        parts[1] = Integer.parseInt(date.substring(5,7));
+        parts[1]--;
+        parts[2] = Integer.parseInt(date.substring(8,10));
+        return parts;
     }
 }
