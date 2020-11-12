@@ -7,26 +7,26 @@ import java.util.ArrayList;
 // podzial danych w tym pliku na rozne listy, np nazwy krajow, daty dostepne w liscie
 // danego kraju itp. Nazwy list, mam nadzieje, dosc dobrze tlumacza, co przechowuje kazda z nich
 public class DataHolder {
-    static ArrayList<String[]> scoreList;
+    private static ArrayList<String[]> scoreList;
 
-    static boolean isDividedListReady = false;
-    static ArrayList<ArrayList<String[]>> listDividedByCountries = new ArrayList<ArrayList<String[]>>();
+    private static boolean isDividedListReady = false;
+    private static ArrayList<ArrayList<String[]>> listDividedByCountries = new ArrayList<ArrayList<String[]>>();
 
-    static boolean isCountryNameListReady = false;
-    static ArrayList<String> countryNameList = new ArrayList<String>();
+    private static boolean isCountryNameListReady = false;
+    private static ArrayList<String> countryNameList = new ArrayList<String>();
 
-    static boolean isChosenCountryListReady = false;
-    static ArrayList<String[]> chosenCountryList = new ArrayList<String[]>();
+    private static boolean isChosenCountryListReady = false;
+    private static ArrayList<String[]> chosenCountryList = new ArrayList<String[]>();
 
-    static boolean isChosenCountryNameReady = false;
-    static String chosenCountryName = "";
+    private static boolean isChosenCountryNameReady = false;
+    private static String chosenCountryName = "";
 
-    static boolean isChosenDateReady = false;
-    static String chosenDate = "";
+    private static boolean isChosenDateReady = false;
+    private static String chosenDate = "";
 
     // Obecny rekord to ten wybrany na podstawie kraju i daty
-    static boolean isChosenRecordReady = false;
-    static String[] chosenRecord;
+    private static boolean isChosenRecordReady = false;
+    private static String[] chosenRecord;
 
 
 
@@ -36,10 +36,12 @@ public class DataHolder {
     // Generalnie nalezy korzystac tylko z ponizszych getterow (jest tez jeden setter -
     // informacje o nim znajduja sie w komentarzu nad nim), nie ma potrzeby korzystania z
     // funkcji typu "update...", poniewaz gettery w razie potrzeby same aktualizuja dane
-    // Wyjatkiem jest updateChosenDate(String newDate), nalezy z niego korzystac jesli
-    // wybrana data zostala zmieniona
+    // Wyjatkami sa
+    // updateChosenDate(String newDate) i updateChosenCountryName(String newChosenCountryName),
+    // nalezy z nich korzystac jesli wybrana data lub kraj ulebly zmianie
 
-    // Jedyny setter tutaj, korzysta z niej tylko raz MainActivity, po pobraniu danych
+
+    // Jedyny setter tutaj, korzysta sie z niego tylko raz MainActivity, po pobraniu danych
     // z pliku csv. Generalnie w zadnym innym miejscu nie ma potrzeby korzystania z niej
     public static void setScoreList(ArrayList<String[]> data) { scoreList = data; }
 
@@ -117,6 +119,8 @@ public class DataHolder {
     }
 
     // Koniec getterow i setterow
+
+
 
 
     // Ponizej funkcje przygotowujace dla list
