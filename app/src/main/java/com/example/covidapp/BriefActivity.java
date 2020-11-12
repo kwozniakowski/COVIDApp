@@ -103,23 +103,34 @@ public class BriefActivity extends AppCompatActivity {
             }
         });
 
+
+        // Wyswietlanie kalendarza do wyboru daty
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Dane potrzebne do ustawien
                 final Calendar calendar = Calendar.getInstance();
                 mDate = calendar.get(Calendar.DATE);
                 mMonth = calendar.get(Calendar.MONTH);
                 mYear = calendar.get(Calendar.YEAR);
+                // Pobieram minimalna i maksymalna date dostepna dla obecnie wybranego kraju
                 long minDate = getChosenCountryMinTime();
                 long maxDate = getChosenCountryMaxTime();
+
                 DatePickerDialog datePickerDialog = new DatePickerDialog(BriefActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        // Ta czesc wykona sie po wybraniu daty
+
+                        // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
                         String newDate = calendarDateToString(year, month, date);
+                        // Zmieniam wybrana date w DataHolderze
                         DataHolder.updateChosenDate(newDate);
-                        DataHolder.updateChosenRecord();
+                        // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
+                        // Dlatego tutaj tez trzeba zaktualizowac te dane
                         chosenDate = DataHolder.getChosenDate();
                         chosenRecord = DataHolder.getChosenRecord();
+                        // i zaktualizowac dane liczbowe
                         setTextsForCountry(totalInfectionsText,newInfectionsText,
                                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
                     }
@@ -168,6 +179,8 @@ public class BriefActivity extends AppCompatActivity {
         return text;
     }
 
+    // Funkcja pobiera najstarsza date dostepna dla obecnie wybranego kraju i zwraca ja
+    // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMinTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = chosenCountryList.get(0)[3] + " 00:00:00";
@@ -181,6 +194,8 @@ public class BriefActivity extends AppCompatActivity {
         return millis;
     }
 
+    // Funkcja pobiera najnowsza date dostepna dla obecnie wybranego kraju i zwraca ja
+    // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMaxTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
@@ -194,6 +209,8 @@ public class BriefActivity extends AppCompatActivity {
         return millis;
     }
 
+    // Funkcja do przeksztalcenia daty wybranej przez uzytkownika w kalendarzu
+    // do formy Stringa
     public String calendarDateToString(int year, int month, int date) {
         String yearStr = String.valueOf(year);
         String monthStr = "";

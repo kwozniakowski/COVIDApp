@@ -220,6 +220,7 @@ public class DataHolder {
                 if(currentRecord[3].equals(newDate)) {
                     chosenDate = newDate;
                     isChosenDateReady = true;
+                    updateChosenRecord();
                     break;
                 }
             }
