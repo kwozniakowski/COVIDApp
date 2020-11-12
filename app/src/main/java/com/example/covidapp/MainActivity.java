@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), BriefActivity.class);
-                intent.putExtra("Region", "Poland");
+                // intent.putExtra("Region", "Poland");
+                DataHolder.updateChosenCountryName("Poland");
                 startActivity(intent);
             }
         });
@@ -46,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), BriefActivity.class);
-                intent.putExtra("Region", "World");
+                // intent.putExtra("Region", "World");
+                DataHolder.updateChosenCountryName("World");
                 startActivity(intent);
             }
         });

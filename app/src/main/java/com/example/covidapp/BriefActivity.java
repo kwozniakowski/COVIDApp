@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -58,42 +59,33 @@ public class BriefActivity extends AppCompatActivity {
         dateText = findViewById(R.id.textView4);
         spinner = (Spinner)findViewById(R.id.countrySpinner);
         statisticsActivityButton = findViewById(R.id.statisticsActivityButton);
-        statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
-                intent.putExtra("Region", spinner.getSelectedItem().toString());
-                startActivity(intent);
-            }
-        });
 
         // Pobieram region przekazany przez MainActivity
         // Na razie jest ustawiony na sztywno w zaleznosci od przycisku kliknietego
         // w menu glownym
         Intent intent = getIntent();
-        chosenCountryName = intent.getStringExtra("Region");
+        // chosenCountryName = intent.getStringExtra("Region");
+        chosenCountryName = DataHolder.getChosenCountryName();
 
         // Pobieram scoreList z DataHolder, ktory zostal tam umieszczony przez MainActivity
         final ArrayList<String[]> scoreList = DataHolder.getScoreList();
         // oraz pozostale dane wygenerowane przez DataHoldera na podstawie scoreList
         listDividedByCountries = DataHolder.getListDividedByCountries();
-        ArrayList<String> countries = DataHolder.getCountryNameList();
-        chosenCountryList = DataHolder.getChosenCountryList(chosenCountryName);
+        final ArrayList<String> countryNameList = DataHolder.getCountryNameList();
+        chosenCountryList = DataHolder.getChosenCountryList();
         chosenDate = DataHolder.getChosenDate();
         chosenRecord = DataHolder.getChosenRecord();
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countries);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countryNameList);
         spinner.setAdapter(adapter);
 
         // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci
         // Jest to zwiazane z tym, ze MainActivity przekazuje tutaj nazwe regionu, ktory ma byc wybrany
         // (np. world lub kraj w ktorym znajduje sie uzytkownik). Na wszelki wypadek sprawdzam, czy
         // przekazan
-        if(countries.indexOf(chosenCountryName) >= 0) {
-            spinner.setSelection(countries.indexOf(chosenCountryName));
-        }
+        spinner.setSelection(countryNameList.indexOf(chosenCountryName));
 
         setTextsForCountry(totalInfectionsText,newInfectionsText,
                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
@@ -102,8 +94,9 @@ public class BriefActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                chosenCountryName = spinner.getSelectedItem().toString();
-                chosenCountryList = DataHolder.getChosenCountryList(chosenCountryName);
+                DataHolder.updateChosenCountryName(spinner.getSelectedItem().toString());
+                chosenCountryName = DataHolder.getChosenCountryName();
+                chosenCountryList = DataHolder.getChosenCountryList();
                 chosenDate = DataHolder.getChosenDate();
                 chosenRecord = DataHolder.getChosenRecord();
                 setTextsForCountry(totalInfectionsText,newInfectionsText,
@@ -162,7 +155,23 @@ public class BriefActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+
+        statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
+
+
+
+
+
+
+    // Funkcje
 
     public void setTextsForCountry(TextView a,TextView b,TextView c,TextView d, TextView e, TextView f){
         dateText.setText(chosenDate);
