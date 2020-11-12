@@ -174,6 +174,9 @@ public class DataHolder {
         if(text.indexOf(".") >= 0) {
             text = text.substring(0, text.indexOf("."));
         }
+        if(text.isEmpty()) {
+            text = "0";
+        }
         if(text.length() > 3 && text.indexOf(",") < 0) {
             int number = Integer.parseInt(text);
             text = String.format("%,d", number);
