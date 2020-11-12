@@ -82,6 +82,7 @@ public class DataHolder {
 
     public static String getChosenDate() {
         if(isChosenDateReady) {
+            updateChosenDate(chosenDate);
             return chosenDate;
         }
         else {
