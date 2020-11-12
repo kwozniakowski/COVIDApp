@@ -2,6 +2,10 @@ package com.example.covidapp;
 
 import java.util.ArrayList;
 
+
+// Glownym zadaniem tej klasy jest przechowywanie danych z pliku csv, ale takze
+// podzial danych w tym pliku na rozne listy, np nazwy krajow, daty dostepne w liscie
+// danego kraju itp. Nazwy list, mam nadzieje, dosc dobrze tlumacza, co przechowuje kazda z nich
 public class DataHolder {
     static ArrayList<String[]> scoreList;
 
@@ -24,7 +28,18 @@ public class DataHolder {
 
 
 
+    // GETTERY I SETTERY
+
+    // !!! WAZNE !!!
+    // Generalnie nalezy korzystac tylko z nich, nie ma potrzeby korzystania z funkcji
+    // "update...", poniewaz gettery w razie potrzeby same aktualizuja dane
+    // Wyjatkiem jest updateChosenDate(String newDate), nalezy z niego korzystac jesli
+    // wybrana data zostala zmieniona
+
+    // Jedyny setter tutaj, korzysta z niej tylko raz MainActivity, po pobraniu danych
+    // z pliku csv. Generalnie w zadnym innym miejscu nie ma potrzeby korzystania z niej
     public static void setScoreList(ArrayList<String[]> data) { scoreList = data; }
+
     public static ArrayList<String[]> getScoreList() { return scoreList; }
 
     // Przy zwracaniu ponizszych list, zawsze najpierw sprawdzam, czy sa one w ogole
@@ -88,6 +103,7 @@ public class DataHolder {
         else return null;
     }
 
+    // Koniec getterow i setterow
 
 
     // Ponizej funkcje przygotowujace dla list
@@ -195,6 +211,7 @@ public class DataHolder {
         }
     }
 
+    // newDate powinna miec format "yyyy-MM-dd"
     public static void updateChosenDate(String newDate) {
         if(isChosenCountryListReady) {
             isChosenDateReady = false;
