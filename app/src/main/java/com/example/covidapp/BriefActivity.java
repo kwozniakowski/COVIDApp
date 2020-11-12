@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -54,9 +53,9 @@ public class BriefActivity extends AppCompatActivity {
         newInfectionsText = findViewById(R.id.newInfectionsText);
         totalDeathsText = findViewById(R.id.totalDeathsText);
         newDeathsText = findViewById(R.id.newDeathsText);
-        totalTestsText = findViewById(R.id.totalTestsText);
-        newTestsText = findViewById(R.id.newTestsText);
-        dateText = findViewById(R.id.textView4);
+        //totalTestsText = findViewById(R.id.totalTestsText);
+        //newTestsText = findViewById(R.id.newTestsText);
+        dateText = findViewById(R.id.dateButton);
         spinner = (Spinner)findViewById(R.id.countrySpinner);
         statisticsActivityButton = findViewById(R.id.statisticsActivityButton);
 

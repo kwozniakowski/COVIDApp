@@ -9,4 +9,5 @@
     <color name="colorGrey">#AAAAAA</color>
     <color name="colorBlue">#00AAFF</color>
     <color name="colorVeryLightGrey">#DDDDDD</color>
+    <color name="colorVeryLightBlue">#BEE9FF</color>
 </resources>
