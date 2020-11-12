@@ -20,9 +20,7 @@ public class CSVFile {
             String csvLine;
             while ((csvLine = reader.readLine()) != null) {
                 String[] row = csvLine.split(",");
-                //System.out.println(csvLine);
                 resultList.add(row);
-                //System.out.println(row[2]);
             }
         }
         catch (IOException ex) {
@@ -36,7 +34,6 @@ public class CSVFile {
                 throw new RuntimeException("Error while closing input stream: "+e);
             }
         }
-        System.out.println("Chuuuuuuuj");
         return resultList;
     }
 }
