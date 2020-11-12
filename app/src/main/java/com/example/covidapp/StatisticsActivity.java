@@ -2,6 +2,8 @@ package com.example.covidapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -30,6 +32,18 @@ public class StatisticsActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countryNameList);
         countrySpinner.setAdapter(adapter);
         countrySpinner.setSelection(countryNameList.indexOf(chosenCountryName));
+        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                DataHolder.updateChosenCountryName(countrySpinner.getSelectedItem().toString());
+                chosenCountryName = DataHolder.getChosenCountryName();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         //Trzeba bedzie ustawic tu liste wyboru panstwa dla spinnera ale to juz potem
     }
 }

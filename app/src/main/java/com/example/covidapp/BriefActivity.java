@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class BriefActivity extends AppCompatActivity {
@@ -44,6 +43,7 @@ public class BriefActivity extends AppCompatActivity {
     String chosenCountryName;
     String chosenDate;
     String[] chosenRecord;
+    ArrayList<String> countryNameList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,21 +60,14 @@ public class BriefActivity extends AppCompatActivity {
         spinner = (Spinner)findViewById(R.id.countrySpinner);
         statisticsActivityButton = findViewById(R.id.statisticsActivityButton);
 
-        // Pobieram region przekazany przez MainActivity
-        // Na razie jest ustawiony na sztywno w zaleznosci od przycisku kliknietego
-        // w menu glownym
-        Intent intent = getIntent();
-        // chosenCountryName = intent.getStringExtra("Region");
-        chosenCountryName = DataHolder.getChosenCountryName();
 
-        // Pobieram scoreList z DataHolder, ktory zostal tam umieszczony przez MainActivity
-        final ArrayList<String[]> scoreList = DataHolder.getScoreList();
-        // oraz pozostale dane wygenerowane przez DataHoldera na podstawie scoreList
+
+        // Pobieram dane wygenerowane przez DataHoldera
         listDividedByCountries = DataHolder.getListDividedByCountries();
-        final ArrayList<String> countryNameList = DataHolder.getCountryNameList();
-        chosenCountryList = DataHolder.getChosenCountryList();
-        chosenDate = DataHolder.getChosenDate();
-        chosenRecord = DataHolder.getChosenRecord();
+        countryNameList = DataHolder.getCountryNameList();
+
+        // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
+        updateChosenStuff();
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
@@ -83,24 +76,15 @@ public class BriefActivity extends AppCompatActivity {
 
         // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci
         // Jest to zwiazane z tym, ze MainActivity przekazuje tutaj nazwe regionu, ktory ma byc wybrany
-        // (np. world lub kraj w ktorym znajduje sie uzytkownik). Na wszelki wypadek sprawdzam, czy
-        // przekazan
+        // (np. world lub kraj w ktorym znajduje sie uzytkownik).
         spinner.setSelection(countryNameList.indexOf(chosenCountryName));
-
-        setTextsForCountry(totalInfectionsText,newInfectionsText,
-                totalDeathsText,newDeathsText,totalTestsText,newTestsText);
 
         // Update danych jesli zostal zmieniony kraj
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 DataHolder.updateChosenCountryName(spinner.getSelectedItem().toString());
-                chosenCountryName = DataHolder.getChosenCountryName();
-                chosenCountryList = DataHolder.getChosenCountryList();
-                chosenDate = DataHolder.getChosenDate();
-                chosenRecord = DataHolder.getChosenRecord();
-                setTextsForCountry(totalInfectionsText,newInfectionsText,
-                        totalDeathsText,newDeathsText,totalTestsText,newTestsText);
+                updateChosenStuff();
             }
 
             @Override
@@ -109,52 +93,9 @@ public class BriefActivity extends AppCompatActivity {
             }
         });
 
-
-        // Wyswietlanie kalendarza do wyboru daty
-        dateText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Dane potrzebne do ustawien
-                final Calendar calendar = Calendar.getInstance();
-                mDate = calendar.get(Calendar.DATE);
-                mMonth = calendar.get(Calendar.MONTH);
-                mYear = calendar.get(Calendar.YEAR);
-                // Pobieram minimalna i maksymalna date dostepna dla obecnie wybranego kraju
-                long minDate = getChosenCountryMinTime();
-                long maxDate = getChosenCountryMaxTime();
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(BriefActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        // Ta czesc wykona sie po wybraniu daty
-
-                        // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
-                        String newDate = calendarDateToString(year, month, date);
-                        // Zmieniam wybrana date w DataHolderze
-                        DataHolder.updateChosenDate(newDate);
-                        // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
-                        // Dlatego tutaj tez trzeba zaktualizowac te dane
-                        chosenDate = DataHolder.getChosenDate();
-                        chosenRecord = DataHolder.getChosenRecord();
-                        // i zaktualizowac dane liczbowe
-                        setTextsForCountry(totalInfectionsText,newInfectionsText,
-                                totalDeathsText,newDeathsText,totalTestsText,newTestsText);
-                    }
-                }, mYear, mMonth, mDate);
-
-                // Ustawiam minimalna i maksymalna date, ktore wczesniej pobralem
-                datePickerDialog.getDatePicker().setMinDate(minDate);
-                datePickerDialog.getDatePicker().setMaxDate(maxDate);
-
-                // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
-                // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
-                if(!(chosenDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
-                    int[] parts = stringDateToInt(chosenDate);
-                    datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
-                }
-                datePickerDialog.show();
-            }
-        });
+        // Ustawiam wszystko co potrzebne, zeby dzialal kalendarz
+        // kodu jest sporo, wiec wrzucilem to wszystko do funkcji
+        setUpCalendar();
 
         statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,6 +104,16 @@ public class BriefActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    // To sie wykona jestli np uzytkownik wejdzie w statystyki, a potem sie cofnie
+    // Odswiezam po prostu dane na wypadek, gdyby uzytkownik np zmienil kraj w aktywnosci
+    // ze statystykami
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        updateChosenStuff();
+        spinner.setSelection(countryNameList.indexOf(chosenCountryName));
     }
 
 
@@ -243,6 +194,7 @@ public class BriefActivity extends AppCompatActivity {
         return yearStr + "-" + monthStr + "-" + dateStr;
     }
 
+    // Zamienia stringa w formacie "yyyy-MM-dd" na prosty do odczytania przez kalendarz format
     public int[] stringDateToInt(String date) {
         int[] parts = new int[3];
         parts[0] = Integer.parseInt(date.substring(0,4));
@@ -252,6 +204,7 @@ public class BriefActivity extends AppCompatActivity {
         return parts;
     }
 
+    // Funkcja odpowiadajaca za animacje liczb
     private void startCountAnimation(final TextView textView, final int finalValue, final String additionalText) {
         ValueAnimator animator = ValueAnimator.ofInt(0, finalValue);
         animator.setDuration(3000);
@@ -264,5 +217,60 @@ public class BriefActivity extends AppCompatActivity {
             }
         });
         animator.start();
+    }
+
+    // Aktualizuje wartosci zmiennych
+    private void updateChosenStuff() {
+        chosenCountryName = DataHolder.getChosenCountryName();
+        chosenCountryList = DataHolder.getChosenCountryList();
+        chosenDate = DataHolder.getChosenDate();
+        chosenRecord = DataHolder.getChosenRecord();
+        setTextsForCountry(totalInfectionsText,newInfectionsText,
+                totalDeathsText,newDeathsText,totalTestsText,newTestsText);
+    }
+
+    private void setUpCalendar() {
+        // Wyswietlanie kalendarza do wyboru daty
+        dateText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dane potrzebne do ustawien
+                final Calendar calendar = Calendar.getInstance();
+                mDate = calendar.get(Calendar.DATE);
+                mMonth = calendar.get(Calendar.MONTH);
+                mYear = calendar.get(Calendar.YEAR);
+                // Pobieram minimalna i maksymalna date dostepna dla obecnie wybranego kraju
+                long minDate = getChosenCountryMinTime();
+                long maxDate = getChosenCountryMaxTime();
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(BriefActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        // Ta czesc wykona sie po wybraniu daty
+
+                        // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
+                        String newDate = calendarDateToString(year, month, date);
+                        // Zmieniam wybrana date w DataHolderze
+                        DataHolder.updateChosenDate(newDate);
+                        // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
+                        // Dlatego tutaj tez trzeba zaktualizowac dane
+                        updateChosenStuff();
+
+                    }
+                }, mYear, mMonth, mDate);
+
+                // Ustawiam minimalna i maksymalna date, ktore wczesniej pobralem
+                datePickerDialog.getDatePicker().setMinDate(minDate);
+                datePickerDialog.getDatePicker().setMaxDate(maxDate);
+
+                // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
+                // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
+                if(!(chosenDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
+                    int[] parts = stringDateToInt(chosenDate);
+                    datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
+                }
+                datePickerDialog.show();
+            }
+        });
     }
 }
