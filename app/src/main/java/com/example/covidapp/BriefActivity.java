@@ -37,6 +37,7 @@ public class BriefActivity extends AppCompatActivity {
 
     private int mDate, mMonth, mYear;
 
+    // Zmienne do ktorych beda wpisywane odpowiednie dane z DataHoldera
     ArrayList<ArrayList<String[]>> listDividedByCountries;
     ArrayList<String[]> chosenCountryList;
     String chosenCountryName;
@@ -66,19 +67,30 @@ public class BriefActivity extends AppCompatActivity {
             }
         });
 
+        // Pobieram region przekazany przez MainActivity
+        // Na razie jest ustawiony na sztywno w zaleznosci od przycisku kliknietego
+        // w menu glownym
         Intent intent = getIntent();
         chosenCountryName = intent.getStringExtra("Region");
-        
-        final ArrayList<String[]> scoreList = DataHolder.getScoreList();
 
+        // Pobieram scoreList z DataHolder, ktory zostal tam umieszczony przez MainActivity
+        final ArrayList<String[]> scoreList = DataHolder.getScoreList();
+        // oraz pozostale dane wygenerowane przez DataHoldera na podstawie scoreList
         listDividedByCountries = DataHolder.getListDividedByCountries();
         ArrayList<String> countries = DataHolder.getCountryNameList();
         chosenCountryList = DataHolder.getChosenCountryList(chosenCountryName);
         chosenDate = DataHolder.getChosenDate();
         chosenRecord = DataHolder.getChosenRecord();
+
+        // Spinner (dropdown-menu)
+        // Przekazuje spinnerowi nazwy krajow
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countries);
         spinner.setAdapter(adapter);
 
+        // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci
+        // Jest to zwiazane z tym, ze MainActivity przekazuje tutaj nazwe regionu, ktory ma byc wybrany
+        // (np. world lub kraj w ktorym znajduje sie uzytkownik). Na wszelki wypadek sprawdzam, czy
+        // przekazan
         if(countries.indexOf(chosenCountryName) >= 0) {
             spinner.setSelection(countries.indexOf(chosenCountryName));
         }
@@ -86,6 +98,7 @@ public class BriefActivity extends AppCompatActivity {
         setTextsForCountry(totalInfectionsText,newInfectionsText,
                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
 
+        // Update danych jesli zostal zmieniony kraj
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -135,8 +148,13 @@ public class BriefActivity extends AppCompatActivity {
                                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
                     }
                 }, mYear, mMonth, mDate);
+
+                // Ustawiam minimalna i maksymalna date, ktore wczesniej pobralem
                 datePickerDialog.getDatePicker().setMinDate(minDate);
                 datePickerDialog.getDatePicker().setMaxDate(maxDate);
+
+                // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
+                // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
                 if(!(chosenDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
                     int[] parts = stringDateToInt(chosenDate);
                     datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
@@ -149,34 +167,23 @@ public class BriefActivity extends AppCompatActivity {
     public void setTextsForCountry(TextView a,TextView b,TextView c,TextView d, TextView e, TextView f){
         dateText.setText(chosenDate);
 
-        // String aStr = removeFloatingPointFromString(latestRecord[4]);
-        // a.setText(chosenRecord[4]);
         int infectedTotal = Integer.parseInt(chosenRecord[4]);
         startCountAnimation(a, infectedTotal, "");
-        // String bStr = removeFloatingPointFromString(latestRecord[5]);
-        //b.setText("+" + chosenRecord[5]);
+
         int infectedDaily = Integer.parseInt(chosenRecord[5]);
         startCountAnimation(b, infectedDaily, "+");
-        // String cStr = removeFloatingPointFromString(latestRecord[7]);
-        //c.setText(chosenRecord[7]);
+
         int deathsTotal = Integer.parseInt(chosenRecord[7]);
         startCountAnimation(c, deathsTotal, "");
-        // String dStr = removeFloatingPointFromString(latestRecord[8]);
-        //d.setText("+" + chosenRecord[8]);
+
         int deathsDaily = Integer.parseInt(chosenRecord[8]);
         startCountAnimation(d, deathsDaily, "+");
+
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
         e.setText(eStr);
         String fStr = removeFloatingPointFromString(scoreList.get(i)[25]);
         f.setText("+" + fStr);*/
-    }
-
-    public String removeFloatingPointFromString(String text) {
-        if(text.indexOf(".") >= 0) {
-            text = text.substring(0, text.indexOf("."));
-        }
-        return text;
     }
 
     // Funkcja pobiera najstarsza date dostepna dla obecnie wybranego kraju i zwraca ja

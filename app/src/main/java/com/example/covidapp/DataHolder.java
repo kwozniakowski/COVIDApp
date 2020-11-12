@@ -31,8 +31,9 @@ public class DataHolder {
     // GETTERY I SETTERY
 
     // !!! WAZNE !!!
-    // Generalnie nalezy korzystac tylko z nich, nie ma potrzeby korzystania z funkcji
-    // "update...", poniewaz gettery w razie potrzeby same aktualizuja dane
+    // Generalnie nalezy korzystac tylko z ponizszych getterow (jest tez jeden setter -
+    // informacje o nim znajduja sie w komentarzu nad nim), nie ma potrzeby korzystania z
+    // funkcji typu "update...", poniewaz gettery w razie potrzeby same aktualizuja dane
     // Wyjatkiem jest updateChosenDate(String newDate), nalezy z niego korzystac jesli
     // wybrana data zostala zmieniona
 
@@ -42,8 +43,6 @@ public class DataHolder {
 
     public static ArrayList<String[]> getScoreList() { return scoreList; }
 
-    // Przy zwracaniu ponizszych list, zawsze najpierw sprawdzam, czy sa one w ogole
-    // przygotowane do odczytu, jesli nie - wywoluje odpowiednia funkcje przygotowujaca
     public static ArrayList<ArrayList<String[]>> getListDividedByCountries() {
         if(isDividedListReady) {
             return listDividedByCountries;
@@ -157,6 +156,7 @@ public class DataHolder {
     // do chosenCountryList zostana wpisane wszystkie rekordy z tego kraju
     public static void updateChosenCountryList(String newCountryName) {
         if(isDividedListReady) {
+            isChosenCountryListReady = false;
             for(int countryNr = 0; countryNr < listDividedByCountries.size(); countryNr++) {
                 String countryName = listDividedByCountries.get(countryNr).get(0)[2];
                 if(countryName.equals(newCountryName)) {
@@ -164,11 +164,15 @@ public class DataHolder {
                     chosenCountryList = (ArrayList<String[]>) listDividedByCountries.get(countryNr).clone();
                     removeFloatingPointsFromList();
                     updateChosenDate(chosenDate);
+                    chosenCountryName = newCountryName;
+                    isChosenCountryListReady = true;
                     break;
                 }
             }
-            chosenCountryName = newCountryName;
-            isChosenCountryListReady = true;
+            // Na wypadek gdyby podano bledna nazwe kraju (nie ma jej w liscie)
+            if(!isChosenCountryListReady) {
+                updateChosenCountryList("World");
+            }
         }
         else {
             divideListIntoCountries();
