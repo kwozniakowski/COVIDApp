@@ -140,37 +140,20 @@ public class BriefActivity extends AppCompatActivity {
 
         // String aStr = removeFloatingPointFromString(latestRecord[4]);
         // a.setText(chosenRecord[4]);
-        NumberFormat numberFormat = NumberFormat.getInstance(Locale.UK);
-        try {
-            int infectedTotal = numberFormat.parse(chosenRecord[4]).intValue();
-            startCountAnimation(a, infectedTotal, "");
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
+        int infectedTotal = Integer.parseInt(chosenRecord[4]);
+        startCountAnimation(a, infectedTotal, "");
         // String bStr = removeFloatingPointFromString(latestRecord[5]);
         //b.setText("+" + chosenRecord[5]);
-        try {
-            int infectedDaily = numberFormat.parse(chosenRecord[5]).intValue();
-            startCountAnimation(b, infectedDaily, "+");
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
+        int infectedDaily = Integer.parseInt(chosenRecord[5]);
+        startCountAnimation(b, infectedDaily, "+");
         // String cStr = removeFloatingPointFromString(latestRecord[7]);
         //c.setText(chosenRecord[7]);
-        try {
-            int deathsTotal = numberFormat.parse(chosenRecord[7]).intValue();
-            startCountAnimation(c, deathsTotal, "");
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
+        int deathsTotal = Integer.parseInt(chosenRecord[7]);
+        startCountAnimation(c, deathsTotal, "");
         // String dStr = removeFloatingPointFromString(latestRecord[8]);
         //d.setText("+" + chosenRecord[8]);
-        try {
-            int deathsDaily = numberFormat.parse(chosenRecord[8]).intValue();
-            startCountAnimation(d, deathsDaily, "+");
-        } catch (ParseException ex) {
-            ex.printStackTrace();
-        }
+        int deathsDaily = Integer.parseInt(chosenRecord[8]);
+        startCountAnimation(d, deathsDaily, "+");
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
         e.setText(eStr);

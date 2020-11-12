@@ -177,10 +177,10 @@ public class DataHolder {
         if(text.isEmpty()) {
             text = "0";
         }
-        if(text.length() > 3 && text.indexOf(",") < 0) {
+        /*if(text.length() > 3 && text.indexOf(",") < 0) {
             int number = Integer.parseInt(text);
             text = String.format("%,d", number);
-        }
+        }*/
         return text;
     }
 
