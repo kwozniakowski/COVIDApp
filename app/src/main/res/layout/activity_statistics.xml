@@ -45,7 +45,7 @@
             android:layout_height="match_parent">
 
             <Spinner
-                android:id="@+id/infectionsSpinner"
+                android:id="@+id/lineChart1Spinner"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
@@ -60,7 +60,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
-                android:id="@+id/testsSpinner"
+                android:id="@+id/lineChart2Spinner"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
@@ -72,10 +72,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/infectionsData" />
+                app:layout_constraintTop_toBottomOf="@+id/barChart1" />
 
             <Spinner
-                android:id="@+id/deathsSpinner2"
+                android:id="@+id/lineChart3Spinner"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
@@ -87,10 +87,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/deathsData" />
+                app:layout_constraintTop_toBottomOf="@+id/barChart2" />
 
-            <TextView
-                android:id="@+id/infectionsData"
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart1"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginStart="20dp"
@@ -98,28 +98,14 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
-                android:text="Wykres"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/infectionsSpinner" />
-
-            <TextView
-                android:id="@+id/deathsData"
-                android:layout_width="0dp"
-                android:layout_height="300dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:text="Wykres"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/testsSpinner" />
+                app:layout_constraintTop_toBottomOf="@+id/lineChart1Spinner"/>
 
-            <TextView
-                android:id="@+id/testsData"
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart2"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginStart="20dp"
@@ -127,11 +113,24 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
-                android:text="Wykres"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/deathsSpinner2" />
+                app:layout_constraintTop_toBottomOf="@+id/lineChart2Spinner" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChart3"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lineChart3Spinner" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
