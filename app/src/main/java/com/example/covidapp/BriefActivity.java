@@ -117,10 +117,6 @@ public class BriefActivity extends AppCompatActivity {
 
 
 
-
-
-
-
     // Funkcje
 
     public void setTextsForCountry(TextView a,TextView b,TextView c,TextView d, TextView e, TextView f){
