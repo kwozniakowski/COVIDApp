@@ -41,7 +41,7 @@
             android:layout_height="match_parent">
 
             <Spinner
-                android:id="@+id/lineChart1Spinner"
+                android:id="@+id/chartSpinner1"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
@@ -56,7 +56,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Spinner
-                android:id="@+id/lineChart2Spinner"
+                android:id="@+id/chartSpinner2"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
@@ -71,7 +71,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/barChart1" />
 
             <Spinner
-                android:id="@+id/lineChart3Spinner"
+                android:id="@+id/chartSpinner3"
                 android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
@@ -97,7 +97,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lineChart1Spinner" />
+                app:layout_constraintTop_toBottomOf="@+id/chartSpinner1" />
 
 
             <com.github.mikephil.charting.charts.BarChart
@@ -112,7 +112,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lineChart2Spinner" />
+                app:layout_constraintTop_toBottomOf="@+id/chartSpinner2" />
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChart3"
@@ -126,7 +126,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lineChart3Spinner" />
+                app:layout_constraintTop_toBottomOf="@+id/chartSpinner3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
