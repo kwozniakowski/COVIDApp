@@ -1,5 +1,6 @@
 package com.example.covidapp;
 
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,9 +10,14 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.MPPointF;
 
 import java.util.ArrayList;
 
@@ -64,6 +70,9 @@ public class StatisticsActivity extends AppCompatActivity {
                 drawChart(barChart1, "new infections");
                 drawChart(barChart2, "new deaths");
                 drawChart(barChart3, "new tests");
+                chartSpinner1.setSelection(0);
+                chartSpinner2.setSelection(1);
+                chartSpinner3.setSelection(2);
             }
 
             @Override
@@ -122,7 +131,34 @@ public class StatisticsActivity extends AppCompatActivity {
 
             }
         });
-        //Trzeba bedzie ustawic tu liste wyboru panstwa dla spinnera ale to juz potem
+
+        //Poniższe nie działa, trzeba zrobić żeby po naciśnięciu na słupek pokazywała się dokładna wartość z datą
+        barChart1.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            protected RectF mOnValueSelectedRectF = new RectF();
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                if (e == null)
+                    return;
+
+                RectF bounds = mOnValueSelectedRectF;
+                barChart1.getBarBounds((BarEntry) e, bounds);
+                MPPointF position = barChart1.getPosition(e, YAxis.AxisDependency.LEFT);
+
+                System.out.println("bounds"+ bounds.toString());
+                System.out.println("position"+ position.toString());
+
+                System.out.println("x-index" +
+                        "low: " + barChart1.getLowestVisibleX() + ", high: "
+                                + barChart1.getHighestVisibleX());
+
+                MPPointF.recycleInstance(position);
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
     }
 
     private ArrayList<BarEntry> dataValues1()
@@ -152,6 +188,7 @@ public class StatisticsActivity extends AppCompatActivity {
     {
         BarDataSet barDataSet = new BarDataSet(dataValues(label),label);
         BarData barData = new BarData(barDataSet);
+        barData.setDrawValues(false);
         chart.setData(barData);
         chart.animateY(1000);
         chart.getAxisLeft().setDrawGridLines(false);
@@ -159,6 +196,7 @@ public class StatisticsActivity extends AppCompatActivity {
         chart.setAutoScaleMinMaxEnabled(false);
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setEnabled(true);
+        chart.setTouchEnabled(true);
     }
 
     public void setStatisticalData()
@@ -193,14 +231,13 @@ public class StatisticsActivity extends AppCompatActivity {
         }
         else if(statisticalData == "new tests")
         {
-            //TODO: Ogarnac to, ze wywolanie wyjatku zatrzymuje petle, zrobic zeby nie zatrzymywalo!
             for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
             {
-                try
+                if(!chosenCountryList.get(i)[25].equals(""))
                 {
-                    list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[25] )));
+                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[25] )));
                 }
-                catch(Exception e)
+                else
                 {
                     list.add(new BarEntry(i, 0 ));
                 }
@@ -232,12 +269,12 @@ public class StatisticsActivity extends AppCompatActivity {
         {
             for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
             {
-                try
+                if(!chosenCountryList.get(i)[25].equals(""))
                 {
                     list.add(new BarEntry(i, (Float) Float.parseFloat(chosenCountryList.get(i)[5] ) /
-                            Integer.parseInt(chosenCountryList.get(i)[25] ) * 100 ));//lub 26
+                            Float.parseFloat(chosenCountryList.get(i)[25] ) * 100 ));//lub 26
                 }
-                catch(Exception e)
+                else
                 {
                     list.add(new BarEntry(i,0));
                 }
