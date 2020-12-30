@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -30,6 +31,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +44,10 @@ public class MainActivity extends AppCompatActivity {
     Button worldBriefButton;
     Button createModelButton;
     Button settingsButton;
+    Button resetButton;
+
+    boolean isDownloadSuccessful;
+    String latestCommitId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +58,12 @@ public class MainActivity extends AppCompatActivity {
         worldBriefButton = (Button) findViewById(R.id.worldBriefButton);
         createModelButton = (Button) findViewById(R.id.createModelButton);
         settingsButton = (Button) findViewById(R.id.settingsButton);
+        resetButton = (Button) findViewById(R.id.resetButton);
 
         checkForFileUpdates();
 
-        InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
-        CSVFile csvFile = new CSVFile(inputStream);
-        final ArrayList<String[]> scoreList = csvFile.read();
-        DataHolder.setScoreList(scoreList);
+        //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
+        loadDataFromCsvFile();
 
         countryBriefButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +92,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                writeToFile("covid_data_file_info.txt", "");
+                writeToFile("covid_data.csv", "");
+            }
+        });
     }
 
     private void checkForFileUpdates() {
@@ -105,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                     Element latestCommits = latestUpdates.getElementsByTag("ol").get(0);
                     Element latestCommit = latestCommits.getElementsByTag("li").get(0);
                     Element buttonGroup = latestCommit.getElementsByClass("BtnGroup").get(0);
-                    String latestCommitId = buttonGroup.getElementsByTag("a").get(0).text();
+                    latestCommitId = buttonGroup.getElementsByTag("a").get(0).text();
 
                     // Zapisuje rowniez informacje o dacie utworzenia tego commitu
                     // Poki co nie jest to nigdzie uzywane, ale moze sie jeszcze przydac
@@ -120,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                     if(!(dataFromFile.equals(latestCommitId + "\n"))) {
                         // Tu bedzie pobieranie pliku
                         makeToast("Update available, updating...");
-                        writeToFile("covid_data_file_info.txt", latestCommitId);
+                        downloadCsvFile();
                     }
                     else {
                         makeToast("Everything is up to date");
@@ -168,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             fos = openFileOutput(fileName, MODE_PRIVATE);
             fos.write(dataToWrite.getBytes());
-            makeToast("Data updated!");
+            System.out.println("Finished writing to " + fileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -191,5 +209,43 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void downloadCsvFile() {
+        OkHttpClient client = new OkHttpClient();
+        String url = "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv";
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                makeToast("Cannot update data");
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if(response.isSuccessful()) {
+                    String responseStr = response.body().string();
+                    writeToFile("covid_data.csv", responseStr);
+                    writeToFile("covid_data_file_info.txt", latestCommitId);
+                    loadDataFromCsvFile();
+                    makeToast("Data updated!");
+                }
+            }
+        });
+    }
+
+    private void loadDataFromCsvFile() {
+        InputStream inputStream = null;
+        try {
+            inputStream = openFileInput("covid_data.csv");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        CSVFile csvFile = new CSVFile(inputStream);
+        final ArrayList<String[]> scoreList = csvFile.read();
+        DataHolder.setScoreList(scoreList);
     }
 }
