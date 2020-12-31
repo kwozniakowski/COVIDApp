@@ -177,7 +177,7 @@ public class BriefActivity extends AppCompatActivity {
         String yearStr = String.valueOf(year);
         String monthStr = "";
         String dateStr = "";
-        if(month < 10) {
+        if(month < 9) {
             monthStr += "0";
         }
         month++;

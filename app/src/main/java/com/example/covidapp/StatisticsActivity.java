@@ -1,11 +1,14 @@
 package com.example.covidapp;
 
+import android.app.DatePickerDialog;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,7 +22,11 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class StatisticsActivity extends AppCompatActivity {
     Spinner countrySpinner;
@@ -30,6 +37,10 @@ public class StatisticsActivity extends AppCompatActivity {
     ArrayList<String> countryNameList;
     BarChart barChart1, barChart2, barChart3;
     ArrayList<String> statisticalData;
+    TextView dateText1, dateText2;
+    private int mDate, mMonth, mYear;
+    String chosenDate, chosenStartDate, chosenEndDate;
+    String[] chosenRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +62,23 @@ public class StatisticsActivity extends AppCompatActivity {
         barChart1 = findViewById(R.id.barChart1);
         barChart2 = findViewById(R.id.barChart2);
         barChart3 = findViewById(R.id.barChart3);
+
+        //text kalendarza
+        dateText1 = findViewById(R.id.dateText1);
+        dateText2 = findViewById(R.id.dateText2);
         //Funkcja odpowiedzialna za rysowanie wykresu
         drawChart(barChart1, "new infections");
         drawChart(barChart2, "new deaths");
         drawChart(barChart3, "new tests");
 
+        updateChosenStuff();
+        chosenStartDate = DataHolder.getChosenDate();
+        chosenEndDate = DataHolder.getChosenDate();
+
         statisticalData = new ArrayList<String>();
         setStatisticalData();
+
+        setUpCalendar();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countryNameList);
         countrySpinner.setAdapter(adapter);
@@ -197,6 +218,7 @@ public class StatisticsActivity extends AppCompatActivity {
         chart.getAxisRight().setEnabled(false);
         chart.getAxisLeft().setEnabled(true);
         chart.setTouchEnabled(true);
+        chart.getAxisLeft().setAxisMinimum(0);
     }
 
     public void setStatisticalData()
@@ -208,30 +230,31 @@ public class StatisticsActivity extends AppCompatActivity {
         statisticalData.add("total deaths per 1 mln");
         statisticalData.add("% of positive tests");
         statisticalData.add("day to day % growth");
+        statisticalData.add("death rate");
     }
 
-    private ArrayList<BarEntry> dataValues(String statisticalData)
-    {
+    private ArrayList<BarEntry> dataValues(String statisticalData) {
         ArrayList<String[]> chosenCountryList = DataHolder.getChosenCountryList();
         ArrayList<BarEntry> list = new ArrayList<>();
+        int startIndex = chosenCountryList.size()-1;
+        int endIndex = startIndex-1;
         //Tutaj wyswietlimy sobie zakazenia dla ostatnigo tygodnia
-        if(statisticalData == "new infections")
+        for (int i = chosenCountryList.size() - 1; i > 0; i--)
         {
-            for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
+            if(chosenCountryList.get(i)[3].equals(chosenEndDate)) endIndex = i;
+            if(chosenCountryList.get(i)[3].equals(chosenStartDate)) startIndex = i;
+        }
+        for(int i = endIndex; i > startIndex ; i --)
+        {
+            if(statisticalData == "new infections")
             {
                 list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[5] )));
             }
-        }
-        else if(statisticalData == "new deaths")
-        {
-            for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
+            else if(statisticalData == "new deaths")
             {
                 list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[8] )));
             }
-        }
-        else if(statisticalData == "new tests")
-        {
-            for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
+            else if(statisticalData == "new tests")
             {
                 if(!chosenCountryList.get(i)[25].equals(""))
                 {
@@ -242,10 +265,7 @@ public class StatisticsActivity extends AppCompatActivity {
                     list.add(new BarEntry(i, 0 ));
                 }
             }
-        }
-        else if(statisticalData == "total infections per 1 mln")
-        {
-            for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
+            else if(statisticalData == "total infections per 1 mln")
             {
                 try
                 {
@@ -255,19 +275,12 @@ public class StatisticsActivity extends AppCompatActivity {
                 {
                     list.add(new BarEntry(i, 0));
                 }
-
             }
-        }
-        else if(statisticalData == "total deaths per 1 mln")
-        {
-            for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
+            else if(statisticalData == "total deaths per 1 mln")
             {
                 list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[13] )));
             }
-        }
-        else if(statisticalData == "% of positive tests")
-        {
-            for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
+            else if(statisticalData == "% of positive tests")
             {
                 if(!chosenCountryList.get(i)[25].equals(""))
                 {
@@ -278,12 +291,8 @@ public class StatisticsActivity extends AppCompatActivity {
                 {
                     list.add(new BarEntry(i,0));
                 }
-
             }
-        }
-        else if(statisticalData == "day to day % growth")
-        {
-            for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
+            else if(statisticalData == "day to day % growth")
             {
                 try {
                     list.add(new BarEntry(i, (Float.parseFloat(chosenCountryList.get(i-1)[5]) /
@@ -294,14 +303,175 @@ public class StatisticsActivity extends AppCompatActivity {
                     list.add(new BarEntry(i,0));
                 }
             }
-        }
-        else
-        {
-            for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
+            else if(statisticalData == "death rate")
+            {
+                list.add(new BarEntry(i,(Float.parseFloat(chosenCountryList.get(i)[9]) /
+                        Float.parseFloat(chosenCountryList.get(i)[6]) * 100)));
+            }
+            else
             {
                 list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[5] )));
             }
         }
         return list;
     }
+
+    private void setUpCalendar() {
+        // Wyswietlanie kalendarza do wyboru daty
+        dateText1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dane potrzebne do ustawien
+                final Calendar calendar = Calendar.getInstance();
+                mDate = calendar.get(Calendar.DATE);
+                mMonth = calendar.get(Calendar.MONTH);
+                mYear = calendar.get(Calendar.YEAR);
+                // Pobieram minimalna i maksymalna date dostepna dla obecnie wybranego kraju
+                long minDate = getChosenCountryMinTime();
+                long maxDate = getChosenCountryMaxTime();
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(StatisticsActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        // Ta czesc wykona sie po wybraniu daty
+
+                        // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
+                        String newDate = calendarDateToString(year, month, date);
+                        // Zmieniam wybrana date w DataHolderze
+                        chosenStartDate = newDate;
+                        // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
+                        // Dlatego tutaj tez trzeba zaktualizowac dane
+                        updateChosenStuff();
+                        drawChart(barChart1,chartSpinner1.getSelectedItem().toString());
+                        drawChart(barChart2,chartSpinner2.getSelectedItem().toString());
+                        drawChart(barChart3,chartSpinner3.getSelectedItem().toString());
+
+                    }
+                }, mYear, mMonth, mDate);
+
+                // Ustawiam minimalna i maksymalna date, ktore wczesniej pobralem
+                datePickerDialog.getDatePicker().setMinDate(minDate);
+                datePickerDialog.getDatePicker().setMaxDate(maxDate);
+
+                // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
+                // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
+                if(!(chosenStartDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
+                    int[] parts = stringDateToInt(chosenStartDate);
+                    datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
+                }
+                datePickerDialog.show();
+            }
+        });
+        dateText2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Dane potrzebne do ustawien
+                final Calendar calendar = Calendar.getInstance();
+                mDate = calendar.get(Calendar.DATE);
+                mMonth = calendar.get(Calendar.MONTH);
+                mYear = calendar.get(Calendar.YEAR);
+                // Pobieram minimalna i maksymalna date dostepna dla obecnie wybranego kraju
+                long minDate = getChosenCountryMinTime();
+                long maxDate = getChosenCountryMaxTime();
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(StatisticsActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                        // Ta czesc wykona sie po wybraniu daty
+
+                        // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
+                        String newDate = calendarDateToString(year, month, date);
+                        // Zmieniam wybrana date w DataHolderze
+                        chosenEndDate = newDate;
+                        // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
+                        // Dlatego tutaj tez trzeba zaktualizowac dane
+                        updateChosenStuff();
+                        drawChart(barChart1,chartSpinner1.getSelectedItem().toString());
+                        drawChart(barChart2,chartSpinner2.getSelectedItem().toString());
+                        drawChart(barChart3,chartSpinner3.getSelectedItem().toString());
+
+                    }
+                }, mYear, mMonth, mDate);
+
+                // Ustawiam minimalna i maksymalna date, ktore wczesniej pobralem
+                datePickerDialog.getDatePicker().setMinDate(minDate);
+                datePickerDialog.getDatePicker().setMaxDate(maxDate);
+
+                // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
+                // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
+                if(!(chosenEndDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
+                    int[] parts = stringDateToInt(chosenEndDate);
+                    datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
+                }
+                datePickerDialog.show();
+            }
+        });
+    }
+
+    private void updateChosenStuff() {
+        chosenCountryName = DataHolder.getChosenCountryName();
+        chosenCountryList = DataHolder.getChosenCountryList();
+        chosenDate = DataHolder.getChosenDate();
+
+        chosenRecord = DataHolder.getChosenRecord();
+        dateText1.setText(chosenStartDate);
+        dateText2.setText(chosenEndDate);
+    }
+
+    public long getChosenCountryMinTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateStr = chosenCountryList.get(0)[3] + " 00:00:00";
+        Date date = null;
+        try {
+            date = sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long millis = date.getTime();
+        return millis;
+    }
+
+    // Funkcja pobiera najnowsza date dostepna dla obecnie wybranego kraju i zwraca ja
+    // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
+    public long getChosenCountryMaxTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
+        Date date = null;
+        try {
+            date = sdf.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long millis = date.getTime();
+        return millis;
+    }
+
+    // Funkcja do przeksztalcenia daty wybranej przez uzytkownika w kalendarzu
+    // do formy Stringa
+    public String calendarDateToString(int year, int month, int date) {
+        String yearStr = String.valueOf(year);
+        String monthStr = "";
+        String dateStr = "";
+        if(month < 9) {
+            monthStr += "0";
+        }
+        month++;
+        monthStr += String.valueOf(month);
+        if(date < 10) {
+            dateStr += "0";
+        }
+        dateStr += String.valueOf(date);
+        return yearStr + "-" + monthStr + "-" + dateStr;
+    }
+
+    // Zamienia stringa w formacie "yyyy-MM-dd" na prosty do odczytania przez kalendarz format
+    public int[] stringDateToInt(String date) {
+        int[] parts = new int[3];
+        parts[0] = Integer.parseInt(date.substring(0,4));
+        parts[1] = Integer.parseInt(date.substring(5,7));
+        parts[1]--;
+        parts[2] = Integer.parseInt(date.substring(8,10));
+        return parts;
+    }
+
 }

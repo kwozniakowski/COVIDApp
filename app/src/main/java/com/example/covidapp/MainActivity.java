@@ -244,6 +244,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
         CSVFile csvFile = new CSVFile(inputStream);
         final ArrayList<String[]> scoreList = csvFile.read();
         DataHolder.setScoreList(scoreList);
