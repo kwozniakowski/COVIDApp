@@ -202,7 +202,17 @@ public class BriefActivity extends AppCompatActivity {
     // Funkcja odpowiadajaca za animacje liczb
     private void startCountAnimation(final TextView textView, final int finalValue, final String additionalText) {
         ValueAnimator animator = ValueAnimator.ofInt(0, finalValue);
-        animator.setDuration(3000);
+        if(finalValue > 1000000) {
+            animator.setDuration(3000);
+        } else if(finalValue > 100000) {
+            animator.setDuration(2000);
+        }  else if(finalValue > 1000) {
+            animator.setDuration(1000);
+        } else if(finalValue > 20) {
+            animator.setDuration(500);
+        } else {
+            animator.setDuration(100);
+        }
         final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.UK);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
