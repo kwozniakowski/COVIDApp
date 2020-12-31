@@ -3,6 +3,7 @@ package com.example.covidapp;
 import android.app.DatePickerDialog;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -71,9 +72,9 @@ public class StatisticsActivity extends AppCompatActivity {
         drawChart(barChart2, "new deaths");
         drawChart(barChart3, "new tests");
 
-        updateChosenStuff();
         chosenStartDate = DataHolder.getChosenDate();
         chosenEndDate = DataHolder.getChosenDate();
+        updateChosenStuff();
 
         statisticalData = new ArrayList<String>();
         setStatisticalData();
@@ -88,6 +89,7 @@ public class StatisticsActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 DataHolder.updateChosenCountryName(countrySpinner.getSelectedItem().toString());
                 chosenCountryName = DataHolder.getChosenCountryName();
+                updateChosenStuff();
                 drawChart(barChart1, "new infections");
                 drawChart(barChart2, "new deaths");
                 drawChart(barChart3, "new tests");
@@ -239,7 +241,7 @@ public class StatisticsActivity extends AppCompatActivity {
         int startIndex = chosenCountryList.size()-1;
         int endIndex = startIndex-1;
         //Tutaj wyswietlimy sobie zakazenia dla ostatnigo tygodnia
-        for (int i = chosenCountryList.size() - 1; i > 0; i--)
+        for (int i = chosenCountryList.size() - 1; i >= 0; i--)
         {
             if(chosenCountryList.get(i)[3].equals(chosenEndDate)) endIndex = i;
             if(chosenCountryList.get(i)[3].equals(chosenStartDate)) startIndex = i;
@@ -414,6 +416,8 @@ public class StatisticsActivity extends AppCompatActivity {
         chosenDate = DataHolder.getChosenDate();
 
         chosenRecord = DataHolder.getChosenRecord();
+        chosenStartDate = DataHolder.isDateInChosenCountry(chosenStartDate);
+        chosenEndDate = DataHolder.isDateInChosenCountry(chosenEndDate);
         dateText1.setText(chosenStartDate);
         dateText2.setText(chosenEndDate);
     }
