@@ -331,4 +331,30 @@ public class DataHolder {
             throw new Exception("scoreList is empty!");
         }
     }
+
+    // Ponizsza funkcja sprawdza czy dla wybranego kraju sa dane z podanej daty
+    // Przyklad:
+    // Mamy dane od 1.03.2020 do 31.03.2020
+    // Jesli funkcja otrzyma 5.03.2020, zwroci 5.03.2020, bo to poprawna data
+    // Jesli otrzyma 1.02.2020, zwroci 1.03.2020, bo to pierwsza mozliwa data
+    // Jesli otrzyma 1.05.2020, zwroci 31.03.2020, bo to ostatnia mozliwa data
+    public static String isDateInChosenCountry(String date) {
+
+        // To tylko na wypadek gdyby chosenCountryList bylo puste, chociaz
+        // nigdy nie powinno to miec miejsca
+        getChosenCountryList();
+
+        String chosenCountryMinDate = chosenCountryList.get(0)[3];
+        String chosenCountryMaxDate = chosenCountryList.get(chosenCountryList.size() - 1)[3];
+
+        if(date.compareTo(chosenCountryMinDate) < 0) {
+            return chosenCountryMinDate;
+        }
+        else if(date.compareTo(chosenCountryMaxDate) > 0) {
+            return chosenCountryMaxDate;
+        }
+        else {
+            return date;
+        }
+    }
 }
