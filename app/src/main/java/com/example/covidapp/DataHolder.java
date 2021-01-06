@@ -127,46 +127,59 @@ public class DataHolder {
 
     public static void updateChosenCountryName(String newChosenCountryName) {
         System.out.println("Wywolano metode updateChosenCountryName1");
+        getCountryNameList();
+
         isChosenCountryNameReady = false;
-        if(isCountryNameListReady) {
-            for(String countryName:countryNameList) {
-                if(countryName.equals(newChosenCountryName)) {
-                    chosenCountryName = newChosenCountryName;
-                    isChosenCountryNameReady = true;
-                    updateChosenCountryList();
-                    break;
+        //if(isCountryNameListReady) {
+        for(String countryName:countryNameList) {
+            if(countryName.equals(newChosenCountryName)) {
+                // Sprawdzam, czy potrzebne bedzie wywolanie funkcji updateChosenRecord()
+                boolean isRecordUpdateRequired = (chosenCountryName != newChosenCountryName);
+                chosenCountryName = newChosenCountryName;
+                isChosenCountryNameReady = true;
+                updateChosenCountryList();
+                if(isRecordUpdateRequired) {
+                    updateChosenRecord();
                 }
-            }
-            if(!isChosenCountryNameReady) {
-                updateChosenCountryName();
+                break;
             }
         }
+        if(!isChosenCountryNameReady) {
+            updateChosenCountryName();
+        }
+        /*}
         else {
             updateCountryNames();
             updateChosenCountryName(newChosenCountryName);
-        }
+        }*/
     }
 
     // newDate powinna miec format "yyyy-MM-dd"
     public static void updateChosenDate(String newDate) {
         System.out.println("Wywolano metode updateChosenDate1");
+        getChosenCountryList();
+
         isChosenDateReady = false;
-        if(isChosenCountryListReady) {
-            for(String[] currentRecord:chosenCountryList) {
-                if(currentRecord[3].equals(newDate)) {
-                    chosenDate = newDate;
-                    isChosenDateReady = true;
+        //if(isChosenCountryListReady) {
+        for(String[] currentRecord:chosenCountryList) {
+            if(currentRecord[3].equals(newDate)) {
+                // Sprawdzam, czy potrzebne bedzie wywolanie funkcji updateChosenRecord()
+                boolean isRecordUpdateRequired = (chosenDate != newDate);
+                chosenDate = newDate;
+                isChosenDateReady = true;
+                if(isRecordUpdateRequired) {
                     updateChosenRecord();
-                    break;
                 }
-            }
-            if(!isChosenDateReady) {
-                updateChosenDate();
+                break;
             }
         }
+        if(!isChosenDateReady) {
+            updateChosenDate();
+        }
+        /*}
         else {
             updateChosenCountryList();
-        }
+        }*/
     }
 
     // Dzieli cala liste na poszczegolne kraje: z postaci lista[nrRekordu][nrDanej]
@@ -204,43 +217,49 @@ public class DataHolder {
 
     public static void updateCountryNames() {
         System.out.println("Wywolano metode updateCountryNames");
-        if(isDividedListReady) {
-            for(ArrayList<String[]> country:listDividedByCountries) {
-                String countryName = country.get(0)[2];
-                if(countryName.equals("World")) {
-                    if(!(countryNameList.get(0).equals("World"))) {
-                        countryNameList.add(0, countryName);
-                    }
-                }
-                else {
-                    countryNameList.add(country.get(0)[2]);
+        getListDividedByCountries();
+
+        //if(isDividedListReady) {
+        countryNameList.clear();
+        for(ArrayList<String[]> country:listDividedByCountries) {
+            String countryName = country.get(0)[2];
+            if(countryName.equals("World")) {
+                if(!(countryNameList.get(0).equals("World"))) {
+                    countryNameList.add(0, countryName);
                 }
             }
-            isCountryNameListReady = true;
+            else {
+                countryNameList.add(country.get(0)[2]);
+            }
         }
+        isCountryNameListReady = true;
+        /*}
         else {
             divideListIntoCountries();
             updateCountryNames();
-        }
+        }*/
     }
 
     // Jesli podana nazwa kraju znajduje sie w listDividedByCountry,
     // do chosenCountryList zostana wpisane wszystkie rekordy z tego kraju
     public static void updateChosenCountryList() {
         System.out.println("Wywolano metode updateChosenCountryList");
-        if(isDividedListReady) {
-            if(isChosenCountryNameReady) {
-                for (ArrayList<String[]> countryList : listDividedByCountries) {
-                    String countryName = countryList.get(0)[2];
-                    if (countryName.equals(chosenCountryName)) {
-                        chosenCountryList = (ArrayList<String[]>) countryList.clone();
-                        isChosenCountryListReady = true;
-                        removeFloatingPointsFromList();
-                        updateChosenDate(chosenDate);
-                        break;
-                    }
-                }
+        getListDividedByCountries();
+        getChosenCountryName();
+
+        /*if(isDividedListReady) {
+            if(isChosenCountryNameReady) {*/
+        for (ArrayList<String[]> countryList : listDividedByCountries) {
+            String countryName = countryList.get(0)[2];
+            if (countryName.equals(chosenCountryName)) {
+                chosenCountryList = (ArrayList<String[]>) countryList.clone();
+                isChosenCountryListReady = true;
+                removeFloatingPointsFromList();
+                updateChosenDate(chosenDate);
+                break;
             }
+        }
+            /*}
             // Tu nie wywoluje updateChosenCountryList, poniewaz funkcja updateChosenCountryName
             // sama to zrobi, o ile uda jej sie odswiezyc chosenCountryName
             else {
@@ -250,7 +269,7 @@ public class DataHolder {
         else {
             divideListIntoCountries();
             updateChosenCountryList();
-        }
+        }*/
     }
 
     private static void removeFloatingPointsFromList() {
@@ -290,22 +309,27 @@ public class DataHolder {
 
     private static void updateChosenCountryName() {
         System.out.println("Wywolano metode updateChosenCountryName2");
+        getCountryNameList();
+
         // Na wypadek gdyby podano bledna nazwe kraju (nie ma jej w liscie)
-        if(isCountryNameListReady) {
+        //if(isCountryNameListReady) {
             chosenCountryName = countryNameList.get(0);
             isChosenCountryNameReady = true;
             updateChosenCountryList();
-        }
+        /*}
         else {
             updateCountryNames();
             updateChosenCountryName();
-        }
+        }*/
     }
 
     private static void updateChosenRecord() {
         System.out.println("Wywolano metode updateChosenRecord");
-        if(isChosenCountryListReady) {
-            if(isChosenDateReady) {
+        getChosenCountryList();
+        getChosenDate();
+
+        /*if(isChosenCountryListReady) {
+            if(isChosenDateReady) {*/
                 for(String[] record:chosenCountryList) {
                     String currentRecordDate = record[3];
                     if(currentRecordDate.equals(chosenDate)) {
@@ -314,7 +338,7 @@ public class DataHolder {
                         break;
                     }
                 }
-            }
+            /*}
             // Nie wywoluje tu updateChosenRecord, bo funkcja updateChosenDate() sama to zrobi,
             // o ile uda jej sie odswiezyc date
             else {
@@ -323,7 +347,7 @@ public class DataHolder {
         }
         else {
             updateChosenCountryList();
-        }
+        }*/
     }
 
     private static void checkScoreList() throws Exception {
@@ -356,5 +380,11 @@ public class DataHolder {
         else {
             return date;
         }
+    }
+
+    public static void updateData() {
+        isDividedListReady = false;
+        isCountryNameListReady = false;
+        updateChosenRecord();
     }
 }
