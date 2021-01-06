@@ -4,79 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ModelingActivity">
-
-    <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView2"
-        android:layout_width="189dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:text="Poland"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/multiAutoCompleteTextView3"
-        android:layout_width="267dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/input_field_border"
-        android:text="Parameter1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView2" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/multiAutoCompleteTextView4"
-        android:layout_width="267dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/input_field_border"
-        android:text="Parameter2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/multiAutoCompleteTextView3" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/multiAutoCompleteTextView5"
-        android:layout_width="267dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/input_field_border"
-        android:text="Parameter3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/multiAutoCompleteTextView4" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/multiAutoCompleteTextView6"
-        android:layout_width="267dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/input_field_border"
-        android:text="Parameter4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/multiAutoCompleteTextView5" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/multiAutoCompleteTextView7"
-        android:layout_width="267dp"
-        android:layout_height="42dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/input_field_border"
-        android:text="Parameter5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/multiAutoCompleteTextView6" />
+    tools:context=".VaccinationsActivity">
 
     <Button
         android:id="@+id/button5"
@@ -88,4 +16,39 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <view
+        android:id="@+id/chart1"
+        class="com.github.mikephil.charting.charts.PieChart"
+        android:layout_width="210dp"
+        android:layout_height="191dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+    <view
+        android:id="@+id/chart2"
+        class="com.github.mikephil.charting.charts.PieChart"
+        android:layout_width="210dp"
+        android:layout_height="191dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/chart1" />
 </androidx.constraintlayout.widget.ConstraintLayout>

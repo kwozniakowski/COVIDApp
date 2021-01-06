@@ -1,14 +1,9 @@
 package com.example.covidapp;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,18 +12,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 
 import okhttp3.Call;
@@ -42,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button countryBriefButton;
     Button worldBriefButton;
-    Button createModelButton;
+    Button vaccinationsButton;
     Button settingsButton;
     Button resetButton;
 
@@ -56,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
         countryBriefButton = (Button) findViewById(R.id.countryBriefButton);
         worldBriefButton = (Button) findViewById(R.id.worldBriefButton);
-        createModelButton = (Button) findViewById(R.id.createModelButton);
+        vaccinationsButton = (Button) findViewById(R.id.vaccinationsButton);
         settingsButton = (Button) findViewById(R.id.settingsButton);
         resetButton = (Button) findViewById(R.id.resetButton);
 
@@ -85,10 +76,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        createModelButton.setOnClickListener(new View.OnClickListener() {
+        vaccinationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ModelingActivity.class);
+                Intent intent = new Intent(getApplicationContext(), VaccinationsActivity.class);
+                DataHolder.updateChosenCountryName("Poland");
                 startActivity(intent);
             }
         });

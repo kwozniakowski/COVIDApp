@@ -33,12 +33,12 @@
         app:layout_constraintTop_toBottomOf="@+id/countryBriefButton" />
 
     <Button
-        android:id="@+id/createModelButton"
+        android:id="@+id/vaccinationsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:color="@color/colorAccent"
-        android:text="Create model"
+        android:text="Vaccinations"
         android:theme="@style/AppTheme.defaultButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -56,7 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createModelButton" />
+        app:layout_constraintTop_toBottomOf="@+id/vaccinationsButton" />
 
     <Button
         android:id="@+id/resetButton"
