@@ -23,6 +23,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,8 +73,8 @@ public class StatisticsActivity extends AppCompatActivity {
         drawChart(barChart2, "new deaths");
         drawChart(barChart3, "new tests");
 
-        chosenStartDate = DataHolder.getChosenDate();
         chosenEndDate = DataHolder.getChosenDate();
+        chosenStartDate = subtractDaysFromDate(chosenEndDate, 7); //DataHolder.getChosenDate();
         updateChosenStuff();
 
         statisticalData = new ArrayList<String>();
@@ -476,6 +477,23 @@ public class StatisticsActivity extends AppCompatActivity {
         parts[1]--;
         parts[2] = Integer.parseInt(date.substring(8,10));
         return parts;
+    }
+
+    // Zwraca date o 7 dni mniejsza niz podana
+    private String subtractDaysFromDate(String date1Str, int numberOfDays) {
+        String dt = date1Str;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date1;
+        long difference = 0;
+        try {
+            date1 = sdf.parse(date1Str);
+            difference = date1.getTime() - (numberOfDays* 24 * 60 * 60 * 1000);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String result = new SimpleDateFormat("yyyy-MM-dd").format(new Date(difference));
+        return result;
     }
 
 }
