@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         intent = null;
 
+        loadSettings();
         checkForFileUpdates();
 
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 intent = new Intent(getApplicationContext(), BriefActivity.class);
                 // intent.putExtra("Region", "Poland");
-                DataHolder.updateChosenCountryName("Poland");
+                DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
                 //startActivity(intent);
                 checkForFileUpdates();
             }
@@ -89,7 +91,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 intent = new Intent(getApplicationContext(), VaccinationsActivity.class);
-                DataHolder.updateChosenCountryName("Poland");
+                DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
+                //startActivity(intent);
+                checkForFileUpdates();
+            }
+        });
+
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                //DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
                 //startActivity(intent);
                 checkForFileUpdates();
             }
@@ -100,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 writeToFile(txtFilename, "");
                 writeToFile(csvFilename, "");
+                writeToFile("settings.txt", "");
                 makeToast("Data cleared");
             }
         });
@@ -311,5 +324,17 @@ public class MainActivity extends AppCompatActivity {
         CSVFile csvFile = new CSVFile(inputStream);
         final ArrayList<String[]> scoreList = csvFile.read();
         DataHolder.setScoreList(scoreList);
+    }
+
+    private void loadSettings() {
+        String settings = readFromFile("settings.txt");
+        settings = settings.substring(0, settings.indexOf('\n'));
+        if(settings.isEmpty()) {
+            writeToFile("settings.txt", "Poland");
+            DataHolder.updateDefaultCountryName("Poland");
+        } else {
+            DataHolder.updateDefaultCountryName(settings);
+            System.out.println("Odczytane dane z pliku settings.txt: " + settings);
+        }
     }
 }
