@@ -28,6 +28,8 @@ public class DataHolder {
     private static boolean isChosenRecordReady = false;
     private static String[] chosenRecord;
 
+    private static String defaultCountryName;
+
 
 
     // GETTERY I SETTERY
@@ -116,6 +118,10 @@ public class DataHolder {
             return chosenRecord;
         }
         else return null;
+    }
+
+    public static String getDefaultCountryName() {
+        return defaultCountryName;
     }
 
     // Koniec getterow i setterow
@@ -386,5 +392,9 @@ public class DataHolder {
         isDividedListReady = false;
         isCountryNameListReady = false;
         updateChosenRecord();
+    }
+
+    public static void updateDefaultCountryName(String countryName) {
+        defaultCountryName = countryName;
     }
 }
