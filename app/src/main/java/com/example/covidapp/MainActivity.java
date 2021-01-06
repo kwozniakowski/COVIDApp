@@ -37,8 +37,10 @@ public class MainActivity extends AppCompatActivity {
     Button settingsButton;
     Button resetButton;
 
-    boolean isDownloadSuccessful;
+    boolean isCsvFileEmpty;
     String latestCommitId;
+    String txtFilename, csvFilename;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
         settingsButton = (Button) findViewById(R.id.settingsButton);
         resetButton = (Button) findViewById(R.id.resetButton);
 
+        txtFilename = "covid_data_file_info.txt";
+        csvFilename = "covid_data.csv";
+
+        intent = null;
+
         checkForFileUpdates();
 
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
@@ -59,37 +66,41 @@ public class MainActivity extends AppCompatActivity {
         countryBriefButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), BriefActivity.class);
+                intent = new Intent(getApplicationContext(), BriefActivity.class);
                 // intent.putExtra("Region", "Poland");
                 DataHolder.updateChosenCountryName("Poland");
-                startActivity(intent);
+                //startActivity(intent);
+                checkForFileUpdates();
             }
         });
 
         worldBriefButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), BriefActivity.class);
+                intent = new Intent(getApplicationContext(), BriefActivity.class);
                 // intent.putExtra("Region", "World");
                 DataHolder.updateChosenCountryName("World");
-                startActivity(intent);
+                //startActivity(intent);
+                checkForFileUpdates();
             }
         });
 
         vaccinationsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), VaccinationsActivity.class);
+                intent = new Intent(getApplicationContext(), VaccinationsActivity.class);
                 DataHolder.updateChosenCountryName("Poland");
-                startActivity(intent);
+                //startActivity(intent);
+                checkForFileUpdates();
             }
         });
 
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                writeToFile("covid_data_file_info.txt", "");
-                writeToFile("covid_data.csv", "");
+                writeToFile(txtFilename, "");
+                writeToFile(csvFilename, "");
+                makeToast("Data cleared");
             }
         });
     }
@@ -98,9 +109,10 @@ public class MainActivity extends AppCompatActivity {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                setButtonsClickableProperty(false);
                 // Sprawdzam jaka wersja pliku csv jest obecnie pobrana, zeby porownac ja z dostepna
                 // w internecie
-                String dataFromFile = readFromFile("covid_data_file_info.txt");
+                String dataFromFile = readFromFile(txtFilename);
                 System.out.println("Dane odczytane z pliku: " + dataFromFile);
 
                 try {
@@ -134,10 +146,18 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else {
                         makeToast("Everything is up to date");
+                        setButtonsClickableProperty(true);
+                        if(!isFileEmpty(csvFilename) && intent != null) {
+                            startActivity(intent);
+                        }
                     }
 
                 } catch (IOException e) {
-                    makeToast("Cannot check for updates");
+                    makeToast("Cannot check for updates. Please, check your internet connection");
+                    setButtonsClickableProperty(true);
+                    if(!isFileEmpty(csvFilename) && intent != null) {
+                        startActivity(intent);
+                    }
                 }
             }
         };
@@ -158,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 sb.append(text).append("\n");
             }
         } catch (FileNotFoundException e) {
+            writeToFile(fileName, "");
             return "";
         } catch (IOException e) {
             e.printStackTrace();
@@ -194,11 +215,52 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void makeToast(final String text) {
+    private boolean isFileEmpty(String fileName) {
+        FileInputStream fis = null;
+        StringBuilder sb = new StringBuilder();
+        try {
+            fis = openFileInput(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            String text = "";
+
+            if ((text = br.readLine()) != null) {
+                sb.append(text).append("\n");
+            }
+            if (sb.toString().isEmpty()) {
+                return true;
+            }
+        } catch (FileNotFoundException e) {
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
+
+        private void makeToast(final String text) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void setButtonsClickableProperty(final boolean value) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                countryBriefButton.setClickable(value);
+                worldBriefButton.setClickable(value);
             }
         });
     }
@@ -214,16 +276,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 makeToast("Cannot update data");
+                setButtonsClickableProperty(true);
+                if(!isFileEmpty(csvFilename) && intent != null) {
+                    startActivity(intent);
+                }
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if(response.isSuccessful()) {
                     String responseStr = response.body().string();
-                    writeToFile("covid_data.csv", responseStr);
-                    writeToFile("covid_data_file_info.txt", latestCommitId);
+                    writeToFile(csvFilename, responseStr);
+                    writeToFile(txtFilename, latestCommitId);
                     loadDataFromCsvFile();
                     makeToast("Data updated!");
+                    setButtonsClickableProperty(true);
+                    if(!isFileEmpty(csvFilename) && intent != null) {
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -232,8 +302,9 @@ public class MainActivity extends AppCompatActivity {
     private void loadDataFromCsvFile() {
         InputStream inputStream = null;
         try {
-            inputStream = openFileInput("covid_data.csv");
+            inputStream = openFileInput(csvFilename);
         } catch (FileNotFoundException e) {
+            writeToFile(csvFilename, "");
             e.printStackTrace();
         }
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
