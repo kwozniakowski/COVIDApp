@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -110,9 +111,26 @@ public class MainActivity extends AppCompatActivity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                writeToFile(txtFilename, "");
-                writeToFile(csvFilename, "");
-                writeToFile("settings.txt", "");
+                //writeToFile(txtFilename, "");
+                //writeToFile(csvFilename, "");
+                //writeToFile("settings.txt", "");
+                if(deleteSomeFile(txtFilename)) {
+                    System.out.println("txt file deleted");
+                } else {
+                    System.out.println("Cannot delete txt file");
+                }
+
+                if(deleteSomeFile(csvFilename)) {
+                    System.out.println("csv file deleted");
+                } else {
+                    System.out.println("Cannot delete csv file");
+                }
+
+                if(deleteSomeFile("settings.txt")) {
+                    System.out.println("Settings deleted");
+                } else {
+                    System.out.println("Cannot delete settings file");
+                }
                 makeToast("Data cleared");
             }
         });
@@ -228,6 +246,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean deleteSomeFile(String fileName) {
+        File dir = getFilesDir();
+        File file = new File(dir, fileName);
+        boolean deleted = file.delete();
+        return deleted;
+    }
+
     private boolean isFileEmpty(String fileName) {
         FileInputStream fis = null;
         StringBuilder sb = new StringBuilder();
@@ -318,6 +343,11 @@ public class MainActivity extends AppCompatActivity {
             inputStream = openFileInput(csvFilename);
         } catch (FileNotFoundException e) {
             writeToFile(csvFilename, "");
+            try {
+                inputStream = openFileInput(csvFilename);
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
         }
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
@@ -328,7 +358,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadSettings() {
         String settings = readFromFile("settings.txt");
-        settings = settings.substring(0, settings.indexOf('\n'));
+        if(settings.indexOf('\n') >= 0) {
+            settings = settings.substring(0, settings.indexOf('\n'));
+        }
         if(settings.isEmpty()) {
             writeToFile("settings.txt", "Poland");
             DataHolder.updateDefaultCountryName("Poland");
