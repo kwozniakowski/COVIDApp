@@ -25,7 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         countrySettingSpinner = (Spinner)findViewById(R.id.countrySettingSpinner);
 
-        countryNameList = DataHolder.getCountryNameList();
+        countryNameList = (ArrayList<String>)DataHolder.getCountryNameList().clone();
         countryNameList.remove(0);
 
         // Spinner (dropdown-menu)

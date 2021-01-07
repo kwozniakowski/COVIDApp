@@ -31,8 +31,12 @@ public class VaccinationsActivity extends AppCompatActivity {
         chosenCountryList = DataHolder.getChosenCountryList();
         chosenCountryName = DataHolder.getChosenCountryName();
         countryNameList = DataHolder.getCountryNameList();
-        setUpChart1();
-        setUpChart2();
+
+        setUpCharts();
+        //setUpDate();
+
+        //setUpChart1();
+        //setUpChart2();
         spinner = findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -40,8 +44,9 @@ public class VaccinationsActivity extends AppCompatActivity {
                 DataHolder.updateChosenCountryName(spinner.getSelectedItem().toString());
                 chosenCountryName = DataHolder.getChosenCountryName();
                 updateChosenStuff();
-                setUpChart1();
-                setUpChart2();
+                setUpCharts();
+                //setUpChart1();
+                //setUpChart2();
             }
 
             @Override
@@ -55,8 +60,10 @@ public class VaccinationsActivity extends AppCompatActivity {
     public void setUpChart1()
     {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
-        float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
+        float population = Float.parseFloat(DataHolder.getChosenRecord()[39]);
+        float vaccined = Float.parseFloat(DataHolder.getChosenRecord()[34]);
+        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
+        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
         pieEntries.add(new PieEntry(population - vaccined,"infected"));
         pieEntries.add(new PieEntry(vaccined,"vaccined"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
@@ -69,9 +76,12 @@ public class VaccinationsActivity extends AppCompatActivity {
     public void setUpChart2()
     {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
-        float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
-        float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
+        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
+        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
+        //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
+        float population = Float.parseFloat(DataHolder.getChosenRecord()[39]);
+        float vaccined = Float.parseFloat(DataHolder.getChosenRecord()[34]);
+        float infected = Float.parseFloat(DataHolder.getChosenRecord()[4]);
         float possiblyInfected = infected * 9;
         pieEntries.add(new PieEntry(population - vaccined - infected - possiblyInfected,"never infected"));
         pieEntries.add(new PieEntry(vaccined,"vaccined"));
@@ -87,5 +97,31 @@ public class VaccinationsActivity extends AppCompatActivity {
     private void updateChosenStuff() {
         chosenCountryName = DataHolder.getChosenCountryName();
         chosenCountryList = DataHolder.getChosenCountryList();
+    }
+
+    private void setUpCharts() {
+        if(setUpDate()) {
+            setUpChart1();
+            setUpChart2();
+        }
+    }
+
+    private boolean setUpDate() {
+        String infectionDate = DataHolder.getLatestInfectionDate();
+        String vaccinationDate = DataHolder.getLatestVaccinationDate();
+        String populationDate = DataHolder.getLatestPopulationDate();
+        if(infectionDate.isEmpty() || vaccinationDate.isEmpty() || populationDate.isEmpty()) {
+            return false;
+        } else {
+            String minDate = infectionDate;
+            if(minDate.compareTo(vaccinationDate) > 0) {
+                minDate = vaccinationDate;
+            }
+            if(minDate.compareTo(populationDate) > 0) {
+                minDate = populationDate;
+            }
+            DataHolder.updateChosenDate(minDate);
+            return true;
+        }
     }
 }

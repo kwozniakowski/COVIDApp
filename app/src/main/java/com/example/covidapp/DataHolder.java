@@ -203,7 +203,7 @@ public class DataHolder {
 
             for(String[] record:scoreList) {
                 String recordCountry = record[2];
-                if(!(recordCountry.equals("International"))) {
+                if(!(recordCountry.equals("International") || recordCountry.equals("location"))) {
                     if (recordCountry.equals(dividedList.get(countryNr).get(0)[2])) {
                         dividedList.get(countryNr).add(record);
                     } else {
@@ -396,5 +396,51 @@ public class DataHolder {
 
     public static void updateDefaultCountryName(String countryName) {
         defaultCountryName = countryName;
+    }
+
+    // Sprawdza, czy dla danego kraju sa dostepne dane odnosnie szczepien
+    // i jesli tak, ustawia chosenDate na date z najnowszymi danymi
+    public static String getLatestDateForParameter(int index) {
+        getChosenCountryList();
+
+        int lastRecordIndexNr = chosenCountryList.size()-1;
+        // Szukam od konca
+        for(int recordNr = lastRecordIndexNr; recordNr >= 0; recordNr--) {
+            String[] record = chosenCountryList.get(recordNr);
+            String parameter = record[index];
+            String date = record[3];
+            if(!parameter.isEmpty()) {
+                // Jesli chcemy sprawdzic infekcje, to sprawa jest troche trudniejsza, bo
+                // wczesniej (reformatString()) wpisuje 0 tam gdzie nie ma danych
+                if(index == 4 && recordNr == lastRecordIndexNr) {
+                    String[] previousRecord = chosenCountryList.get(recordNr-1);
+                    String previousInfections = previousRecord[index];
+                    String previousDate = previousRecord[3];
+                    if(previousInfections.compareTo(parameter) > 0) {
+                        return previousDate;
+                    } else {
+                        return date;
+                    }
+                }
+                return date;
+            }
+        }
+        return "";
+    }
+
+    public static String getLatestVaccinationDate() {
+        return getLatestDateForParameter(34);
+    }
+
+    public static String getLatestInfectionDate() {
+        return getLatestDateForParameter(4);
+    }
+
+    public static String getLatestPopulationDate() {
+        return getLatestDateForParameter(39);
+    }
+
+    public static void setLatestInfectionDate() {
+        chosenDate = getLatestInfectionDate();
     }
 }

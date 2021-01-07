@@ -65,6 +65,8 @@ public class BriefActivity extends AppCompatActivity {
         listDividedByCountries = DataHolder.getListDividedByCountries();
         countryNameList = DataHolder.getCountryNameList();
 
+        //DataHolder.setLatestInfectionDate();
+
         // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
         updateChosenStuff();
 
@@ -161,6 +163,7 @@ public class BriefActivity extends AppCompatActivity {
     public long getChosenCountryMaxTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
+        //String dateStr = DataHolder.getLatestInfectionDate() + " 00:00:00";
         Date date = null;
         try {
             date = sdf.parse(dateStr);
