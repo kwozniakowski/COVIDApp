@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Button worldBriefButton;
     Button vaccinationsButton;
     Button settingsButton;
-    Button resetButton;
+    //Button resetButton;
 
     boolean isCsvFileEmpty;
     String latestCommitId;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         worldBriefButton = (Button) findViewById(R.id.worldBriefButton);
         vaccinationsButton = (Button) findViewById(R.id.vaccinationsButton);
         settingsButton = (Button) findViewById(R.id.settingsButton);
-        resetButton = (Button) findViewById(R.id.resetButton);
+        //resetButton = (Button) findViewById(R.id.resetButton);
 
         txtFilename = "covid_data_file_info.txt";
         csvFilename = "covid_data.csv";
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        resetButton.setOnClickListener(new View.OnClickListener() {
+        /*resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //writeToFile(txtFilename, "");
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 makeToast("Data cleared");
             }
-        });
+        });*/
     }
 
     private void checkForFileUpdates() {
@@ -176,7 +176,9 @@ public class MainActivity extends AppCompatActivity {
                         downloadCsvFile();
                     }
                     else {
-                        makeToast("Everything is up to date");
+                        if(intent == null) {
+                            makeToast("Everything is up to date");
+                        }
                         setButtonsClickableProperty(true);
                         if(!isFileEmpty(csvFilename) && intent != null) {
                             startActivity(intent);
