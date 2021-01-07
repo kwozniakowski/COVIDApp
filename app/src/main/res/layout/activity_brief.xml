@@ -25,12 +25,13 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="40dp"
         android:layout_marginRight="40dp"
-        android:background="@color/colorWhite"
+        android:background="@color/cardview_shadow_start_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:elevation="5dp"/>
+        android:elevation="5dp"
+        android:popupBackground="#E6609AAC"/>
 
     <Button
         android:id="@+id/dateButton"
@@ -40,7 +41,8 @@
         android:layout_marginTop="8dp"
         android:text="2020-01-01"
         android:textSize="24sp"
-        android:background="@color/colorWhite"
+        android:textColor="#B2000000"
+        android:background="@color/cardview_shadow_start_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/countrySpinner" />
@@ -74,23 +76,25 @@
                     android:layout_row="0"
                     android:layout_column="0"
                     android:layout_columnWeight="1"
-                    app:cardElevation="10dp"
-                    app:cardUseCompatPadding="true">
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardBackgroundColor="@color/cardview_shadow_start_color">
 
                     <TextView
                         android:id="@+id/textView2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="15dp"
                         android:text="Infections"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        android:textColor="#DCD100"/>
 
                     <TextView
                         android:id="@+id/totalInfectionsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="60dp"
                         android:layout_gravity="center_horizontal"
                         android:text="Total Infections"
                         android:textColor="#000000"
@@ -100,7 +104,7 @@
                         android:id="@+id/newInfectionsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="90dp"
+                        android:layout_marginTop="100dp"
                         android:layout_gravity="center_horizontal"
                         android:text="New Infections"
                         android:textColor="#000000"
@@ -117,23 +121,25 @@
                     android:layout_row="1"
                     android:layout_column="0"
                     android:layout_columnWeight="1"
-                    app:cardElevation="10dp"
-                    app:cardUseCompatPadding="true">
+                    app:cardElevation="0dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardBackgroundColor="@color/cardview_shadow_start_color">
 
                     <TextView
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="15dp"
                         android:layout_gravity="center_horizontal"
                         android:text="Deaths"
-                        android:textSize="24sp"/>
+                        android:textSize="24sp"
+                        android:textColor="#B80000"/>
 
                     <TextView
                         android:id="@+id/totalDeathsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="50dp"
+                        android:layout_marginTop="60dp"
                         android:layout_gravity="center_horizontal"
                         android:text="Total deaths"
                         android:textColor="#000000"
@@ -143,7 +149,7 @@
                         android:id="@+id/newDeathsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="90dp"
+                        android:layout_marginTop="100dp"
                         android:layout_gravity="center_horizontal"
                         android:text="New deaths"
                         android:textColor="#000000"
