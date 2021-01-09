@@ -62,8 +62,10 @@ public class MainActivity extends AppCompatActivity {
         isCountryChangeRequired = true;
         selectedFragment = null;
 
+        /*deleteSomeFile(csvFilename);
+        deleteSomeFile(txtFilename);*/
+
         loadSettings();
-        checkForFileUpdates();
 
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
         //loadDataFromCsvFile();
@@ -143,8 +145,10 @@ public class MainActivity extends AppCompatActivity {
                         downloadCsvFile();
                     }
                     else {
-                        if(selectedFragment == null) {
-                            makeToast("Everything is up to date");
+                        makeToast("Everything is up to date");
+                        if(!isFileEmpty(csvFilename) && !DataHolder.isScoreListReady) {
+                            makeToast("Loading data");
+                            loadDataFromCsvFile();
                         }
                         if(!isFileEmpty(csvFilename) && selectedFragment != null) {
                             changeFragment(selectedFragment);
@@ -156,11 +160,31 @@ public class MainActivity extends AppCompatActivity {
                     if(!isFileEmpty(csvFilename) && selectedFragment != null) {
                         changeFragment(selectedFragment);
                     }
+                    if(isFileEmpty(csvFilename)) {
+                        waitForConnection();
+                    }
                 }
             }
         };
         Thread thread = new Thread(runnable);
         thread.start();
+    }
+
+    private void waitForConnection() {
+        try {
+            Document doc = Jsoup.connect("https://github.com/owid/covid-19-data/commits/master/public/data/owid-covid-data.csv")
+                    .get();
+            System.out.println("Checking for file updates");
+            checkForFileUpdates();
+        } catch (IOException e) {
+            try {
+                System.out.println("No internet connection, waiting...");
+                Thread.sleep(2000);
+                waitForConnection();
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 
     private String readFromFile(String fileName) {
@@ -230,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
             String text = "";
 
             if ((text = br.readLine()) != null) {
-                sb.append(text).append("\n");
+                sb.append(text);
             }
             if (sb.toString().isEmpty()) {
                 return true;

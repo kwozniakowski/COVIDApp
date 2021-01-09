@@ -452,8 +452,8 @@ public class StatisticsFragment extends Fragment {
     // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMaxTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
-        String dateStr = DataHolder.getLatestInfectionDate() + " 00:00:00";
+        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
+        //String dateStr = DataHolder.getLatestInfectionDate() + " 00:00:00";
         Date date = null;
         try {
             date = sdf.parse(dateStr);

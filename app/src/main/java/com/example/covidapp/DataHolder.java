@@ -7,6 +7,7 @@ import java.util.ArrayList;
 // podzial danych w tym pliku na rozne listy, np nazwy krajow, daty dostepne w liscie
 // danego kraju itp. Nazwy list, mam nadzieje, dosc dobrze tlumacza, co przechowuje kazda z nich
 public class DataHolder {
+    public static boolean isScoreListReady = false;
     private static ArrayList<String[]> scoreList;
 
     private static boolean isDividedListReady = false;
@@ -47,6 +48,7 @@ public class DataHolder {
     // z pliku csv. Generalnie w zadnym innym miejscu nie ma potrzeby korzystania z niej
     public static void setScoreList(ArrayList<String[]> data) {
         scoreList = data;
+        isScoreListReady = true;
         if(isChosenCountryNameReady) {
             updateChosenCountryName(chosenCountryName);
         }
@@ -395,7 +397,7 @@ public class DataHolder {
     }
 
     private static void checkScoreList() throws Exception {
-        if(scoreList.isEmpty()) {
+        if(scoreList == null || scoreList.isEmpty()) {
             throw new Exception("scoreList is empty!");
         }
     }
