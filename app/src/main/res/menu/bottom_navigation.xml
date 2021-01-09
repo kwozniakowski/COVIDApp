@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_country_brief"
+        android:icon="@drawable/ic_baseline_today_24"
+        android:title="Your country" />
+
+    <item
+        android:id="@+id/nav_world_brief"
+        android:icon="@drawable/ic_baseline_public_24"
+        android:title="World" />
+
+    <item
+        android:id="@+id/nav_vaccinations"
+        android:icon="@drawable/ic_baseline_pie_chart_24"
+        android:title="Vaccinations" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="Settings" />
+
+
+</menu>

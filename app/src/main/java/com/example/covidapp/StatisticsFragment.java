@@ -3,14 +3,17 @@ package com.example.covidapp;
 import android.app.DatePickerDialog;
 import android.graphics.RectF;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.YAxis;
@@ -28,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class StatisticsActivity extends AppCompatActivity {
+
+public class StatisticsFragment extends Fragment {
+
     Spinner countrySpinner;
     Spinner chartSpinner1, chartSpinner2,chartSpinner3;
     ArrayList<ArrayList<String[]>> listDividedByCountries;
@@ -43,9 +48,10 @@ public class StatisticsActivity extends AppCompatActivity {
     String[] chosenRecord;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_statistics);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_statistics, container, false);
 
         listDividedByCountries = DataHolder.getListDividedByCountries();
         countryNameList = DataHolder.getCountryNameList();
@@ -53,19 +59,19 @@ public class StatisticsActivity extends AppCompatActivity {
         chosenCountryName = DataHolder.getChosenCountryName();
 
         //spinnery
-        countrySpinner = findViewById(R.id.header);
-        chartSpinner1 = findViewById(R.id.chartSpinner1);
-        chartSpinner2 = findViewById(R.id.chartSpinner2);
-        chartSpinner3 = findViewById(R.id.chartSpinner3);
+        countrySpinner = view.findViewById(R.id.header);
+        chartSpinner1 = view.findViewById(R.id.chartSpinner1);
+        chartSpinner2 = view.findViewById(R.id.chartSpinner2);
+        chartSpinner3 = view.findViewById(R.id.chartSpinner3);
 
         //wykresy
-        barChart1 = findViewById(R.id.barChart1);
-        barChart2 = findViewById(R.id.barChart2);
-        barChart3 = findViewById(R.id.barChart3);
+        barChart1 = view.findViewById(R.id.barChart1);
+        barChart2 = view.findViewById(R.id.barChart2);
+        barChart3 = view.findViewById(R.id.barChart3);
 
         //text kalendarza
-        dateText1 = findViewById(R.id.dateText1);
-        dateText2 = findViewById(R.id.dateText2);
+        dateText1 = view.findViewById(R.id.dateText1);
+        dateText2 = view.findViewById(R.id.dateText2);
         //Funkcja odpowiedzialna za rysowanie wykresu
         drawChart(barChart1, "new infections");
         drawChart(barChart2, "new deaths");
@@ -80,7 +86,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         setUpCalendar();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countryNameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countryNameList);
         countrySpinner.setAdapter(adapter);
         countrySpinner.setSelection(countryNameList.indexOf(chosenCountryName));
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -103,7 +109,7 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item, statisticalData);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, statisticalData);
         chartSpinner1.setAdapter(adapter1);
         chartSpinner1.setSelection(0);
         chartSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -120,7 +126,7 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item, statisticalData);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, statisticalData);
         chartSpinner2.setAdapter(adapter2);
         chartSpinner2.setSelection(0);
         chartSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -137,7 +143,7 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item, statisticalData);
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, statisticalData);
         chartSpinner3.setAdapter(adapter3);
         chartSpinner3.setSelection(0);
         chartSpinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -171,7 +177,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
                 System.out.println("x-index" +
                         "low: " + barChart1.getLowestVisibleX() + ", high: "
-                                + barChart1.getHighestVisibleX());
+                        + barChart1.getHighestVisibleX());
 
                 MPPointF.recycleInstance(position);
             }
@@ -181,7 +187,15 @@ public class StatisticsActivity extends AppCompatActivity {
 
             }
         });
+
+        return view;
     }
+
+
+
+
+
+
 
     private ArrayList<BarEntry> dataValues1()
     {
@@ -331,7 +345,7 @@ public class StatisticsActivity extends AppCompatActivity {
                 long minDate = getChosenCountryMinTime();
                 long maxDate = getChosenCountryMaxTime();
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(StatisticsActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
                         // Ta czesc wykona sie po wybraniu daty
@@ -375,7 +389,7 @@ public class StatisticsActivity extends AppCompatActivity {
                 long minDate = getChosenCountryMinTime();
                 long maxDate = getChosenCountryMaxTime();
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(StatisticsActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
                         // Ta czesc wykona sie po wybraniu daty
@@ -494,5 +508,4 @@ public class StatisticsActivity extends AppCompatActivity {
         String result = new SimpleDateFormat("yyyy-MM-dd").format(new Date(difference));
         return result;
     }
-
 }

@@ -1,13 +1,19 @@
 package com.example.covidapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
@@ -33,32 +39,26 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button countryBriefButton;
-    Button worldBriefButton;
-    Button vaccinationsButton;
-    Button settingsButton;
-    //Button resetButton;
+    BottomNavigationView bottomNavigationView;
 
-    boolean isCsvFileEmpty;
+    boolean isCsvFileEmpty, isCountryChangeRequired;
     String latestCommitId;
     String txtFilename, csvFilename;
-    Intent intent;
+    Fragment selectedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        countryBriefButton = (Button) findViewById(R.id.countryBriefButton);
-        worldBriefButton = (Button) findViewById(R.id.worldBriefButton);
-        vaccinationsButton = (Button) findViewById(R.id.vaccinationsButton);
-        settingsButton = (Button) findViewById(R.id.settingsButton);
-        //resetButton = (Button) findViewById(R.id.resetButton);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         txtFilename = "covid_data_file_info.txt";
         csvFilename = "covid_data.csv";
 
-        intent = null;
+        selectedFragment = null;
+        isCountryChangeRequired = true;
+        selectedFragment = null;
 
         loadSettings();
         checkForFileUpdates();
@@ -66,81 +66,46 @@ public class MainActivity extends AppCompatActivity {
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
         loadDataFromCsvFile();
 
-        countryBriefButton.setOnClickListener(new View.OnClickListener() {
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                intent = new Intent(getApplicationContext(), BriefActivity.class);
-                // intent.putExtra("Region", "Poland");
-                DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
-                //startActivity(intent);
-                checkForFileUpdates();
-            }
-        });
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                selectedFragment = null;
 
-        worldBriefButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                intent = new Intent(getApplicationContext(), BriefActivity.class);
-                // intent.putExtra("Region", "World");
-                DataHolder.updateChosenCountryName("World");
-                //startActivity(intent);
-                checkForFileUpdates();
-            }
-        });
-
-        vaccinationsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                intent = new Intent(getApplicationContext(), VaccinationsActivity.class);
-                DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
-                //startActivity(intent);
-                checkForFileUpdates();
-            }
-        });
-
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                intent = new Intent(getApplicationContext(), SettingsActivity.class);
-                //DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
-                //startActivity(intent);
-                checkForFileUpdates();
-            }
-        });
-
-        /*resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //writeToFile(txtFilename, "");
-                //writeToFile(csvFilename, "");
-                //writeToFile("settings.txt", "");
-                if(deleteSomeFile(txtFilename)) {
-                    System.out.println("txt file deleted");
-                } else {
-                    System.out.println("Cannot delete txt file");
+                switch (item.getItemId()) {
+                    case R.id.nav_country_brief:
+                        if(isCountryChangeRequired) {
+                            DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
+                        }
+                        isCountryChangeRequired = true;
+                        selectedFragment = new CountryBriefFragment();
+                        break;
+                    case R.id.nav_world_brief:
+                        DataHolder.updateChosenCountryName("World");
+                        selectedFragment = new WorldBriefFragment();
+                        break;
+                    case R.id.nav_vaccinations:
+                        DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
+                        selectedFragment = new VaccinationsFragment();
+                        break;
+                    case R.id.nav_settings:
+                        selectedFragment = new SettingsFragment();
+                        break;
                 }
-
-                if(deleteSomeFile(csvFilename)) {
-                    System.out.println("csv file deleted");
-                } else {
-                    System.out.println("Cannot delete csv file");
-                }
-
-                if(deleteSomeFile("settings.txt")) {
-                    System.out.println("Settings deleted");
-                } else {
-                    System.out.println("Cannot delete settings file");
-                }
-                makeToast("Data cleared");
+                checkForFileUpdates();
+                return true;
             }
-        });*/
+        });
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_country_brief);
     }
 
     private void checkForFileUpdates() {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                setButtonsClickableProperty(false);
+                Fragment loadingFragment = new LoadingFragment();
+                changeFragment(loadingFragment);
+
                 // Sprawdzam jaka wersja pliku csv jest obecnie pobrana, zeby porownac ja z dostepna
                 // w internecie
                 String dataFromFile = readFromFile(txtFilename);
@@ -176,20 +141,18 @@ public class MainActivity extends AppCompatActivity {
                         downloadCsvFile();
                     }
                     else {
-                        if(intent == null) {
+                        if(selectedFragment == null) {
                             makeToast("Everything is up to date");
                         }
-                        setButtonsClickableProperty(true);
-                        if(!isFileEmpty(csvFilename) && intent != null) {
-                            startActivity(intent);
+                        if(!isFileEmpty(csvFilename) && selectedFragment != null) {
+                            changeFragment(selectedFragment);
                         }
                     }
 
                 } catch (IOException e) {
                     makeToast("Cannot check for updates. Please, check your internet connection");
-                    setButtonsClickableProperty(true);
-                    if(!isFileEmpty(csvFilename) && intent != null) {
-                        startActivity(intent);
+                    if(!isFileEmpty(csvFilename) && selectedFragment != null) {
+                        changeFragment(selectedFragment);
                     }
                 }
             }
@@ -286,21 +249,13 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-        private void makeToast(final String text) {
+        public void makeToast(final String text) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void setButtonsClickableProperty(final boolean value) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                countryBriefButton.setClickable(value);
-                worldBriefButton.setClickable(value);
+                Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 600);
+                toast.show();
             }
         });
     }
@@ -316,9 +271,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 makeToast("Cannot update data");
-                setButtonsClickableProperty(true);
-                if(!isFileEmpty(csvFilename) && intent != null) {
-                    startActivity(intent);
+                if(!isFileEmpty(csvFilename) && selectedFragment != null) {
+                    changeFragment(selectedFragment);
                 }
             }
 
@@ -330,9 +284,8 @@ public class MainActivity extends AppCompatActivity {
                     writeToFile(txtFilename, latestCommitId);
                     loadDataFromCsvFile();
                     makeToast("Data updated!");
-                    setButtonsClickableProperty(true);
-                    if(!isFileEmpty(csvFilename) && intent != null) {
-                        startActivity(intent);
+                    if(!isFileEmpty(csvFilename) && selectedFragment != null) {
+                        changeFragment(selectedFragment);
                     }
                 }
             }
@@ -369,6 +322,39 @@ public class MainActivity extends AppCompatActivity {
         } else {
             DataHolder.updateDefaultCountryName(settings);
             System.out.println("Odczytane dane z pliku settings.txt: " + settings);
+        }
+    }
+
+    public void changeFragment(Fragment fragment) {
+        System.out.println("Wywolano funkcje changeFragment!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        if(fragment instanceof CountryBriefFragment) selectedFragment = new CountryBriefFragment();
+        else if(fragment instanceof WorldBriefFragment) selectedFragment = new WorldBriefFragment();
+        else if(fragment instanceof StatisticsFragment) selectedFragment = new StatisticsFragment();
+        else if(fragment instanceof SettingsFragment) selectedFragment = new SettingsFragment();
+        else if(fragment instanceof VaccinationsFragment) selectedFragment = new VaccinationsFragment();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                fragment).commit();
+    }
+
+    public void changeFragmentBackStack(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                fragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        int selectedItem = bottomNavigationView.getSelectedItemId();
+        if(selectedItem != R.id.nav_country_brief) {
+            bottomNavigationView.setSelectedItemId(R.id.nav_country_brief);
+        }
+        else {
+            if(selectedFragment instanceof StatisticsFragment) {
+                isCountryChangeRequired = false;
+                bottomNavigationView.setSelectedItemId(R.id.nav_country_brief);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 }

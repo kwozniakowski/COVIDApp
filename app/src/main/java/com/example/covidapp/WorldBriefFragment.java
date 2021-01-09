@@ -2,17 +2,19 @@ package com.example.covidapp;
 
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -22,10 +24,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class BriefActivity extends AppCompatActivity {
 
-    Spinner spinner;
-    Button statisticsActivityButton;
+public class WorldBriefFragment extends Fragment {
+
+    //Button statisticsActivityButton;
     TextView totalInfectionsText;
     TextView newInfectionsText;
     TextView totalDeathsText;
@@ -45,19 +47,20 @@ public class BriefActivity extends AppCompatActivity {
     ArrayList<String> countryNameList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_brief);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_world_brief, container, false);
 
-        totalInfectionsText = findViewById(R.id.totalInfectionsText);
-        newInfectionsText = findViewById(R.id.newInfectionsText);
-        totalDeathsText = findViewById(R.id.totalDeathsText);
-        newDeathsText = findViewById(R.id.newDeathsText);
+        totalInfectionsText = view.findViewById(R.id.totalInfectionsText);
+        newInfectionsText = view.findViewById(R.id.newInfectionsText);
+        totalDeathsText = view.findViewById(R.id.totalDeathsText);
+        newDeathsText = view.findViewById(R.id.newDeathsText);
         //totalTestsText = findViewById(R.id.totalTestsText);
         //newTestsText = findViewById(R.id.newTestsText);
-        dateText = findViewById(R.id.dateButton);
-        spinner = (Spinner)findViewById(R.id.header);
-        statisticsActivityButton = findViewById(R.id.statisticsActivityButton);
+        dateText = view.findViewById(R.id.dateButton);
+        //spinner = (Spinner)view.findViewById(R.id.header);
+        //statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
 
 
 
@@ -72,16 +75,16 @@ public class BriefActivity extends AppCompatActivity {
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, countryNameList);
-        spinner.setAdapter(adapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countryNameList);
+        //spinner.setAdapter(adapter);
 
         // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci
         // Jest to zwiazane z tym, ze MainActivity przekazuje tutaj nazwe regionu, ktory ma byc wybrany
         // (np. world lub kraj w ktorym znajduje sie uzytkownik).
-        spinner.setSelection(countryNameList.indexOf(chosenCountryName));
+        //spinner.setSelection(countryNameList.indexOf(chosenCountryName));
 
         // Update danych jesli zostal zmieniony kraj
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 DataHolder.updateChosenCountryName(spinner.getSelectedItem().toString());
@@ -92,32 +95,22 @@ public class BriefActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
 
         // Ustawiam wszystko co potrzebne, zeby dzialal kalendarz
         // kodu jest sporo, wiec wrzucilem to wszystko do funkcji
         setUpCalendar();
 
-        statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
+        /*statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), StatisticsActivity.class);
-                startActivity(intent);
+                Fragment fragment = new StatisticsFragment();
+                ((MainActivity)getActivity()).changeFragmentBackStack(fragment);
             }
-        });
+        });*/
+
+        return view;
     }
-
-    // To sie wykona jestli np uzytkownik wejdzie w statystyki, a potem sie cofnie
-    // Odswiezam po prostu dane na wypadek, gdyby uzytkownik np zmienil kraj w aktywnosci
-    // ze statystykami
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        updateChosenStuff();
-        spinner.setSelection(countryNameList.indexOf(chosenCountryName));
-    }
-
-
 
     // Funkcje
 
@@ -251,7 +244,7 @@ public class BriefActivity extends AppCompatActivity {
                 long minDate = getChosenCountryMinTime();
                 long maxDate = getChosenCountryMaxTime();
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(BriefActivity.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
                         // Ta czesc wykona sie po wybraniu daty

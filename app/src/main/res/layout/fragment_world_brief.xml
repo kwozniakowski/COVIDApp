@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#E8E8E8"
-    tools:context=".BriefActivity">
+    tools:context=".WorldBriefFragment">
 
     <ImageView
         android:id="@+id/imageView2"
@@ -16,22 +16,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/mobi_tlo_1" />
 
-    <Spinner
+    <TextView
         android:id="@+id/header"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="40dp"
-        android:layout_marginRight="40dp"
-        android:background="@color/cardview_shadow_start_color"
+        android:gravity="center_horizontal"
+        android:text="World"
+        android:textSize="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:elevation="5dp"
-        android:popupBackground="#E6609AAC"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/dateButton"
@@ -189,16 +183,5 @@
                 app:layout_constraintTop_toBottomOf="@+id/totalTestsText" /> -->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-
-    <Button
-        android:id="@+id/statisticsActivityButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:text="More..."
-        android:theme="@style/AppTheme.defaultButton.smallVersion"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
