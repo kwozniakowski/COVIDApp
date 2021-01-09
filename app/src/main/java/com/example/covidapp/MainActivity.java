@@ -3,6 +3,7 @@ package com.example.covidapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         checkForFileUpdates();
 
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
-        loadDataFromCsvFile();
+        //loadDataFromCsvFile();
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -211,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private boolean deleteSomeFile(String fileName) {
+    public boolean deleteSomeFile(String fileName) {
         File dir = getFilesDir();
         File file = new File(dir, fileName);
         boolean deleted = file.delete();
@@ -309,6 +311,7 @@ public class MainActivity extends AppCompatActivity {
         CSVFile csvFile = new CSVFile(inputStream);
         final ArrayList<String[]> scoreList = csvFile.read();
         DataHolder.setScoreList(scoreList);
+        DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
     }
 
     private void loadSettings() {
@@ -326,20 +329,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void changeFragment(Fragment fragment) {
-        System.out.println("Wywolano funkcje changeFragment!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        if(fragment instanceof CountryBriefFragment) selectedFragment = new CountryBriefFragment();
-        else if(fragment instanceof WorldBriefFragment) selectedFragment = new WorldBriefFragment();
-        else if(fragment instanceof StatisticsFragment) selectedFragment = new StatisticsFragment();
-        else if(fragment instanceof SettingsFragment) selectedFragment = new SettingsFragment();
-        else if(fragment instanceof VaccinationsFragment) selectedFragment = new VaccinationsFragment();
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                fragment).commit();
-    }
-
-    public void changeFragmentBackStack(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                fragment).addToBackStack(null).commit();
+        if(fragment instanceof LoadingFragment) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    fragment).commit();
+        } else {
+            selectedFragment = fragment;
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    selectedFragment).commit();
+        }
     }
 
     @Override

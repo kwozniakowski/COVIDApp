@@ -45,7 +45,12 @@ public class DataHolder {
 
     // Jedyny setter tutaj, korzysta sie z niego tylko raz MainActivity, po pobraniu danych
     // z pliku csv. Generalnie w zadnym innym miejscu nie ma potrzeby korzystania z niej
-    public static void setScoreList(ArrayList<String[]> data) { scoreList = data; }
+    public static void setScoreList(ArrayList<String[]> data) {
+        scoreList = data;
+        if(isChosenCountryNameReady) {
+            updateChosenCountryName(chosenCountryName);
+        }
+    }
 
     public static ArrayList<String[]> getScoreList() { return scoreList; }
 
@@ -133,25 +138,34 @@ public class DataHolder {
 
     public static void updateChosenCountryName(String newChosenCountryName) {
         System.out.println("Wywolano metode updateChosenCountryName1");
-        getCountryNameList();
 
-        isChosenCountryNameReady = false;
-        //if(isCountryNameListReady) {
-        for(String countryName:countryNameList) {
-            if(countryName.equals(newChosenCountryName)) {
-                // Sprawdzam, czy potrzebne bedzie wywolanie funkcji updateChosenRecord()
-                boolean isRecordUpdateRequired = (chosenCountryName != newChosenCountryName);
-                chosenCountryName = newChosenCountryName;
-                isChosenCountryNameReady = true;
-                updateChosenCountryList();
-                if(isRecordUpdateRequired) {
-                    updateChosenRecord();
+        if(scoreList != null) {
+            getCountryNameList();
+
+            isChosenCountryNameReady = false;
+            //if(isCountryNameListReady) {
+            for (String countryName : countryNameList) {
+                if (countryName.equals(newChosenCountryName)) {
+                    // Sprawdzam, czy potrzebne bedzie wywolanie funkcji updateChosenRecord()
+                    boolean isRecordUpdateRequired = (chosenCountryName != newChosenCountryName);
+                    chosenCountryName = newChosenCountryName;
+                    isChosenCountryNameReady = true;
+                    updateChosenCountryList();
+                    if (isRecordUpdateRequired) {
+                        updateChosenRecord();
+                    }
+                    break;
                 }
-                break;
+            }
+            if (!isChosenCountryNameReady) {
+                updateChosenCountryName();
             }
         }
-        if(!isChosenCountryNameReady) {
-            updateChosenCountryName();
+        // Jesli plik csv nie jest dostepny (pobrany), to i tak ustawie wybrana nazwe, a potem
+        // metoda setScoreList wywola te metode jeszcze raz, zeby sprawdzic czy nazwa jest poprawna
+        else {
+            chosenCountryName = newChosenCountryName;
+            isChosenCountryNameReady = true;
         }
         /*}
         else {
@@ -261,6 +275,7 @@ public class DataHolder {
                 chosenCountryList = (ArrayList<String[]>) countryList.clone();
                 isChosenCountryListReady = true;
                 removeFloatingPointsFromList();
+                fixInfectionAndDeathZeros();
                 updateChosenDate(chosenDate);
                 break;
             }
@@ -300,6 +315,29 @@ public class DataHolder {
             text = String.format("%,d", number);
         }*/
         return text;
+    }
+
+    // Jesli np w najnowszym rekordzie jest 0, zamienie to na najwieksza ostatnia liczbe
+    private static void fixInfectionAndDeathZeros() {
+        fixZeros(4);
+        fixZeros(7);
+    }
+
+    private static void fixZeros(int index) {
+        for(int recordNr = 1; recordNr < chosenCountryList.size(); recordNr++) {
+            String[] record = chosenCountryList.get(recordNr);
+            if(record[index].equals("0")) {
+                for(int previousNr = recordNr-1; previousNr >=0; previousNr--) {
+                    String[] previousRecord = chosenCountryList.get(previousNr);
+                    int current = Integer.parseInt(record[index]);
+                    int previous = Integer.parseInt(previousRecord[index]);
+                    if(previous > current) {
+                        chosenCountryList.get(recordNr)[index] = previousRecord[index];
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     // W tym przypadku zostanie przypisana najnowsza data z wybranego kraju,
@@ -412,7 +450,7 @@ public class DataHolder {
             if(!parameter.isEmpty()) {
                 // Jesli chcemy sprawdzic infekcje, to sprawa jest troche trudniejsza, bo
                 // wczesniej (reformatString()) wpisuje 0 tam gdzie nie ma danych
-                if(index == 4 && recordNr == lastRecordIndexNr) {
+                /*if(index == 4 && recordNr == lastRecordIndexNr) {
                     String[] previousRecord = chosenCountryList.get(recordNr-1);
                     String previousInfections = previousRecord[index];
                     String previousDate = previousRecord[3];
@@ -421,7 +459,7 @@ public class DataHolder {
                     } else {
                         return date;
                     }
-                }
+                }*/
                 return date;
             }
         }

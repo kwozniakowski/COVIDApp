@@ -104,8 +104,9 @@ public class CountryBriefFragment extends Fragment {
         statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new StatisticsFragment();
-                ((MainActivity)getActivity()).changeFragment(fragment);
+                //Fragment fragment = new StatisticsFragment();
+                //((MainActivity)getActivity()).changeFragment(fragment);
+                ((MainActivity)getActivity()).deleteSomeFile("covid_data.csv");
             }
         });
 
