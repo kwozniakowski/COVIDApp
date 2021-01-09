@@ -29,7 +29,7 @@ public class DataHolder {
     private static boolean isChosenRecordReady = false;
     private static String[] chosenRecord;
 
-    private static String defaultCountryName;
+    private static String defaultCountryName = "";
 
 
 
@@ -359,7 +359,7 @@ public class DataHolder {
 
         // Na wypadek gdyby podano bledna nazwe kraju (nie ma jej w liscie)
         //if(isCountryNameListReady) {
-            chosenCountryName = countryNameList.get(0);
+            chosenCountryName = defaultCountryName;//countryNameList.get(0);
             isChosenCountryNameReady = true;
             updateChosenCountryList();
         /*}
@@ -431,6 +431,7 @@ public class DataHolder {
     public static void updateData() {
         isDividedListReady = false;
         isCountryNameListReady = false;
+        isChosenCountryListReady = false;
         updateChosenRecord();
     }
 

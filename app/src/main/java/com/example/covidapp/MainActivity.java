@@ -68,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
         loadSettings();
 
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
-        //loadDataFromCsvFile();
+        if(isFileEmpty(csvFilename)) {
+            loadDataFromCsvFile();
+        }
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -147,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
                     else {
                         makeToast("Everything is up to date");
                         if(!isFileEmpty(csvFilename) && !DataHolder.isScoreListReady) {
-                            makeToast("Loading data");
                             loadDataFromCsvFile();
                         }
                         if(!isFileEmpty(csvFilename) && selectedFragment != null) {
@@ -335,7 +336,8 @@ public class MainActivity extends AppCompatActivity {
         CSVFile csvFile = new CSVFile(inputStream);
         final ArrayList<String[]> scoreList = csvFile.read();
         DataHolder.setScoreList(scoreList);
-        DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
+        //DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
+        DataHolder.updateData();
     }
 
     private void loadSettings() {
