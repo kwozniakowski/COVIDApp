@@ -59,7 +59,7 @@ public class WorldBriefFragment extends Fragment {
         //totalTestsText = findViewById(R.id.totalTestsText);
         //newTestsText = findViewById(R.id.newTestsText);
         dateText = view.findViewById(R.id.dateButton);
-        //spinner = (Spinner)view.findViewById(R.id.header);
+        //main_spinner = (Spinner)view.findViewById(R.id.header);
         //statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
 
 
@@ -76,18 +76,18 @@ public class WorldBriefFragment extends Fragment {
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countryNameList);
-        //spinner.setAdapter(adapter);
+        //main_spinner.setAdapter(adapter);
 
         // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci
         // Jest to zwiazane z tym, ze MainActivity przekazuje tutaj nazwe regionu, ktory ma byc wybrany
         // (np. world lub kraj w ktorym znajduje sie uzytkownik).
-        //spinner.setSelection(countryNameList.indexOf(chosenCountryName));
+        //main_spinner.setSelection(countryNameList.indexOf(chosenCountryName));
 
         // Update danych jesli zostal zmieniony kraj
-        /*spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*main_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                DataHolder.updateChosenCountryName(spinner.getSelectedItem().toString());
+                DataHolder.updateChosenCountryName(main_spinner.getSelectedItem().toString());
                 updateChosenStuff();
             }
 

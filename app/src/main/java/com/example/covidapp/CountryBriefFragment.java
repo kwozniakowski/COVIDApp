@@ -2,6 +2,7 @@ package com.example.covidapp;
 
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -35,6 +42,7 @@ public class CountryBriefFragment extends Fragment {
     TextView totalTestsText;
     TextView newTestsText;
     TextView dateText;
+    PieChart infectionsChart, deathsChart;
 
     private int mDate, mMonth, mYear;
 
@@ -63,10 +71,13 @@ public class CountryBriefFragment extends Fragment {
         statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
 
 
-
         // Pobieram dane wygenerowane przez DataHoldera
         listDividedByCountries = DataHolder.getListDividedByCountries();
         countryNameList = DataHolder.getCountryNameList();
+
+        infectionsChart = view.findViewById(R.id.infectionsChart);
+        deathsChart = view.findViewById(R.id.deathsChart);
+        setUpCharts();
 
         //DataHolder.setLatestInfectionDate();
 
@@ -229,6 +240,7 @@ public class CountryBriefFragment extends Fragment {
         chosenRecord = DataHolder.getChosenRecord();
         setTextsForCountry(totalInfectionsText,newInfectionsText,
                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
+        setUpCharts();
     }
 
     private void setUpCalendar() {
@@ -275,4 +287,52 @@ public class CountryBriefFragment extends Fragment {
             }
         });
     }
+    private void setUpCharts() {
+            setUpChart1();
+            setUpChart2();
+    }
+    public void setUpChart1()
+    {
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        float infected = Float.parseFloat(DataHolder.getChosenRecord()[4]);
+        float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[5]);
+        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
+        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
+        pieEntries.add(new PieEntry(infected - newInfected,"total"));
+        pieEntries.add(new PieEntry(newInfected,"new"));
+        PieDataSet dataSet = new PieDataSet(pieEntries,"");
+        dataSet.setColors( Color.rgb(10,10,10),Color.rgb(255,0,0));
+        PieData data = new PieData(dataSet);
+        infectionsChart.setData(data);
+        infectionsChart.setDrawSliceText(false);
+        infectionsChart.getData().setDrawValues(false);
+        infectionsChart.setDrawEntryLabels(false);
+        infectionsChart.getDescription().setEnabled(false);
+        infectionsChart.getLegend().setEnabled(false);
+        infectionsChart.animateY(1000);
+    }
+
+    public void setUpChart2()
+    {
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
+        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
+        //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
+        float deaths = Float.parseFloat(DataHolder.getChosenRecord()[7]);
+        float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[8]);
+        pieEntries.add(new PieEntry(deaths - newDeaths,"total"));
+        pieEntries.add(new PieEntry(newDeaths,"new"));
+        PieDataSet dataSet = new PieDataSet(pieEntries,"");
+        dataSet.setColors( Color.rgb(10,10,10),Color.rgb(255,0,0));
+        PieData data = new PieData(dataSet);
+        deathsChart.setData(data);
+        deathsChart.setDrawSliceText(false);
+        deathsChart.getData().setDrawValues(false);
+        deathsChart.setDrawEntryLabels(false);
+        deathsChart.getDescription().setEnabled(false);
+
+        deathsChart.getLegend().setEnabled(false);
+        deathsChart.animateY(1000);
+    }
+
 }
