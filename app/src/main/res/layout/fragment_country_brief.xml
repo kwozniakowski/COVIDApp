@@ -161,7 +161,6 @@
         android:layout_marginEnd="10dp"
         android:background="@drawable/main_spinner"
         android:elevation="2dp"
-        android:popupBackground="#E6609AAC"
         app:layout_constraintEnd_toStartOf="@+id/dateButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

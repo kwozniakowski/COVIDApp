@@ -1,6 +1,7 @@
 package com.example.covidapp;
 
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Bundle;
 
@@ -223,6 +224,7 @@ public class StatisticsFragment extends Fragment {
     private void drawChart(BarChart chart, String label)
     {
         BarDataSet barDataSet = new BarDataSet(dataValues(label),label);
+        barDataSet.setColor(Color.rgb(0,0,170));
         BarData barData = new BarData(barDataSet);
         barData.setDrawValues(false);
         chart.setData(barData);
@@ -231,6 +233,9 @@ public class StatisticsFragment extends Fragment {
         chart.getXAxis().setDrawGridLines(false);
         chart.setAutoScaleMinMaxEnabled(false);
         chart.getAxisRight().setEnabled(false);
+        chart.getLegend().setEnabled(false);
+        chart.getDescription().setEnabled(false);
+        chart.getXAxis().setEnabled(false);
         chart.getAxisLeft().setEnabled(true);
         chart.setTouchEnabled(true);
         chart.getAxisLeft().setAxisMinimum(0);

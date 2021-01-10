@@ -330,7 +330,6 @@ public class CountryBriefFragment extends Fragment {
         deathsChart.getData().setDrawValues(false);
         deathsChart.setDrawEntryLabels(false);
         deathsChart.getDescription().setEnabled(false);
-
         deathsChart.getLegend().setEnabled(false);
         deathsChart.animateY(1000);
     }

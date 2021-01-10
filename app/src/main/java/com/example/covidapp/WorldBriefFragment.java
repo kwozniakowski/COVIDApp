@@ -2,6 +2,7 @@ package com.example.covidapp;
 
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,12 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,10 +31,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-
 public class WorldBriefFragment extends Fragment {
 
-    //Button statisticsActivityButton;
+    Spinner spinner;
+    Button statisticsActivityButton;
     TextView totalInfectionsText;
     TextView newInfectionsText;
     TextView totalDeathsText;
@@ -35,6 +42,7 @@ public class WorldBriefFragment extends Fragment {
     TextView totalTestsText;
     TextView newTestsText;
     TextView dateText;
+    PieChart infectionsChart, deathsChart;
 
     private int mDate, mMonth, mYear;
 
@@ -59,16 +67,19 @@ public class WorldBriefFragment extends Fragment {
         //totalTestsText = findViewById(R.id.totalTestsText);
         //newTestsText = findViewById(R.id.newTestsText);
         dateText = view.findViewById(R.id.dateButton);
-        //main_spinner = (Spinner)view.findViewById(R.id.header);
-        //statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
-
+        spinner = (Spinner)view.findViewById(R.id.header);
+        statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
 
 
         // Pobieram dane wygenerowane przez DataHoldera
         listDividedByCountries = DataHolder.getListDividedByCountries();
         countryNameList = DataHolder.getCountryNameList();
 
-        DataHolder.setLatestInfectionDate();
+        infectionsChart = view.findViewById(R.id.infectionsChart);
+        deathsChart = view.findViewById(R.id.deathsChart);
+        setUpCharts();
+
+        //DataHolder.setLatestInfectionDate();
 
         // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
         updateChosenStuff();
@@ -76,18 +87,18 @@ public class WorldBriefFragment extends Fragment {
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countryNameList);
-        //main_spinner.setAdapter(adapter);
+        spinner.setAdapter(adapter);
 
         // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci
         // Jest to zwiazane z tym, ze MainActivity przekazuje tutaj nazwe regionu, ktory ma byc wybrany
         // (np. world lub kraj w ktorym znajduje sie uzytkownik).
-        //main_spinner.setSelection(countryNameList.indexOf(chosenCountryName));
+        spinner.setSelection(countryNameList.indexOf(chosenCountryName));
 
         // Update danych jesli zostal zmieniony kraj
-        /*main_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                DataHolder.updateChosenCountryName(main_spinner.getSelectedItem().toString());
+                DataHolder.updateChosenCountryName(spinner.getSelectedItem().toString());
                 updateChosenStuff();
             }
 
@@ -95,19 +106,20 @@ public class WorldBriefFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });*/
+        });
 
         // Ustawiam wszystko co potrzebne, zeby dzialal kalendarz
         // kodu jest sporo, wiec wrzucilem to wszystko do funkcji
         setUpCalendar();
 
-        /*statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
+        statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new StatisticsFragment();
-                ((MainActivity)getActivity()).changeFragmentBackStack(fragment);
+                ((MainActivity)getActivity()).changeFragment(fragment);
             }
-        });*/
+        });
+
 
         return view;
     }
@@ -155,8 +167,8 @@ public class WorldBriefFragment extends Fragment {
     // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMaxTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
-        String dateStr = DataHolder.getLatestInfectionDate() + " 00:00:00";
+        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
+        //String dateStr = DataHolder.getLatestInfectionDate() + " 00:00:00";
         Date date = null;
         try {
             date = sdf.parse(dateStr);
@@ -221,13 +233,14 @@ public class WorldBriefFragment extends Fragment {
     }
 
     // Aktualizuje wartosci zmiennych
-    private void updateChosenStuff() {
+    public void updateChosenStuff() {
         chosenCountryName = DataHolder.getChosenCountryName();
         chosenCountryList = DataHolder.getChosenCountryList();
         chosenDate = DataHolder.getChosenDate();
         chosenRecord = DataHolder.getChosenRecord();
         setTextsForCountry(totalInfectionsText,newInfectionsText,
                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
+        setUpCharts();
     }
 
     private void setUpCalendar() {
@@ -274,4 +287,51 @@ public class WorldBriefFragment extends Fragment {
             }
         });
     }
+    private void setUpCharts() {
+        setUpChart1();
+        setUpChart2();
+    }
+    public void setUpChart1()
+    {
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        float infected = Float.parseFloat(DataHolder.getChosenRecord()[4]);
+        float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[5]);
+        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
+        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
+        pieEntries.add(new PieEntry(infected - newInfected,"total"));
+        pieEntries.add(new PieEntry(newInfected,"new"));
+        PieDataSet dataSet = new PieDataSet(pieEntries,"");
+        dataSet.setColors( Color.rgb(10,10,10),Color.rgb(255,0,0));
+        PieData data = new PieData(dataSet);
+        infectionsChart.setData(data);
+        infectionsChart.setDrawSliceText(false);
+        infectionsChart.getData().setDrawValues(false);
+        infectionsChart.setDrawEntryLabels(false);
+        infectionsChart.getDescription().setEnabled(false);
+        infectionsChart.getLegend().setEnabled(false);
+        infectionsChart.animateY(1000);
+    }
+
+    public void setUpChart2()
+    {
+        ArrayList<PieEntry> pieEntries = new ArrayList<>();
+        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
+        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
+        //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
+        float deaths = Float.parseFloat(DataHolder.getChosenRecord()[7]);
+        float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[8]);
+        pieEntries.add(new PieEntry(deaths - newDeaths,"total"));
+        pieEntries.add(new PieEntry(newDeaths,"new"));
+        PieDataSet dataSet = new PieDataSet(pieEntries,"");
+        dataSet.setColors( Color.rgb(10,10,10),Color.rgb(255,0,0));
+        PieData data = new PieData(dataSet);
+        deathsChart.setData(data);
+        deathsChart.setDrawSliceText(false);
+        deathsChart.getData().setDrawValues(false);
+        deathsChart.setDrawEntryLabels(false);
+        deathsChart.getDescription().setEnabled(false);
+        deathsChart.getLegend().setEnabled(false);
+        deathsChart.animateY(1000);
+    }
+
 }
