@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         loadSettings();
 
         //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
-        if(isFileEmpty(csvFilename)) {
+        if(!isFileEmpty(csvFilename)) {
             loadDataFromCsvFile();
         }
 
@@ -148,9 +148,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                     else {
                         makeToast("Everything is up to date");
-                        if(!isFileEmpty(csvFilename) && !DataHolder.isScoreListReady) {
-                            loadDataFromCsvFile();
-                        }
                         if(!isFileEmpty(csvFilename) && selectedFragment != null) {
                             changeFragment(selectedFragment);
                         }
