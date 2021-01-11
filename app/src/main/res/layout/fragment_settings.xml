@@ -4,16 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#133243"
     tools:context=".SettingsFragment">
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="447dp"
-        android:layout_height="782dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/mobi_tlo_1" />
 
 
     <GridLayout
@@ -45,6 +37,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="20dp"
+                android:textColor="#CCCCCC"
                 android:textSize="20dp" />
 
             <Spinner
@@ -57,7 +50,7 @@
                 android:layout_marginEnd="40dp"
                 android:layout_marginRight="40dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@color/cardview_shadow_start_color"
+                android:background="@drawable/main_spinner"
                 android:popupBackground="#E6609AAC"
                 android:elevation="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
