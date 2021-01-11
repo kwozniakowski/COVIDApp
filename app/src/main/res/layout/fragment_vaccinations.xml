@@ -23,103 +23,480 @@
         android:id="@+id/vaccinationsRefresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         app:layout_constraintTop_toBottomOf="@+id/spinner">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@+id/countryBriefRefresh">
+            android:layout_height="wrap_content">
 
-            <view
-                android:id="@+id/chart1"
-                class="com.github.mikephil.charting.charts.PieChart"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:layout_gravity="center_horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView12" />
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:fontFamily="sans-serif-condensed"
-                android:text="VACCINED"
-                android:textColor="#CCCCCC"
-                android:textSize="80sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
+                app:layout_constraintTop_toTopOf="@+id/countryBriefRefresh">
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
-                android:fontFamily="sans-serif-condensed"
-                android:text="LEADERS:"
-                android:textColor="#CCCCCC"
-                android:textSize="80sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chart1" />
+                <view
+                    android:id="@+id/chart1"
+                    class="com.github.mikephil.charting.charts.PieChart"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:layout_gravity="center_horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Vaccination"
-                android:textColor="#CCCCCC"
-                android:textSize="44sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/chart1" />
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="VACCINED"
+                    android:textColor="#CCCCCC"
+                    android:textSize="80sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
 
-            <TextView
-                android:id="@+id/vaccinedText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:fontFamily="sans-serif-condensed"
-                android:text="TextView"
-                android:textColor="#008000"
-                android:textSize="40dp"
-                app:layout_constraintBottom_toBottomOf="@+id/chart1"
-                app:layout_constraintEnd_toEndOf="@+id/chart1"
-                app:layout_constraintStart_toStartOf="@+id/chart1"
-                app:layout_constraintTop_toTopOf="@+id/chart1" />
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="LEADERS:"
+                    android:textColor="#CCCCCC"
+                    android:textSize="80sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chart1" />
 
-            <TextView
-                android:id="@+id/vaccinedNumberText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                android:fontFamily="sans-serif-condensed"
-                android:text="TextView"
-                android:textColor="#80008000"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/chart1"
-                app:layout_constraintEnd_toEndOf="@+id/chart1"
-                app:layout_constraintStart_toStartOf="@+id/chart1"
-                app:layout_constraintTop_toTopOf="@+id/chart1" />
 
-            <TextView
-                android:id="@+id/noDataText"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:background="#103050"
-                android:gravity="center"
-                android:text="No data available for this country."
-                android:textColor="#CCCCCC"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="@+id/chart1"
-                app:layout_constraintEnd_toEndOf="@+id/chart1"
-                app:layout_constraintStart_toStartOf="@+id/chart1"
-                app:layout_constraintTop_toTopOf="@+id/chart1" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView">
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.6"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.6"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.6"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.6"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.6"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.6"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.6"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.6"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.4"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.6"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.4"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                    <TableRow
+                        android:layout_width="fill_parent"
+                        android:layout_height="0dp"
+                        android:layout_margin="1dp"
+                        android:layout_weight="1"
+                        android:background="#103050">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.6"
+                            android:layout_column="0"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="Country"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.4"
+                            android:layout_column="2"
+                            android:layout_margin="4dp"
+                            android:background="@drawable/main_spinner"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center"
+                            android:text="%"
+                            android:textColor="#103050"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+
+                </TableLayout>
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Vaccination"
+                    android:textColor="#CCCCCC"
+                    android:textSize="44sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/chart1" />
+
+                <TextView
+                    android:id="@+id/vaccinedText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="TextView"
+                    android:textColor="#008000"
+                    android:textSize="40dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/chart1"
+                    app:layout_constraintEnd_toEndOf="@+id/chart1"
+                    app:layout_constraintStart_toStartOf="@+id/chart1"
+                    app:layout_constraintTop_toTopOf="@+id/chart1" />
+
+                <TextView
+                    android:id="@+id/vaccinedNumberText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="TextView"
+                    android:textColor="#80008000"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/chart1"
+                    app:layout_constraintEnd_toEndOf="@+id/chart1"
+                    app:layout_constraintStart_toStartOf="@+id/chart1"
+                    app:layout_constraintTop_toTopOf="@+id/chart1" />
+
+                <TextView
+                    android:id="@+id/noDataText"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:background="#103050"
+                    android:gravity="center"
+                    android:text="No data available for this country."
+                    android:textColor="#CCCCCC"
+                    android:textSize="24sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/chart1"
+                    app:layout_constraintEnd_toEndOf="@+id/chart1"
+                    app:layout_constraintStart_toStartOf="@+id/chart1"
+                    app:layout_constraintTop_toTopOf="@+id/chart1" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
