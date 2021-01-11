@@ -3,16 +3,10 @@ package com.example.covidapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainer;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -43,10 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
 
-    boolean isCsvFileEmpty, isCountryChangeRequired;
+    boolean isDownloadSuccessful, isCountryChangeRequired, isUpdateInProgress;
     String latestCommitId;
     String txtFilename, csvFilename;
     Fragment selectedFragment;
+
+    Object downloadLock, mainUpdateLock, connectionLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +56,15 @@ public class MainActivity extends AppCompatActivity {
 
         selectedFragment = null;
         isCountryChangeRequired = true;
+        isUpdateInProgress = false;
         selectedFragment = null;
 
-        /*deleteSomeFile(csvFilename);
-        deleteSomeFile(txtFilename);*/
+        deleteSomeFile(csvFilename);
+        deleteSomeFile(txtFilename);
+
+        downloadLock = new Object();
+        mainUpdateLock = new Object();
+        connectionLock = new Object();
 
         loadSettings();
 
@@ -97,20 +98,43 @@ public class MainActivity extends AppCompatActivity {
                         selectedFragment = new SettingsFragment();
                         break;
                 }
-                checkForFileUpdates();
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if(isUpdateInProgress) {
+                            synchronized (DataHolder.updateLock) {
+                                try {
+                                    DataHolder.updateLock.wait();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                        changeFragment(selectedFragment);
+                    }
+                };
+                Thread thread = new Thread(runnable);
+                thread.start();
                 return true;
             }
         });
 
+        checkForFileUpdates(true);
         bottomNavigationView.setSelectedItemId(R.id.nav_country_brief);
     }
 
-    private void checkForFileUpdates() {
+    public void checkForFileUpdates(final boolean isLoadingScreenRequired) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Fragment loadingFragment = new LoadingFragment();
-                changeFragment(loadingFragment);
+                isUpdateInProgress = true;
+                if(isLoadingScreenRequired) {
+                    Fragment loadingFragment = new LoadingFragment();
+                    changeFragment(loadingFragment);
+                }
+
+                isDownloadSuccessful = false;
 
                 // Sprawdzam jaka wersja pliku csv jest obecnie pobrana, zeby porownac ja z dostepna
                 // w internecie
@@ -142,25 +166,42 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println("Id commitu: " + latestCommitId);
 
                     if(!(dataFromFile.equals(latestCommitId + "\n"))) {
-                        // Tu bedzie pobieranie pliku
                         makeToast("Update available, updating...");
                         downloadCsvFile();
+                        // Czekam na pobranie pliku
+                        synchronized (downloadLock) {
+                            try { downloadLock.wait(); }
+                            catch (InterruptedException e) { e.printStackTrace(); }
+                        }
+
+                        if(isDownloadSuccessful) {
+                            loadDataFromCsvFile();
+                            writeToFile(txtFilename, latestCommitId);
+                            makeToast("Data updated!");
+                            DataHolder.isFragmentUpdateRequired = true;
+                        } else {
+                            makeToast("Cannot update data");
+                        }
                     }
                     else {
                         makeToast("Everything is up to date");
-                        if(!isFileEmpty(csvFilename) && selectedFragment != null) {
-                            changeFragment(selectedFragment);
-                        }
                     }
 
                 } catch (IOException e) {
                     makeToast("Cannot check for updates. Please, check your internet connection");
-                    if(!isFileEmpty(csvFilename) && selectedFragment != null) {
-                        changeFragment(selectedFragment);
-                    }
                     if(isFileEmpty(csvFilename)) {
-                        waitForConnection();
+                        waitForConnection(isLoadingScreenRequired);
                     }
+                } finally {
+                    if(DataHolder.isScoreListReady) {
+                        isUpdateInProgress = false;
+                        synchronized (DataHolder.updateLock) {
+                            DataHolder.updateLock.notify();
+                        }
+                    }
+                    /*if(!isFileEmpty(csvFilename) && newFragment != null) {
+                        changeFragment(newFragment);
+                    }*/
                 }
             }
         };
@@ -168,17 +209,15 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-    private void waitForConnection() {
+    private void waitForConnection(boolean isLoadingScreenRequired) {
         try {
             Document doc = Jsoup.connect("https://github.com/owid/covid-19-data/commits/master/public/data/owid-covid-data.csv")
                     .get();
-            System.out.println("Checking for file updates");
-            checkForFileUpdates();
+            checkForFileUpdates(isLoadingScreenRequired);
         } catch (IOException e) {
             try {
-                System.out.println("No internet connection, waiting...");
                 Thread.sleep(2000);
-                waitForConnection();
+                waitForConnection(isLoadingScreenRequired);
             } catch (InterruptedException ex) {
                 ex.printStackTrace();
             }
@@ -294,9 +333,8 @@ public class MainActivity extends AppCompatActivity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                makeToast("Cannot update data");
-                if(!isFileEmpty(csvFilename) && selectedFragment != null) {
-                    changeFragment(selectedFragment);
+                synchronized (downloadLock) {
+                    downloadLock.notify();
                 }
             }
 
@@ -305,11 +343,9 @@ public class MainActivity extends AppCompatActivity {
                 if(response.isSuccessful()) {
                     String responseStr = response.body().string();
                     writeToFile(csvFilename, responseStr);
-                    writeToFile(txtFilename, latestCommitId);
-                    loadDataFromCsvFile();
-                    makeToast("Data updated!");
-                    if(!isFileEmpty(csvFilename) && selectedFragment != null) {
-                        changeFragment(selectedFragment);
+                    isDownloadSuccessful = true;
+                    synchronized (downloadLock) {
+                        downloadLock.notify();
                     }
                 }
             }

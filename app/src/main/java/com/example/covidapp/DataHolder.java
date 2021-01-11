@@ -31,6 +31,10 @@ public class DataHolder {
 
     private static String defaultCountryName = "";
 
+    // Zmienne pomocne przy odswiezaniu fragmentow
+    public static Object updateLock = new Object();
+    public static boolean isFragmentUpdateRequired = false;
+
 
 
     // GETTERY I SETTERY
@@ -57,7 +61,7 @@ public class DataHolder {
     public static ArrayList<String[]> getScoreList() { return scoreList; }
 
     public static ArrayList<ArrayList<String[]>> getListDividedByCountries() {
-        System.out.println("Wywolano metode getListDividedByCountries");
+        // System.out.println("Wywolano metode getListDividedByCountries");
         if(isDividedListReady) {
             return listDividedByCountries;
         }
@@ -68,7 +72,7 @@ public class DataHolder {
     }
 
     public static ArrayList<String> getCountryNameList() {
-        System.out.println("Wywolano metode getCountryNameList");
+        // System.out.println("Wywolano metode getCountryNameList");
         if(isCountryNameListReady) {
             return countryNameList;
         }
@@ -79,7 +83,7 @@ public class DataHolder {
     }
 
     public static ArrayList<String[]> getChosenCountryList() {
-        System.out.println("Wywolano metode getChosenCountryList");
+        // System.out.println("Wywolano metode getChosenCountryList");
         if(isChosenCountryListReady) {
             return chosenCountryList;
         }
@@ -90,7 +94,7 @@ public class DataHolder {
     }
 
     public static String getChosenCountryName() {
-        System.out.println("Wywolano metode getChosenCountryName");
+        // System.out.println("Wywolano metode getChosenCountryName");
         if(isChosenCountryNameReady) {
             return chosenCountryName;
         }
@@ -101,7 +105,7 @@ public class DataHolder {
     }
 
     public static String getChosenDate() {
-        System.out.println("Wywolano metode getChosenDate");
+        // System.out.println("Wywolano metode getChosenDate");
         if(isChosenDateReady) {
             // Robie update na wypadek, gdyby zmienil sie kraj i dane z obecnie wybranej
             // daty dla tego kraju by nie istnialy (jest to sprawdzane podczas update'u)
@@ -119,7 +123,7 @@ public class DataHolder {
     }
 
     public static String[] getChosenRecord() {
-        System.out.println("Wywolano metode getChosenRecord");
+        // System.out.println("Wywolano metode getChosenRecord");
         updateChosenRecord();
         if(isChosenRecordReady) {
             return chosenRecord;
@@ -139,7 +143,7 @@ public class DataHolder {
     // Ponizej funkcje przygotowujace dla list
 
     public static void updateChosenCountryName(String newChosenCountryName) {
-        System.out.println("Wywolano metode updateChosenCountryName1");
+        // System.out.println("Wywolano metode updateChosenCountryName1");
 
         if(scoreList != null) {
             getCountryNameList();
@@ -178,7 +182,7 @@ public class DataHolder {
 
     // newDate powinna miec format "yyyy-MM-dd"
     public static void updateChosenDate(String newDate) {
-        System.out.println("Wywolano metode updateChosenDate1");
+        // System.out.println("Wywolano metode updateChosenDate1");
         getChosenCountryList();
 
         isChosenDateReady = false;
@@ -238,7 +242,7 @@ public class DataHolder {
     }
 
     public static void updateCountryNames() {
-        System.out.println("Wywolano metode updateCountryNames");
+        // System.out.println("Wywolano metode updateCountryNames");
         getListDividedByCountries();
 
         //if(isDividedListReady) {
@@ -265,7 +269,7 @@ public class DataHolder {
     // Jesli podana nazwa kraju znajduje sie w listDividedByCountry,
     // do chosenCountryList zostana wpisane wszystkie rekordy z tego kraju
     public static void updateChosenCountryList() {
-        System.out.println("Wywolano metode updateChosenCountryList");
+        // System.out.println("Wywolano metode updateChosenCountryList");
         getListDividedByCountries();
         getChosenCountryName();
 
@@ -345,7 +349,7 @@ public class DataHolder {
     // W tym przypadku zostanie przypisana najnowsza data z wybranego kraju,
     // o ile kraj zostal wybrany
     private static void updateChosenDate() {
-        System.out.println("Wywolano metode updateChosenDate2");
+        // System.out.println("Wywolano metode updateChosenDate2");
         if(isChosenCountryListReady) {
             chosenDate = chosenCountryList.get(chosenCountryList.size() - 1)[3];
             isChosenDateReady = true;
@@ -354,7 +358,7 @@ public class DataHolder {
     }
 
     private static void updateChosenCountryName() {
-        System.out.println("Wywolano metode updateChosenCountryName2");
+        // System.out.println("Wywolano metode updateChosenCountryName2");
         getCountryNameList();
 
         // Na wypadek gdyby podano bledna nazwe kraju (nie ma jej w liscie)
@@ -370,7 +374,7 @@ public class DataHolder {
     }
 
     private static void updateChosenRecord() {
-        System.out.println("Wywolano metode updateChosenRecord");
+        // System.out.println("Wywolano metode updateChosenRecord");
         getChosenCountryList();
         getChosenDate();
 

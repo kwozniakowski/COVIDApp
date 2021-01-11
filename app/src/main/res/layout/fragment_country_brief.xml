@@ -16,139 +16,145 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateButton">
 
-        <ScrollView
-            android:id="@+id/scrollView2"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/countryBriefRefresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:paddingTop="5dp">
+            android:layout_height="match_parent" >
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ScrollView
+                android:id="@+id/scrollView2"
                 android:layout_width="match_parent"
-                android:layout_height="700dp">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:paddingTop="5dp">
 
-                <view
-                    android:id="@+id/infectionsChart"
-                    class="com.github.mikephil.charting.charts.PieChart"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.495"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2"
-                    />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="700dp">
 
-                <view
-                    android:id="@+id/deathsChart"
-                    class="com.github.mikephil.charting.charts.PieChart"
-                    android:layout_width="300dp"
-                    android:layout_height="300dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.495"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                    <view
+                        android:id="@+id/infectionsChart"
+                        class="com.github.mikephil.charting.charts.PieChart"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.495"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView2"
+                        />
 
-                <TextView
-                    android:id="@+id/newInfectionsText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="30dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="New Infections"
-                    android:textColor="#FF0000"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/infectionsChart"
-                    app:layout_constraintEnd_toEndOf="@+id/infectionsChart"
-                    app:layout_constraintStart_toStartOf="@+id/infectionsChart"
-                    app:layout_constraintTop_toTopOf="@+id/infectionsChart" />
+                    <view
+                        android:id="@+id/deathsChart"
+                        class="com.github.mikephil.charting.charts.PieChart"
+                        android:layout_width="300dp"
+                        android:layout_height="300dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.495"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-                <TextView
-                    android:id="@+id/totalInfectionsText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="30dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="Total Infections"
-                    android:textColor="#000000"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/infectionsChart"
-                    app:layout_constraintEnd_toEndOf="@+id/infectionsChart"
-                    app:layout_constraintStart_toStartOf="@+id/infectionsChart"
-                    app:layout_constraintTop_toTopOf="@+id/infectionsChart" />
+                    <TextView
+                        android:id="@+id/newInfectionsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="30dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="New Infections"
+                        android:textColor="#FF0000"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/infectionsChart"
+                        app:layout_constraintEnd_toEndOf="@+id/infectionsChart"
+                        app:layout_constraintStart_toStartOf="@+id/infectionsChart"
+                        app:layout_constraintTop_toTopOf="@+id/infectionsChart" />
 
-                <TextView
-                    android:id="@+id/totalDeathsText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="30dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="Total deaths"
-                    android:textColor="#000000"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/deathsChart"
-                    app:layout_constraintEnd_toEndOf="@+id/deathsChart"
-                    app:layout_constraintStart_toStartOf="@+id/deathsChart"
-                    app:layout_constraintTop_toTopOf="@+id/deathsChart" />
+                    <TextView
+                        android:id="@+id/totalInfectionsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="30dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Total Infections"
+                        android:textColor="#000000"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/infectionsChart"
+                        app:layout_constraintEnd_toEndOf="@+id/infectionsChart"
+                        app:layout_constraintStart_toStartOf="@+id/infectionsChart"
+                        app:layout_constraintTop_toTopOf="@+id/infectionsChart" />
 
-                <TextView
-                    android:id="@+id/newDeathsText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="30dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="New deaths"
-                    android:textColor="#FF0000"
-                    android:textSize="24sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/deathsChart"
-                    app:layout_constraintEnd_toEndOf="@+id/deathsChart"
-                    app:layout_constraintStart_toStartOf="@+id/deathsChart"
-                    app:layout_constraintTop_toTopOf="@+id/deathsChart" />
+                    <TextView
+                        android:id="@+id/totalDeathsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="30dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Total deaths"
+                        android:textColor="#000000"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/deathsChart"
+                        app:layout_constraintEnd_toEndOf="@+id/deathsChart"
+                        app:layout_constraintStart_toStartOf="@+id/deathsChart"
+                        app:layout_constraintTop_toTopOf="@+id/deathsChart" />
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginEnd="20dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="Infections"
-                    android:textColor="#CCCCCC"
-                    android:textSize="80sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/newDeathsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="30dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="New deaths"
+                        android:textColor="#FF0000"
+                        android:textSize="24sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/deathsChart"
+                        app:layout_constraintEnd_toEndOf="@+id/deathsChart"
+                        app:layout_constraintStart_toStartOf="@+id/deathsChart"
+                        app:layout_constraintTop_toTopOf="@+id/deathsChart" />
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="20dp"
-                    android:fontFamily="sans-serif-condensed"
-                    android:text="Deaths"
-                    android:textColor="#CCCCCC"
-                    android:textSize="80sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/infectionsChart" />
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginEnd="20dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Infections"
+                        android:textColor="#CCCCCC"
+                        android:textSize="80sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
-                    android:id="@+id/statisticsActivityButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="More..."
-                    android:theme="@style/AppTheme.defaultButton.smallVersion"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/deathsChart" />
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="20dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Deaths"
+                        android:textColor="#CCCCCC"
+                        android:textSize="80sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/infectionsChart" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                    <Button
+                        android:id="@+id/statisticsActivityButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="More..."
+                        android:theme="@style/AppTheme.defaultButton.smallVersion"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/deathsChart" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
