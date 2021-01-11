@@ -129,7 +129,7 @@ public class CountryBriefFragment extends Fragment {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
-                        ((MainActivity)getActivity()).deleteSomeFile("covid_data_file_info.txt");
+                        //((MainActivity)getActivity()).deleteSomeFile("covid_data_file_info.txt");
                         DataHolder.isFragmentUpdateRequired = false;
                         ((MainActivity)getActivity()).checkForFileUpdates(false);
                         swipeRefreshLayout.setRefreshing(false);
