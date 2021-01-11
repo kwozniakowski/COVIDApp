@@ -59,8 +59,8 @@ public class MainActivity extends AppCompatActivity {
         isUpdateInProgress = false;
         selectedFragment = null;
 
-        deleteSomeFile(csvFilename);
-        deleteSomeFile(txtFilename);
+        /*deleteSomeFile(csvFilename);
+        deleteSomeFile(txtFilename);*/
 
         downloadLock = new Object();
         mainUpdateLock = new Object();
