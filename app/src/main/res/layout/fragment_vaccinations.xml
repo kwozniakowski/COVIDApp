@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#133243"
+    android:background="#103050"
     tools:context=".VaccinationsFragment">
 
     <Spinner
@@ -73,7 +73,7 @@
         android:id="@+id/noDataText"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:background="#FFFFFF"
+        android:background="#103050"
         android:gravity="center"
         android:text="No data available for this country."
         android:textColor="#CCCCCC"

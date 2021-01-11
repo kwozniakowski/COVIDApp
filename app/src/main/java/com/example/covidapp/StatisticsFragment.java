@@ -224,7 +224,7 @@ public class StatisticsFragment extends Fragment {
     private void drawChart(BarChart chart, String label)
     {
         BarDataSet barDataSet = new BarDataSet(dataValues(label),label);
-        barDataSet.setColor(Color.rgb(0,0,170));
+        barDataSet.setColor(Color.rgb(204,204,204));
         BarData barData = new BarData(barDataSet);
         barData.setDrawValues(false);
         chart.setData(barData);
@@ -237,6 +237,7 @@ public class StatisticsFragment extends Fragment {
         chart.getDescription().setEnabled(false);
         chart.getXAxis().setEnabled(false);
         chart.getAxisLeft().setEnabled(true);
+        chart.getAxisLeft().setTextColor(Color.rgb(204,204,204));
         chart.setTouchEnabled(true);
         chart.getAxisLeft().setAxisMinimum(0);
     }
