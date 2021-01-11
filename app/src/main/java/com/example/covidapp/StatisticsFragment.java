@@ -6,6 +6,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,8 @@ public class StatisticsFragment extends Fragment {
     String chosenDate, chosenStartDate, chosenEndDate;
     String[] chosenRecord;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,6 +67,8 @@ public class StatisticsFragment extends Fragment {
         chartSpinner1 = view.findViewById(R.id.chartSpinner1);
         chartSpinner2 = view.findViewById(R.id.chartSpinner2);
         chartSpinner3 = view.findViewById(R.id.chartSpinner3);
+
+        swipeRefreshLayout = view.findViewById(R.id.statisticsRefresh);
 
         //wykresy
         barChart1 = view.findViewById(R.id.barChart1);
@@ -186,6 +191,32 @@ public class StatisticsFragment extends Fragment {
             @Override
             public void onNothingSelected() {
 
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        DataHolder.isFragmentUpdateRequired = false;
+                        ((MainActivity)getActivity()).checkForFileUpdates(false);
+                        synchronized (DataHolder.updateLock) {
+                            try {
+                                DataHolder.updateLock.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+                        if(DataHolder.isFragmentUpdateRequired) {
+                            updateChosenStuff();
+                        }
+                    }
+                };
+                Thread thread = new Thread(runnable);
+                thread.start();
             }
         });
 

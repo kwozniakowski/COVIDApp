@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,7 @@ public class WorldBriefFragment extends Fragment {
     TextView newTestsText;
     TextView dateText;
     PieChart infectionsChart, deathsChart;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     private int mDate, mMonth, mYear;
 
@@ -69,6 +71,7 @@ public class WorldBriefFragment extends Fragment {
         dateText = view.findViewById(R.id.dateButton);
         spinner = (Spinner)view.findViewById(R.id.header);
         statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
+        swipeRefreshLayout = view.findViewById(R.id.worldBriefRefresh);
 
 
         // Pobieram dane wygenerowane przez DataHoldera
@@ -117,6 +120,32 @@ public class WorldBriefFragment extends Fragment {
             public void onClick(View view) {
                 Fragment fragment = new StatisticsFragment();
                 ((MainActivity)getActivity()).changeFragment(fragment);
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        DataHolder.isFragmentUpdateRequired = false;
+                        ((MainActivity)getActivity()).checkForFileUpdates(false);
+                        synchronized (DataHolder.updateLock) {
+                            try {
+                                DataHolder.updateLock.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+                        if(DataHolder.isFragmentUpdateRequired) {
+                            updateChosenStuff();
+                        }
+                    }
+                };
+                Thread thread = new Thread(runnable);
+                thread.start();
             }
         });
 

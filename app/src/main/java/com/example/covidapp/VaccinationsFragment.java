@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class VaccinationsFragment extends Fragment {
     ArrayList<String> countryNameList;
     Spinner spinner;
     TextView vaccinedText, vaccinedNumberText, noDataText;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +50,8 @@ public class VaccinationsFragment extends Fragment {
         chosenCountryList = DataHolder.getChosenCountryList();
         chosenCountryName = DataHolder.getChosenCountryName();
         countryNameList = DataHolder.getCountryNameList();
+
+        swipeRefreshLayout = view.findViewById(R.id.vaccinationsRefresh);
 
         setUpCharts();
         //setUpDate();
@@ -72,6 +76,32 @@ public class VaccinationsFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
+            }
+        });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        DataHolder.isFragmentUpdateRequired = false;
+                        ((MainActivity)getActivity()).checkForFileUpdates(false);
+                        synchronized (DataHolder.updateLock) {
+                            try {
+                                DataHolder.updateLock.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        swipeRefreshLayout.setRefreshing(false);
+                        if(DataHolder.isFragmentUpdateRequired) {
+                            updateChosenStuff();
+                        }
+                    }
+                };
+                Thread thread = new Thread(runnable);
+                thread.start();
             }
         });
 

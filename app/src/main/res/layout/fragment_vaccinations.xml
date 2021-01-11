@@ -19,68 +19,82 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <view
-        android:id="@+id/chart1"
-        class="com.github.mikephil.charting.charts.PieChart"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_gravity="center_horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/vaccinationsRefresh"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="Vaccined"
-        android:textColor="#CCCCCC"
-        android:textSize="80sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner">
 
-    <TextView
-        android:id="@+id/vaccinedText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="TextView"
-        android:textColor="#008000"
-        android:textSize="40dp"
-        app:layout_constraintBottom_toBottomOf="@+id/chart1"
-        app:layout_constraintEnd_toEndOf="@+id/chart1"
-        app:layout_constraintStart_toStartOf="@+id/chart1"
-        app:layout_constraintTop_toTopOf="@+id/chart1" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/countryBriefRefresh">
 
-    <TextView
-        android:id="@+id/vaccinedNumberText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="TextView"
-        android:textColor="#80008000"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/chart1"
-        app:layout_constraintEnd_toEndOf="@+id/chart1"
-        app:layout_constraintStart_toStartOf="@+id/chart1"
-        app:layout_constraintTop_toTopOf="@+id/chart1" />
+            <view
+                android:id="@+id/chart1"
+                class="com.github.mikephil.charting.charts.PieChart"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
-    <TextView
-        android:id="@+id/noDataText"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:background="#103050"
-        android:gravity="center"
-        android:text="No data available for this country."
-        android:textColor="#CCCCCC"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/chart1"
-        app:layout_constraintEnd_toEndOf="@+id/chart1"
-        app:layout_constraintStart_toStartOf="@+id/chart1"
-        app:layout_constraintTop_toTopOf="@+id/chart1" />
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Vaccined"
+                android:textColor="#CCCCCC"
+                android:textSize="80sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
+
+            <TextView
+                android:id="@+id/vaccinedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="TextView"
+                android:textColor="#008000"
+                android:textSize="40dp"
+                app:layout_constraintBottom_toBottomOf="@+id/chart1"
+                app:layout_constraintEnd_toEndOf="@+id/chart1"
+                app:layout_constraintStart_toStartOf="@+id/chart1"
+                app:layout_constraintTop_toTopOf="@+id/chart1" />
+
+            <TextView
+                android:id="@+id/vaccinedNumberText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="TextView"
+                android:textColor="#80008000"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/chart1"
+                app:layout_constraintEnd_toEndOf="@+id/chart1"
+                app:layout_constraintStart_toStartOf="@+id/chart1"
+                app:layout_constraintTop_toTopOf="@+id/chart1" />
+
+            <TextView
+                android:id="@+id/noDataText"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:background="#103050"
+                android:gravity="center"
+                android:text="No data available for this country."
+                android:textColor="#CCCCCC"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/chart1"
+                app:layout_constraintEnd_toEndOf="@+id/chart1"
+                app:layout_constraintStart_toStartOf="@+id/chart1"
+                app:layout_constraintTop_toTopOf="@+id/chart1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
