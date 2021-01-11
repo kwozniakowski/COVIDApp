@@ -126,19 +126,27 @@ public class CountryBriefFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                DataHolder.isFragmentUpdateRequired = false;
-                ((MainActivity)getActivity()).checkForFileUpdates(false);
-                swipeRefreshLayout.setRefreshing(false);
-                synchronized (DataHolder.updateLock) {
-                    try {
-                        DataHolder.updateLock.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        ((MainActivity)getActivity()).deleteSomeFile("covid_data_file_info.txt");
+                        DataHolder.isFragmentUpdateRequired = false;
+                        ((MainActivity)getActivity()).checkForFileUpdates(false);
+                        swipeRefreshLayout.setRefreshing(false);
+                        synchronized (DataHolder.updateLock) {
+                            try {
+                                DataHolder.updateLock.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        if(DataHolder.isFragmentUpdateRequired) {
+                            updateChosenStuff();
+                        }
                     }
-                }
-                if(DataHolder.isFragmentUpdateRequired) {
-                    updateChosenStuff();
-                }
+                };
+                Thread thread = new Thread(runnable);
+                thread.start();
             }
         });
 
@@ -257,13 +265,18 @@ public class CountryBriefFragment extends Fragment {
 
     // Aktualizuje wartosci zmiennych
     public void updateChosenStuff() {
-        chosenCountryName = DataHolder.getChosenCountryName();
-        chosenCountryList = DataHolder.getChosenCountryList();
-        chosenDate = DataHolder.getChosenDate();
-        chosenRecord = DataHolder.getChosenRecord();
-        setTextsForCountry(totalInfectionsText,newInfectionsText,
-                totalDeathsText,newDeathsText,totalTestsText,newTestsText);
-        setUpCharts();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                chosenCountryName = DataHolder.getChosenCountryName();
+                chosenCountryList = DataHolder.getChosenCountryList();
+                chosenDate = DataHolder.getChosenDate();
+                chosenRecord = DataHolder.getChosenRecord();
+                setTextsForCountry(totalInfectionsText,newInfectionsText,
+                        totalDeathsText,newDeathsText,totalTestsText,newTestsText);
+                setUpCharts();
+            }
+        });
     }
 
     public void updateChosenStuff(boolean isVisualUpdateRequired) {

@@ -356,6 +356,12 @@ public class MainActivity extends AppCompatActivity {
         InputStream inputStream = null;
         try {
             inputStream = openFileInput(csvFilename);
+            //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
+            CSVFile csvFile = new CSVFile(inputStream);
+            final ArrayList<String[]> scoreList = csvFile.read();
+            DataHolder.setScoreList(scoreList);
+            //DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
+            DataHolder.updateData();
         } catch (FileNotFoundException e) {
             writeToFile(csvFilename, "");
             try {
@@ -364,13 +370,13 @@ public class MainActivity extends AppCompatActivity {
                 ex.printStackTrace();
             }
             e.printStackTrace();
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-        //InputStream inputStream = getResources().openRawResource(R.raw.covid_data);
-        CSVFile csvFile = new CSVFile(inputStream);
-        final ArrayList<String[]> scoreList = csvFile.read();
-        DataHolder.setScoreList(scoreList);
-        //DataHolder.updateChosenCountryName(DataHolder.getDefaultCountryName());
-        DataHolder.updateData();
     }
 
     private void loadSettings() {
