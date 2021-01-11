@@ -132,7 +132,6 @@ public class CountryBriefFragment extends Fragment {
                         //((MainActivity)getActivity()).deleteSomeFile("covid_data_file_info.txt");
                         DataHolder.isFragmentUpdateRequired = false;
                         ((MainActivity)getActivity()).checkForFileUpdates(false);
-                        swipeRefreshLayout.setRefreshing(false);
                         synchronized (DataHolder.updateLock) {
                             try {
                                 DataHolder.updateLock.wait();
@@ -140,6 +139,7 @@ public class CountryBriefFragment extends Fragment {
                                 e.printStackTrace();
                             }
                         }
+                        swipeRefreshLayout.setRefreshing(false);
                         if(DataHolder.isFragmentUpdateRequired) {
                             updateChosenStuff();
                         }
