@@ -47,11 +47,36 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:fontFamily="sans-serif-condensed"
-                android:text="Vaccined"
+                android:text="VACCINED"
                 android:textColor="#CCCCCC"
                 android:textSize="80sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="LEADERS:"
+                android:textColor="#CCCCCC"
+                android:textSize="80sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chart1" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Vaccination"
+                android:textColor="#CCCCCC"
+                android:textSize="44sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chart1" />
 
             <TextView
                 android:id="@+id/vaccinedText"
