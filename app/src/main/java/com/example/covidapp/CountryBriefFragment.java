@@ -85,7 +85,7 @@ public class CountryBriefFragment extends Fragment {
         //DataHolder.setLatestInfectionDate();
 
         // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
-        updateChosenStuff();
+        updateChosenStuff(false);
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
@@ -232,7 +232,7 @@ public class CountryBriefFragment extends Fragment {
     // Funkcja odpowiadajaca za animacje liczb
     private void startCountAnimation(final TextView textView, final int finalValue, final String additionalText) {
         ValueAnimator animator = ValueAnimator.ofInt(0, finalValue);
-        if(finalValue > 1000000) {
+        /*if(finalValue > 1000000) {
             animator.setDuration(3000);
         } else if(finalValue > 100000) {
             animator.setDuration(2000);
@@ -242,7 +242,8 @@ public class CountryBriefFragment extends Fragment {
             animator.setDuration(500);
         } else {
             animator.setDuration(100);
-        }
+        }*/
+        animator.setDuration(1000);
         final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.UK);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -263,6 +264,18 @@ public class CountryBriefFragment extends Fragment {
         setTextsForCountry(totalInfectionsText,newInfectionsText,
                 totalDeathsText,newDeathsText,totalTestsText,newTestsText);
         setUpCharts();
+    }
+
+    public void updateChosenStuff(boolean isVisualUpdateRequired) {
+        chosenCountryName = DataHolder.getChosenCountryName();
+        chosenCountryList = DataHolder.getChosenCountryList();
+        chosenDate = DataHolder.getChosenDate();
+        chosenRecord = DataHolder.getChosenRecord();
+        if(isVisualUpdateRequired) {
+            setTextsForCountry(totalInfectionsText, newInfectionsText,
+                    totalDeathsText, newDeathsText, totalTestsText, newTestsText);
+            setUpCharts();
+        }
     }
 
     private void setUpCalendar() {
