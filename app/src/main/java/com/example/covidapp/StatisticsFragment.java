@@ -24,6 +24,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 
@@ -175,6 +176,7 @@ public class StatisticsFragment extends Fragment {
                     return;
 
                 RectF bounds = mOnValueSelectedRectF;
+                System.out.println(chosenCountryList.get((int)h.getX())[3]);
                 barChart1.getBarBounds((BarEntry) e, bounds);
                 MPPointF position = barChart1.getPosition(e, YAxis.AxisDependency.LEFT);
 
@@ -255,6 +257,7 @@ public class StatisticsFragment extends Fragment {
     private void drawChart(BarChart chart, String label)
     {
         BarDataSet barDataSet = new BarDataSet(dataValues(label),label);
+
         barDataSet.setColor(Color.rgb(204,204,204));
         BarData barData = new BarData(barDataSet);
         barData.setDrawValues(false);
@@ -269,7 +272,10 @@ public class StatisticsFragment extends Fragment {
         chart.getXAxis().setEnabled(false);
         chart.getAxisLeft().setEnabled(true);
         chart.getAxisLeft().setTextColor(Color.rgb(204,204,204));
+
         chart.setTouchEnabled(true);
+        chart.setHighlightPerTapEnabled(true);
+
         chart.getAxisLeft().setAxisMinimum(0);
     }
 
@@ -288,15 +294,15 @@ public class StatisticsFragment extends Fragment {
     private ArrayList<BarEntry> dataValues(String statisticalData) {
         ArrayList<String[]> chosenCountryList = DataHolder.getChosenCountryList();
         ArrayList<BarEntry> list = new ArrayList<>();
-        int startIndex = chosenCountryList.size()-1;
-        int endIndex = startIndex-1;
+        int startIndex = chosenCountryList.size()-2;
+        int endIndex = chosenCountryList.size()-1;
         //Tutaj wyswietlimy sobie zakazenia dla ostatnigo tygodnia
-        for (int i = chosenCountryList.size() - 1; i >= 0; i--)
+        for (int i = 0; i <= chosenCountryList.size() - 1; i++)
         {
             if(chosenCountryList.get(i)[3].equals(chosenEndDate)) endIndex = i;
             if(chosenCountryList.get(i)[3].equals(chosenStartDate)) startIndex = i;
         }
-        for(int i = endIndex; i > startIndex ; i --)
+        for(int i = startIndex; i <= endIndex ; i ++)
         {
             if(statisticalData == "new infections")
             {
