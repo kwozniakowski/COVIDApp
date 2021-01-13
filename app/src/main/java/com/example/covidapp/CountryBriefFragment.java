@@ -34,6 +34,8 @@ import java.util.Locale;
 
 public class CountryBriefFragment extends Fragment {
 
+    int DATE, TOTAL_INFECTIONS, NEW_INFECTIONS, TOTAL_DEATHS, NEW_DEATHS;
+
     Spinner spinner;
     Button statisticsActivityButton;
     TextView totalInfectionsText;
@@ -78,14 +80,15 @@ public class CountryBriefFragment extends Fragment {
         listDividedByCountries = DataHolder.getListDividedByCountries();
         countryNameList = DataHolder.getCountryNameList();
 
+        // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
+        updateChosenStuff(false);
+
         infectionsChart = view.findViewById(R.id.infectionsChart);
         deathsChart = view.findViewById(R.id.deathsChart);
         setUpCharts();
 
         //DataHolder.setLatestInfectionDate();
 
-        // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
-        updateChosenStuff(false);
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
@@ -159,16 +162,16 @@ public class CountryBriefFragment extends Fragment {
     public void setTextsForCountry(TextView a,TextView b,TextView c,TextView d, TextView e, TextView f){
         dateText.setText(chosenDate);
 
-        int infectedTotal = Integer.parseInt(chosenRecord[4]);
+        int infectedTotal = Integer.parseInt(chosenRecord[TOTAL_INFECTIONS]);
         startCountAnimation(a, infectedTotal, "");
 
-        int infectedDaily = Integer.parseInt(chosenRecord[5]);
+        int infectedDaily = Integer.parseInt(chosenRecord[NEW_INFECTIONS]);
         startCountAnimation(b, infectedDaily, "+");
 
-        int deathsTotal = Integer.parseInt(chosenRecord[7]);
+        int deathsTotal = Integer.parseInt(chosenRecord[TOTAL_DEATHS]);
         startCountAnimation(c, deathsTotal, "");
 
-        int deathsDaily = Integer.parseInt(chosenRecord[8]);
+        int deathsDaily = Integer.parseInt(chosenRecord[NEW_DEATHS]);
         startCountAnimation(d, deathsDaily, "+");
 
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
@@ -182,7 +185,7 @@ public class CountryBriefFragment extends Fragment {
     // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMinTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = chosenCountryList.get(0)[3] + " 00:00:00";
+        String dateStr = chosenCountryList.get(0)[DATE] + " 00:00:00";
         Date date = null;
         try {
             date = sdf.parse(dateStr);
@@ -197,7 +200,7 @@ public class CountryBriefFragment extends Fragment {
     // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMaxTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
+        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[DATE] + " 00:00:00";
         //String dateStr = DataHolder.getLatestInfectionDate() + " 00:00:00";
         Date date = null;
         try {
@@ -268,6 +271,12 @@ public class CountryBriefFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                DATE = DataHolder.DATE;
+                TOTAL_INFECTIONS = DataHolder.TOTAL_CASES;
+                NEW_INFECTIONS = DataHolder.NEW_CASES;
+                TOTAL_DEATHS = DataHolder.TOTAL_DEATHS;
+                NEW_DEATHS = DataHolder.NEW_DEATHS;
+
                 chosenCountryName = DataHolder.getChosenCountryName();
                 chosenCountryList = DataHolder.getChosenCountryList();
                 chosenDate = DataHolder.getChosenDate();
@@ -280,6 +289,12 @@ public class CountryBriefFragment extends Fragment {
     }
 
     public void updateChosenStuff(boolean isVisualUpdateRequired) {
+        DATE = DataHolder.DATE;
+        TOTAL_INFECTIONS = DataHolder.TOTAL_CASES;
+        NEW_INFECTIONS = DataHolder.NEW_CASES;
+        TOTAL_DEATHS = DataHolder.TOTAL_DEATHS;
+        NEW_DEATHS = DataHolder.NEW_DEATHS;
+
         chosenCountryName = DataHolder.getChosenCountryName();
         chosenCountryList = DataHolder.getChosenCountryList();
         chosenDate = DataHolder.getChosenDate();
@@ -342,10 +357,10 @@ public class CountryBriefFragment extends Fragment {
     public void setUpChart1()
     {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        float infected = Float.parseFloat(DataHolder.getChosenRecord()[4]);
-        float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[5]);
-        float weeklyInfected = Float.parseFloat(DataHolder.getWeeklyData()[4]);
-        float monthlyInfected = Float.parseFloat(DataHolder.getMonthlyData()[4]);
+        float infected = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_INFECTIONS]);
+        float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_DEATHS]);
+        float weeklyInfected = Float.parseFloat(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
+        float monthlyInfected = Float.parseFloat(DataHolder.getMonthlyData()[TOTAL_INFECTIONS]);
         float monthlyMinusWeekly = monthlyInfected - weeklyInfected;
         if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
 
@@ -374,10 +389,10 @@ public class CountryBriefFragment extends Fragment {
         //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
         //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
         //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
-        float deaths = Float.parseFloat(DataHolder.getChosenRecord()[7]);
-        float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[8]);
-        float weeklyDeaths = Float.parseFloat(DataHolder.getWeeklyData()[7]);
-        float monthlyDeaths = Float.parseFloat(DataHolder.getMonthlyData()[7]);
+        float deaths = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_DEATHS]);
+        float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[NEW_DEATHS]);
+        float weeklyDeaths = Float.parseFloat(DataHolder.getWeeklyData()[TOTAL_DEATHS]);
+        float monthlyDeaths = Float.parseFloat(DataHolder.getMonthlyData()[TOTAL_DEATHS]);
         float monthlyMinusWeekly = monthlyDeaths - weeklyDeaths;
         if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
 

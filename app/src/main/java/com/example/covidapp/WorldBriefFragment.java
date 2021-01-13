@@ -34,6 +34,8 @@ import java.util.Locale;
 
 public class WorldBriefFragment extends Fragment {
 
+    int DATE, TOTAL_INFECTIONS, NEW_INFECTIONS, TOTAL_DEATHS, NEW_DEATHS;
+
     Spinner spinner;
     Button statisticsActivityButton;
     TextView totalInfectionsText;
@@ -78,14 +80,14 @@ public class WorldBriefFragment extends Fragment {
         listDividedByCountries = DataHolder.getListDividedByCountries();
         countryNameList = DataHolder.getCountryNameList();
 
+        // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
+        updateChosenStuff(false);
+
         infectionsChart = view.findViewById(R.id.infectionsChart);
         deathsChart = view.findViewById(R.id.deathsChart);
         setUpCharts();
 
         //DataHolder.setLatestInfectionDate();
-
-        // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
-        updateChosenStuff(false);
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
@@ -181,7 +183,7 @@ public class WorldBriefFragment extends Fragment {
     // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMinTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = chosenCountryList.get(0)[3] + " 00:00:00";
+        String dateStr = chosenCountryList.get(0)[DATE] + " 00:00:00";
         Date date = null;
         try {
             date = sdf.parse(dateStr);
@@ -196,7 +198,7 @@ public class WorldBriefFragment extends Fragment {
     // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMaxTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
+        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[DATE] + " 00:00:00";
         //String dateStr = DataHolder.getLatestInfectionDate() + " 00:00:00";
         Date date = null;
         try {
@@ -264,6 +266,12 @@ public class WorldBriefFragment extends Fragment {
 
     // Aktualizuje wartosci zmiennych
     public void updateChosenStuff() {
+        DATE = DataHolder.DATE;
+        TOTAL_INFECTIONS = DataHolder.TOTAL_CASES;
+        NEW_INFECTIONS = DataHolder.NEW_CASES;
+        TOTAL_DEATHS = DataHolder.TOTAL_DEATHS;
+        NEW_DEATHS = DataHolder.NEW_DEATHS;
+
         chosenCountryName = DataHolder.getChosenCountryName();
         chosenCountryList = DataHolder.getChosenCountryList();
         chosenDate = DataHolder.getChosenDate();
@@ -274,6 +282,12 @@ public class WorldBriefFragment extends Fragment {
     }
 
     public void updateChosenStuff(boolean isVisualUpdateRequired) {
+        DATE = DataHolder.DATE;
+        TOTAL_INFECTIONS = DataHolder.TOTAL_CASES;
+        NEW_INFECTIONS = DataHolder.NEW_CASES;
+        TOTAL_DEATHS = DataHolder.TOTAL_DEATHS;
+        NEW_DEATHS = DataHolder.NEW_DEATHS;
+
         chosenCountryName = DataHolder.getChosenCountryName();
         chosenCountryList = DataHolder.getChosenCountryList();
         chosenDate = DataHolder.getChosenDate();
@@ -321,7 +335,7 @@ public class WorldBriefFragment extends Fragment {
 
                 // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
                 // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
-                if(!(chosenDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
+                if(!(chosenDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[DATE]))) {
                     int[] parts = stringDateToInt(chosenDate);
                     datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
                 }
@@ -336,8 +350,8 @@ public class WorldBriefFragment extends Fragment {
     public void setUpChart1()
     {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        float infected = Float.parseFloat(DataHolder.getChosenRecord()[4]);
-        float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[5]);
+        float infected = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_INFECTIONS]);
+        float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[NEW_INFECTIONS]);
         //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
         //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
         pieEntries.add(new PieEntry(infected - newInfected,"total"));
@@ -360,8 +374,8 @@ public class WorldBriefFragment extends Fragment {
         //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
         //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
         //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
-        float deaths = Float.parseFloat(DataHolder.getChosenRecord()[7]);
-        float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[8]);
+        float deaths = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_DEATHS]);
+        float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[NEW_DEATHS]);
         pieEntries.add(new PieEntry(deaths - newDeaths,"total"));
         pieEntries.add(new PieEntry(newDeaths,"new"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");

@@ -37,6 +37,9 @@ import java.util.Date;
 
 public class StatisticsFragment extends Fragment {
 
+    int DATE, NEW_INFECTIONS, NEW_DEATHS, NEW_TESTS, TOTAL_INFECTIONS_PER_MILLION;
+    int TOTAL_DEATHS_PER_MILLION;
+
     Spinner countrySpinner;
     Spinner chartSpinner1, chartSpinner2,chartSpinner3;
     ArrayList<ArrayList<String[]>> listDividedByCountries;
@@ -57,6 +60,13 @@ public class StatisticsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_statistics, container, false);
+
+        DATE = DataHolder.DATE;
+        NEW_INFECTIONS = DataHolder.NEW_CASES;
+        NEW_DEATHS = DataHolder.NEW_DEATHS;
+        NEW_TESTS = DataHolder.NEW_TESTS;
+        TOTAL_INFECTIONS_PER_MILLION = DataHolder.TOTAL_CASES_PER_MILLION;
+        TOTAL_DEATHS_PER_MILLION = DataHolder.TOTAL_DEATHS_PER_MILLION;
 
         listDividedByCountries = DataHolder.getListDividedByCountries();
         countryNameList = DataHolder.getCountryNameList();
@@ -176,7 +186,7 @@ public class StatisticsFragment extends Fragment {
                     return;
 
                 RectF bounds = mOnValueSelectedRectF;
-                System.out.println(chosenCountryList.get((int)h.getX())[3]);
+                System.out.println(chosenCountryList.get((int)h.getX())[DATE]);
                 barChart1.getBarBounds((BarEntry) e, bounds);
                 MPPointF position = barChart1.getPosition(e, YAxis.AxisDependency.LEFT);
 
@@ -238,7 +248,7 @@ public class StatisticsFragment extends Fragment {
         //Tutaj wyswietlimy sobie zakazenia dla ostatnigo tygodnia
         for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
         {
-            list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[5] )));
+            list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] )));
         }
         return list;
     }
@@ -249,7 +259,7 @@ public class StatisticsFragment extends Fragment {
         //Tutaj wyswietlimy sobie zakazenia dla ostatnigo tygodnia
         for(int i=chosenCountryList.size() -1; i > chosenCountryList.size() - 30; i--)
         {
-            list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[8] )));
+            list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_DEATHS] )));
         }
         return list;
     }
@@ -312,24 +322,24 @@ public class StatisticsFragment extends Fragment {
         //Tutaj wyswietlimy sobie zakazenia dla ostatnigo tygodnia
         for (int i = 0; i <= chosenCountryList.size() - 1; i++)
         {
-            if(chosenCountryList.get(i)[3].equals(chosenEndDate)) endIndex = i;
-            if(chosenCountryList.get(i)[3].equals(chosenStartDate)) startIndex = i;
+            if(chosenCountryList.get(i)[DATE].equals(chosenEndDate)) endIndex = i;
+            if(chosenCountryList.get(i)[DATE].equals(chosenStartDate)) startIndex = i;
         }
         for(int i = startIndex; i <= endIndex ; i ++)
         {
             if(statisticalData == "new infections")
             {
-                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[5] )));
+                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] )));
             }
             else if(statisticalData == "new deaths")
             {
-                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[8] )));
+                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_DEATHS] )));
             }
             else if(statisticalData == "new tests")
             {
-                if(!chosenCountryList.get(i)[25].equals(""))
+                if(!chosenCountryList.get(i)[NEW_TESTS].equals(""))
                 {
-                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[25] )));
+                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[NEW_TESTS] )));
                 }
                 else
                 {
@@ -340,7 +350,7 @@ public class StatisticsFragment extends Fragment {
             {
                 try
                 {
-                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[10] )));
+                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[TOTAL_INFECTIONS_PER_MILLION])));
                 }
                 catch (Exception e)
                 {
@@ -349,14 +359,14 @@ public class StatisticsFragment extends Fragment {
             }
             else if(statisticalData == "total deaths per 1 mln")
             {
-                list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[13] )));
+                list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[TOTAL_DEATHS_PER_MILLION] )));
             }
             else if(statisticalData == "% of positive tests")
             {
-                if(!chosenCountryList.get(i)[25].equals(""))
+                if(!chosenCountryList.get(i)[NEW_TESTS].equals(""))
                 {
-                    list.add(new BarEntry(i, (Float) Float.parseFloat(chosenCountryList.get(i)[5] ) /
-                            Float.parseFloat(chosenCountryList.get(i)[25] ) * 100 ));//lub 26
+                    list.add(new BarEntry(i, (Float) Float.parseFloat(chosenCountryList.get(i)[NEW_INFECTIONS] ) /
+                            Float.parseFloat(chosenCountryList.get(i)[NEW_TESTS] ) * 100 ));//lub 26
                 }
                 else
                 {
@@ -366,8 +376,8 @@ public class StatisticsFragment extends Fragment {
             else if(statisticalData == "day to day % growth")
             {
                 try {
-                    list.add(new BarEntry(i, (Float.parseFloat(chosenCountryList.get(i-1)[5]) /
-                            Integer.parseInt(chosenCountryList.get(i)[5] ) - 1 )* 100));
+                    list.add(new BarEntry(i, (Float.parseFloat(chosenCountryList.get(i-1)[NEW_INFECTIONS]) /
+                            Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ) - 1 )* 100));
                 }
                 catch (Exception e)
                 {
@@ -426,7 +436,7 @@ public class StatisticsFragment extends Fragment {
 
                 // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
                 // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
-                if(!(chosenStartDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
+                if(!(chosenStartDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[DATE]))) {
                     int[] parts = stringDateToInt(chosenStartDate);
                     datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
                 }
@@ -470,7 +480,7 @@ public class StatisticsFragment extends Fragment {
 
                 // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
                 // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
-                if(!(chosenEndDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
+                if(!(chosenEndDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[DATE]))) {
                     int[] parts = stringDateToInt(chosenEndDate);
                     datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
                 }
@@ -480,6 +490,13 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void updateChosenStuff() {
+        DATE = DataHolder.DATE;
+        NEW_INFECTIONS = DataHolder.NEW_CASES;
+        NEW_DEATHS = DataHolder.NEW_DEATHS;
+        NEW_TESTS = DataHolder.NEW_TESTS;
+        TOTAL_INFECTIONS_PER_MILLION = DataHolder.TOTAL_CASES_PER_MILLION;
+        TOTAL_DEATHS_PER_MILLION = DataHolder.TOTAL_DEATHS_PER_MILLION;
+
         chosenCountryName = DataHolder.getChosenCountryName();
         chosenCountryList = DataHolder.getChosenCountryList();
         chosenDate = DataHolder.getChosenDate();
@@ -493,7 +510,7 @@ public class StatisticsFragment extends Fragment {
 
     public long getChosenCountryMinTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = chosenCountryList.get(0)[3] + " 00:00:00";
+        String dateStr = chosenCountryList.get(0)[DATE] + " 00:00:00";
         Date date = null;
         try {
             date = sdf.parse(dateStr);
@@ -508,7 +525,7 @@ public class StatisticsFragment extends Fragment {
     // w postaci milisekund - uzywane przy zmianie daty w kalendarzu
     public long getChosenCountryMaxTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[3] + " 00:00:00";
+        String dateStr = chosenCountryList.get(chosenCountryList.size() - 1)[DATE] + " 00:00:00";
         //String dateStr = DataHolder.getLatestInfectionDate() + " 00:00:00";
         Date date = null;
         try {

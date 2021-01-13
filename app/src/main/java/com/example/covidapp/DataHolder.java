@@ -14,6 +14,8 @@ public class DataHolder {
     public static boolean isScoreListReady = false;
     private static ArrayList<String[]> scoreList;
 
+    private static String[] indexList;
+
     private static boolean isDividedListReady = false;
     private static ArrayList<ArrayList<String[]>> listDividedByCountries = new ArrayList<ArrayList<String[]>>();
 
@@ -39,6 +41,10 @@ public class DataHolder {
     public static Object updateLock = new Object();
     public static boolean isFragmentUpdateRequired = false;
 
+    public static int LOCATION, DATE, TOTAL_CASES, NEW_CASES, TOTAL_DEATHS, NEW_DEATHS;
+    public static int TOTAL_CASES_PER_MILLION, TOTAL_DEATHS_PER_MILLION, TOTAL_TESTS, NEW_TESTS;
+    public static int TOTAL_VACCINATIONS, NEW_VACCINATIONS, POPULATION;
+
 
 
     // GETTERY I SETTERY
@@ -56,6 +62,8 @@ public class DataHolder {
     // z pliku csv. Generalnie w zadnym innym miejscu nie ma potrzeby korzystania z niej
     public static void setScoreList(ArrayList<String[]> data) {
         scoreList = data;
+        indexList = scoreList.get(0);
+        setUpIndexes();
         isScoreListReady = true;
         if(isChosenCountryNameReady) {
             updateChosenCountryName(chosenCountryName);
@@ -73,6 +81,16 @@ public class DataHolder {
             divideListIntoCountries();
             return listDividedByCountries;
         }
+    }
+
+    public static int getIndex(String chosenParameter) {
+        for(int index = 0; index < indexList.length; index++) {
+            String parameter = indexList[index];
+            if(chosenParameter.equals(parameter)) {
+                return index;
+            }
+        }
+        return -1;
     }
 
     public static ArrayList<String> getCountryNameList() {
@@ -607,5 +625,21 @@ public class DataHolder {
             e.printStackTrace();
         }
         return monthlyList;
+    }
+
+    private static void setUpIndexes() {
+        LOCATION = getIndex("location");
+        DATE = getIndex("date");
+        TOTAL_CASES = getIndex("total_cases");
+        NEW_CASES = getIndex("new_cases");
+        TOTAL_DEATHS = getIndex("total_deaths");
+        NEW_DEATHS = getIndex("new_deaths");
+        TOTAL_CASES_PER_MILLION = getIndex("total_cases_per_million");
+        TOTAL_DEATHS_PER_MILLION = getIndex("total_deaths_per_million");
+        TOTAL_TESTS = getIndex("total_tests");
+        NEW_TESTS = getIndex("new_tests");
+        TOTAL_VACCINATIONS = getIndex("total_vaccinations");
+        NEW_VACCINATIONS = getIndex("new_vaccinations");
+        POPULATION = getIndex("population");
     }
 }

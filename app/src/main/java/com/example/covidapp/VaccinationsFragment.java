@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class VaccinationsFragment extends Fragment {
+    int POPULATION, TOTAL_VACCINATIONS;
+
     PieChart chart1, chart2;
     ArrayList<ArrayList<String[]>> listDividedByCountries;
     ArrayList<String[]> chosenCountryList;
@@ -52,6 +54,9 @@ public class VaccinationsFragment extends Fragment {
         countryNameList = DataHolder.getCountryNameList();
 
         swipeRefreshLayout = view.findViewById(R.id.vaccinationsRefresh);
+
+        POPULATION = DataHolder.POPULATION;
+        TOTAL_VACCINATIONS = DataHolder.TOTAL_VACCINATIONS;
 
         setUpCharts();
         //setUpDate();
@@ -111,8 +116,8 @@ public class VaccinationsFragment extends Fragment {
     public void setUpChart1()
     {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        float population = Float.parseFloat(DataHolder.getChosenRecord()[39]);
-        float vaccined = Float.parseFloat(DataHolder.getChosenRecord()[34]);
+        float population = Float.parseFloat(DataHolder.getChosenRecord()[POPULATION]);
+        float vaccined = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_VACCINATIONS]);
         startCountAnimation1(vaccinedNumberText, vaccined ," doses");
         startCountAnimation2(vaccinedText,vaccined/population * 100,"%");
 
@@ -159,6 +164,9 @@ public class VaccinationsFragment extends Fragment {
     }*/
 
     private void updateChosenStuff() {
+        POPULATION = DataHolder.POPULATION;
+        TOTAL_VACCINATIONS = DataHolder.TOTAL_VACCINATIONS;
+
         chosenCountryName = DataHolder.getChosenCountryName();
         chosenCountryList = DataHolder.getChosenCountryList();
     }
