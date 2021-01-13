@@ -183,22 +183,22 @@ public class CountryBriefFragment extends Fragment {
         int infectedWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
         infectedWeekly -= infectedDaily;
         if(infectedWeekly < 0) { infectedWeekly = 0; }
-        startCountAnimation(weeklyInfectionText, infectedWeekly, "Previous days of week\n");
+        startCountAnimation(weeklyInfectionText, infectedWeekly, "Previous days\nof week:\n");
 
         int infectedMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_INFECTIONS]);
         infectedMonthly -= infectedWeekly;
         if(infectedMonthly < 0) { infectedMonthly = 0; }
-        startCountAnimation(monthlyInfectionText, infectedMonthly, "Previous weeks of month\n");
+        startCountAnimation(monthlyInfectionText, infectedMonthly, "Previous weeks\nof month:\n");
 
         int deathsWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_DEATHS]);
         deathsWeekly -= deathsDaily;
         if(deathsWeekly < 0) { deathsWeekly = 0; }
-        startCountAnimation(weeklyDeathsText, deathsWeekly, "Previous days of week\n");
+        startCountAnimation(weeklyDeathsText, deathsWeekly, "Previous days\nof week:\n");
 
         int deathsMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_DEATHS]);
         deathsMonthly -= deathsWeekly;
         if(deathsMonthly < 0) { deathsMonthly = 0; }
-        startCountAnimation(monthlyDeathsText, deathsMonthly, "Previous weeks of month\n");
+        startCountAnimation(monthlyDeathsText, deathsMonthly, "Previous weeks\nof month:\n");
 
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);

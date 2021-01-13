@@ -53,9 +53,8 @@
                         android:padding="10px"
                         android:textStyle="bold"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/monthlyInfections"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.15"
                         app:layout_constraintTop_toBottomOf="@id/infectionsChart"/>
 
                     <TextView
@@ -68,8 +67,7 @@
                         android:textStyle="bold"
                         android:textAlignment="center"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.85"
+                        app:layout_constraintStart_toEndOf="@id/weeklyInfections"
                         app:layout_constraintTop_toBottomOf="@id/infectionsChart"/>
 
                     <view
@@ -91,9 +89,8 @@
                         android:padding="10px"
                         android:textStyle="bold"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/monthlyDeaths"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.15"
                         app:layout_constraintTop_toBottomOf="@id/deathsChart"/>
 
                     <TextView
@@ -106,8 +103,7 @@
                         android:textStyle="bold"
                         android:textAlignment="center"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="0.85"
+                        app:layout_constraintStart_toEndOf="@id/weeklyDeaths"
                         app:layout_constraintTop_toBottomOf="@id/deathsChart"/>
 
                     <TextView
