@@ -514,13 +514,11 @@ public class DataHolder {
             Date date = simpleDateFormat.parse(chosenDate);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
-            if(calendar.get(calendar.DAY_OF_MONTH) <= 7) {
-                return getMonthlyData();
-            }
             int days_to_subtract = calendar.get(calendar.DAY_OF_WEEK);
             if(days_to_subtract < 0) { days_to_subtract = 7; }
             calendar.add(calendar.DATE, -1*days_to_subtract);
             String previousDate = simpleDateFormat.format(calendar.getTime());
+            boolean isDateInRange = (previousDate.equals(isDateInChosenCountry(previousDate)));
             previousDate = isDateInChosenCountry(previousDate);
             String[] previousRecord = getRecordForDate(previousDate);
             for(int index = 0; index < chosenRecord.length; index++) {
@@ -532,10 +530,20 @@ public class DataHolder {
                     try {
                         float test = Float.parseFloat(currentParameter);
                         if(currentParameter.indexOf('.') >= 0 || previousParameter.indexOf('.') >= 0) {
-                            float resultParameter = Float.parseFloat(currentParameter) - Float.parseFloat(previousParameter);
+                            float resultParameter;
+                            if(isDateInRange) {
+                                resultParameter = Float.parseFloat(currentParameter) - Float.parseFloat(previousParameter);
+                            } else {
+                                resultParameter = Float.parseFloat(currentParameter);
+                            }
                             weeklyList[index] = Float.toString(resultParameter);
                         } else {
-                            int resultParameter = Integer.parseInt(currentParameter) - Integer.parseInt(previousParameter);
+                            int resultParameter;
+                            if(isDateInRange) {
+                                resultParameter = Integer.parseInt(currentParameter) - Integer.parseInt(previousParameter);
+                            } else {
+                                resultParameter = Integer.parseInt(currentParameter);
+                            }
                             weeklyList[index] = Integer.toString(resultParameter);
                         }
                     } catch(NumberFormatException e) {
@@ -562,6 +570,7 @@ public class DataHolder {
             int days_to_subtract = calendar.get(calendar.DAY_OF_MONTH);
             calendar.add(calendar.DATE, -1*days_to_subtract);
             String previousDate = simpleDateFormat.format(calendar.getTime());
+            boolean isDateInRange = (previousDate.equals(isDateInChosenCountry(previousDate)));
             previousDate = isDateInChosenCountry(previousDate);
             String[] previousRecord = getRecordForDate(previousDate);
             for(int index = 0; index < chosenRecord.length; index++) {
@@ -573,10 +582,20 @@ public class DataHolder {
                     try {
                         float test = Float.parseFloat(currentParameter);
                         if(currentParameter.indexOf('.') >= 0 || previousParameter.indexOf('.') >= 0) {
-                            float resultParameter = Float.parseFloat(currentParameter) - Float.parseFloat(previousParameter);
+                            float resultParameter;
+                            if(isDateInRange) {
+                                resultParameter = Float.parseFloat(currentParameter) - Float.parseFloat(previousParameter);
+                            } else {
+                                resultParameter = Float.parseFloat(currentParameter);
+                            }
                             monthlyList[index] = Float.toString(resultParameter);
                         } else {
-                            int resultParameter = Integer.parseInt(currentParameter) - Integer.parseInt(previousParameter);
+                            int resultParameter;
+                            if(isDateInRange) {
+                                resultParameter = Integer.parseInt(currentParameter) - Integer.parseInt(previousParameter);
+                            } else {
+                                resultParameter = Integer.parseInt(currentParameter);
+                            }
                             monthlyList[index] = Integer.toString(resultParameter);
                         }
                     } catch(NumberFormatException e) {

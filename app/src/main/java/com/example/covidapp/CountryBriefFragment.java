@@ -344,18 +344,23 @@ public class CountryBriefFragment extends Fragment {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         float infected = Float.parseFloat(DataHolder.getChosenRecord()[4]);
         float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[5]);
+        System.out.println("Today: " + newInfected);
         float weeklyInfected = Float.parseFloat(DataHolder.getWeeklyData()[4]);
+        System.out.println("This week: " + weeklyInfected);
         float monthlyInfected = Float.parseFloat(DataHolder.getMonthlyData()[4]);
+        System.out.println("This month: " + monthlyInfected);
+        float monthlyMinusWeekly = monthlyInfected - weeklyInfected;
+        if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
 
         //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
         //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
         pieEntries.add(new PieEntry(infected - monthlyInfected,"total"));
-        pieEntries.add(new PieEntry(monthlyInfected - weeklyInfected, "monthly"));
+        pieEntries.add(new PieEntry(monthlyMinusWeekly, "monthly"));
         pieEntries.add(new PieEntry(weeklyInfected - newInfected, "weekly"));
         pieEntries.add(new PieEntry(newInfected,"new"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors( Color.rgb(204,204,204), Color.rgb(0, 0, 255),
-                Color.rgb(0, 255, 0),Color.rgb(255,0,0));
+        dataSet.setColors( Color.rgb(204,204,204), Color.rgb(255, 150, 0),
+                Color.rgb(255, 100, 0),Color.rgb(255,0,0));
         PieData data = new PieData(dataSet);
         infectionsChart.setData(data);
         infectionsChart.setDrawSliceText(false);
@@ -374,10 +379,18 @@ public class CountryBriefFragment extends Fragment {
         //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
         float deaths = Float.parseFloat(DataHolder.getChosenRecord()[7]);
         float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[8]);
-        pieEntries.add(new PieEntry(deaths - newDeaths,"total"));
+        float weeklyDeaths = Float.parseFloat(DataHolder.getWeeklyData()[7]);
+        float monthlyDeaths = Float.parseFloat(DataHolder.getMonthlyData()[7]);
+        float monthlyMinusWeekly = monthlyDeaths - weeklyDeaths;
+        if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
+
+        pieEntries.add(new PieEntry(deaths - monthlyDeaths,"total"));
+        pieEntries.add(new PieEntry(monthlyMinusWeekly, "monthly"));
+        pieEntries.add(new PieEntry(weeklyDeaths - newDeaths, "weekly"));
         pieEntries.add(new PieEntry(newDeaths,"new"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors( Color.rgb(204,204,204),Color.rgb(255,0,0));
+        dataSet.setColors( Color.rgb(204,204,204), Color.rgb(255, 150, 0),
+                Color.rgb(255, 100, 0),Color.rgb(255,0,0));
         PieData data = new PieData(dataSet);
         deathsChart.setData(data);
         deathsChart.setDrawSliceText(false);
