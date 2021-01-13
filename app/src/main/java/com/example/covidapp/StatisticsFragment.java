@@ -261,7 +261,6 @@ public class StatisticsFragment extends Fragment {
         barDataSet.setColor(Color.rgb(204,204,204));
         BarData barData = new BarData(barDataSet);
         barData.setDrawValues(false);
-        chart.setData(barData);
         chart.animateY(1000);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.getXAxis().setDrawGridLines(false);
@@ -288,6 +287,7 @@ public class StatisticsFragment extends Fragment {
 
         chart.setTouchEnabled(true);
         chart.setHighlightPerTapEnabled(true);
+        chart.setData(barData);
 
 
     }
