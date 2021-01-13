@@ -167,7 +167,7 @@ public class DataHolder {
     public static void updateChosenCountryName(String newChosenCountryName) {
         // System.out.println("Wywolano metode updateChosenCountryName1");
 
-        if(scoreList != null) {
+        if(listDividedByCountries != null) {
             getCountryNameList();
 
             isChosenCountryNameReady = false;

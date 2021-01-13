@@ -46,6 +46,7 @@ public class CountryBriefFragment extends Fragment {
     TextView newTestsText;
     TextView dateText;
     TextView weeklyInfectionText, monthlyInfectionText;
+    TextView weeklyDeathsText, monthlyDeathsText;
     PieChart infectionsChart, deathsChart;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -77,6 +78,8 @@ public class CountryBriefFragment extends Fragment {
         swipeRefreshLayout = view.findViewById(R.id.countryBriefRefresh);
         weeklyInfectionText = view.findViewById(R.id.weeklyInfections);
         monthlyInfectionText = view.findViewById(R.id.monthlyInfections);
+        weeklyDeathsText = view.findViewById(R.id.weeklyDeaths);
+        monthlyDeathsText = view.findViewById(R.id.monthlyDeaths);
 
 
         // Pobieram dane wygenerowane przez DataHoldera
@@ -186,6 +189,16 @@ public class CountryBriefFragment extends Fragment {
         infectedMonthly -= infectedWeekly;
         if(infectedMonthly < 0) { infectedMonthly = 0; }
         startCountAnimation(monthlyInfectionText, infectedMonthly, "Previous weeks of month\n");
+
+        int deathsWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_DEATHS]);
+        deathsWeekly -= deathsDaily;
+        if(deathsWeekly < 0) { deathsWeekly = 0; }
+        startCountAnimation(weeklyDeathsText, deathsWeekly, "Previous days of week\n");
+
+        int deathsMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_DEATHS]);
+        deathsMonthly -= deathsWeekly;
+        if(deathsMonthly < 0) { deathsMonthly = 0; }
+        startCountAnimation(monthlyDeathsText, deathsMonthly, "Previous weeks of month\n");
 
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);

@@ -83,6 +83,34 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                     <TextView
+                        android:id="@+id/weeklyDeaths"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Previous days of week"
+                        android:background="@drawable/weekly_rounded_corner"
+                        android:padding="10px"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="0.15"
+                        app:layout_constraintTop_toBottomOf="@id/deathsChart"/>
+
+                    <TextView
+                        android:id="@+id/monthlyDeaths"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Previous weeks of month"
+                        android:background="@drawable/monthly_rounded_corner"
+                        android:padding="10px"
+                        android:textStyle="bold"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="0.85"
+                        app:layout_constraintTop_toBottomOf="@id/deathsChart"/>
+
+                    <TextView
                         android:id="@+id/newInfectionsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -179,7 +207,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/deathsChart" />
+                        app:layout_constraintTop_toBottomOf="@+id/weeklyDeaths" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>

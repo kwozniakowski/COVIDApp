@@ -45,6 +45,8 @@ public class WorldBriefFragment extends Fragment {
     TextView totalTestsText;
     TextView newTestsText;
     TextView dateText;
+    TextView weeklyInfectionText, monthlyInfectionText;
+    TextView weeklyDeathsText, monthlyDeathsText;
     PieChart infectionsChart, deathsChart;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -74,6 +76,10 @@ public class WorldBriefFragment extends Fragment {
         spinner = (Spinner)view.findViewById(R.id.header);
         statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
         swipeRefreshLayout = view.findViewById(R.id.worldBriefRefresh);
+        weeklyInfectionText = view.findViewById(R.id.weeklyInfections);
+        monthlyInfectionText = view.findViewById(R.id.monthlyInfections);
+        weeklyDeathsText = view.findViewById(R.id.weeklyDeaths);
+        monthlyDeathsText = view.findViewById(R.id.monthlyDeaths);
 
 
         // Pobieram dane wygenerowane przez DataHoldera
@@ -160,17 +166,40 @@ public class WorldBriefFragment extends Fragment {
     public void setTextsForCountry(TextView a,TextView b,TextView c,TextView d, TextView e, TextView f){
         dateText.setText(chosenDate);
 
-        int infectedTotal = Integer.parseInt(chosenRecord[4]);
+        int infectedTotal = Integer.parseInt(chosenRecord[TOTAL_INFECTIONS]);
         startCountAnimation(a, infectedTotal, "");
 
-        int infectedDaily = Integer.parseInt(chosenRecord[5]);
+        int infectedDaily = Integer.parseInt(chosenRecord[NEW_INFECTIONS]);
         startCountAnimation(b, infectedDaily, "+");
 
-        int deathsTotal = Integer.parseInt(chosenRecord[7]);
+        int deathsTotal = Integer.parseInt(chosenRecord[TOTAL_DEATHS]);
         startCountAnimation(c, deathsTotal, "");
 
-        int deathsDaily = Integer.parseInt(chosenRecord[8]);
+        int deathsDaily = Integer.parseInt(chosenRecord[NEW_DEATHS]);
         startCountAnimation(d, deathsDaily, "+");
+
+        System.out.println("Kraj: " + chosenCountryName);
+        System.out.println("Zakazonych: " + infectedTotal);
+
+        int infectedWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
+        infectedWeekly -= infectedDaily;
+        if(infectedWeekly < 0) { infectedWeekly = 0; }
+        startCountAnimation(weeklyInfectionText, infectedWeekly, "Previous days of week\n");
+
+        int infectedMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_INFECTIONS]);
+        infectedMonthly -= infectedWeekly;
+        if(infectedMonthly < 0) { infectedMonthly = 0; }
+        startCountAnimation(monthlyInfectionText, infectedMonthly, "Previous weeks of month\n");
+
+        int deathsWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_DEATHS]);
+        deathsWeekly -= deathsDaily;
+        if(deathsWeekly < 0) { deathsWeekly = 0; }
+        startCountAnimation(weeklyDeathsText, deathsWeekly, "Previous days of week\n");
+
+        int deathsMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_DEATHS]);
+        deathsMonthly -= deathsWeekly;
+        if(deathsMonthly < 0) { deathsMonthly = 0; }
+        startCountAnimation(monthlyDeathsText, deathsMonthly, "Previous weeks of month\n");
 
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
