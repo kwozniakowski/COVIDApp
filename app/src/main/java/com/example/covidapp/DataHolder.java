@@ -257,6 +257,8 @@ public class DataHolder {
             }
             listDividedByCountries = dividedList;
             isDividedListReady = true;
+            scoreList = null;
+            isScoreListReady = false;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -423,7 +425,7 @@ public class DataHolder {
     }
 
     private static void checkScoreList() throws Exception {
-        if(scoreList == null || scoreList.isEmpty()) {
+        if(!isScoreListReady) {
             throw new Exception("scoreList is empty!");
         }
     }

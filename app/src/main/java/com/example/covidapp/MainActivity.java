@@ -193,11 +193,9 @@ public class MainActivity extends AppCompatActivity {
                         waitForConnection(isLoadingScreenRequired);
                     }
                 } finally {
-                    if(DataHolder.isScoreListReady) {
-                        isUpdateInProgress = false;
-                        synchronized (DataHolder.updateLock) {
-                            DataHolder.updateLock.notify();
-                        }
+                    isUpdateInProgress = false;
+                    synchronized (DataHolder.updateLock) {
+                        DataHolder.updateLock.notify();
                     }
                     /*if(!isFileEmpty(csvFilename) && newFragment != null) {
                         changeFragment(newFragment);
