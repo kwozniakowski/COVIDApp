@@ -1,6 +1,10 @@
 package com.example.covidapp;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 
 // Glownym zadaniem tej klasy jest przechowywanie danych z pliku csv, ale takze
@@ -485,7 +489,104 @@ public class DataHolder {
         return getLatestDateForParameter(39);
     }
 
-    public static void setLatestInfectionDate() {
-        chosenDate = getLatestInfectionDate();
+    public static String[] getRecordForDate(String date) {
+        getChosenCountryList();
+        getChosenDate();
+
+        String[] selectedRecord = null;
+        for(String[] record:chosenCountryList) {
+            String currentRecordDate = record[3];
+            if(currentRecordDate.equals(date)) {
+                selectedRecord = record;
+                break;
+            }
+        }
+        return selectedRecord;
+    }
+
+    public static String[] getWeeklyData() {
+        getChosenCountryList();
+        getChosenDate();
+
+        String[] weeklyList = new String[chosenRecord.length];
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = simpleDateFormat.parse(chosenDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            if(calendar.get(calendar.DAY_OF_MONTH) <= 7) {
+                return getMonthlyData();
+            }
+            int days_to_subtract = calendar.get(calendar.DAY_OF_WEEK);
+            if(days_to_subtract < 0) { days_to_subtract = 7; }
+            calendar.add(calendar.DATE, -1*days_to_subtract);
+            String previousDate = simpleDateFormat.format(calendar.getTime());
+            previousDate = isDateInChosenCountry(previousDate);
+            String[] previousRecord = getRecordForDate(previousDate);
+            for(int index = 0; index < chosenRecord.length; index++) {
+                String currentParameter = chosenRecord[index];
+                String previousParameter = previousRecord[index];
+                if(currentParameter == null || previousParameter == null) {
+                    weeklyList[index] = null;
+                } else {
+                    try {
+                        float test = Float.parseFloat(currentParameter);
+                        if(currentParameter.indexOf('.') >= 0 || previousParameter.indexOf('.') >= 0) {
+                            float resultParameter = Float.parseFloat(currentParameter) - Float.parseFloat(previousParameter);
+                            weeklyList[index] = Float.toString(resultParameter);
+                        } else {
+                            int resultParameter = Integer.parseInt(currentParameter) - Integer.parseInt(previousParameter);
+                            weeklyList[index] = Integer.toString(resultParameter);
+                        }
+                    } catch(NumberFormatException e) {
+                        weeklyList[index] = currentParameter;
+                    }
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return weeklyList;
+    }
+
+    public static String[] getMonthlyData() {
+        getChosenCountryList();
+        getChosenDate();
+
+        String[] monthlyList = new String[chosenRecord.length];
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Date date = simpleDateFormat.parse(chosenDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int days_to_subtract = calendar.get(calendar.DAY_OF_MONTH);
+            calendar.add(calendar.DATE, -1*days_to_subtract);
+            String previousDate = simpleDateFormat.format(calendar.getTime());
+            previousDate = isDateInChosenCountry(previousDate);
+            String[] previousRecord = getRecordForDate(previousDate);
+            for(int index = 0; index < chosenRecord.length; index++) {
+                String currentParameter = chosenRecord[index];
+                String previousParameter = previousRecord[index];
+                if(currentParameter == null || previousParameter == null) {
+                    monthlyList[index] = null;
+                } else {
+                    try {
+                        float test = Float.parseFloat(currentParameter);
+                        if(currentParameter.indexOf('.') >= 0 || previousParameter.indexOf('.') >= 0) {
+                            float resultParameter = Float.parseFloat(currentParameter) - Float.parseFloat(previousParameter);
+                            monthlyList[index] = Float.toString(resultParameter);
+                        } else {
+                            int resultParameter = Integer.parseInt(currentParameter) - Integer.parseInt(previousParameter);
+                            monthlyList[index] = Integer.toString(resultParameter);
+                        }
+                    } catch(NumberFormatException e) {
+                        monthlyList[index] = currentParameter;
+                    }
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return monthlyList;
     }
 }
