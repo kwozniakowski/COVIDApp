@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#103050"
+    android:background="#021C35"
     tools:context=".CountryBriefFragment">
 
     <LinearLayout
@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:background="#103050"
                 android:paddingTop="5dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
