@@ -178,9 +178,6 @@ public class WorldBriefFragment extends Fragment {
         int deathsDaily = Integer.parseInt(chosenRecord[NEW_DEATHS]);
         startCountAnimation(d, deathsDaily, "+");
 
-        System.out.println("Kraj: " + chosenCountryName);
-        System.out.println("Zakazonych: " + infectedTotal);
-
         int infectedWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
         infectedWeekly -= infectedDaily;
         if(infectedWeekly < 0) { infectedWeekly = 0; }
