@@ -344,11 +344,8 @@ public class CountryBriefFragment extends Fragment {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         float infected = Float.parseFloat(DataHolder.getChosenRecord()[4]);
         float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[5]);
-        System.out.println("Today: " + newInfected);
         float weeklyInfected = Float.parseFloat(DataHolder.getWeeklyData()[4]);
-        System.out.println("This week: " + weeklyInfected);
         float monthlyInfected = Float.parseFloat(DataHolder.getMonthlyData()[4]);
-        System.out.println("This month: " + monthlyInfected);
         float monthlyMinusWeekly = monthlyInfected - weeklyInfected;
         if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
 
