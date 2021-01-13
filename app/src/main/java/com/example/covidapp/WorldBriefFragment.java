@@ -85,7 +85,7 @@ public class WorldBriefFragment extends Fragment {
 
         infectionsChart = view.findViewById(R.id.infectionsChart);
         deathsChart = view.findViewById(R.id.deathsChart);
-        setUpCharts();
+        //setUpCharts();
 
         //DataHolder.setLatestInfectionDate();
 

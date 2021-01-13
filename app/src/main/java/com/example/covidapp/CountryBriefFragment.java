@@ -45,6 +45,7 @@ public class CountryBriefFragment extends Fragment {
     TextView totalTestsText;
     TextView newTestsText;
     TextView dateText;
+    TextView weeklyInfectionText, monthlyInfectionText;
     PieChart infectionsChart, deathsChart;
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -74,6 +75,8 @@ public class CountryBriefFragment extends Fragment {
         spinner = (Spinner)view.findViewById(R.id.header);
         statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
         swipeRefreshLayout = view.findViewById(R.id.countryBriefRefresh);
+        weeklyInfectionText = view.findViewById(R.id.weeklyInfections);
+        monthlyInfectionText = view.findViewById(R.id.monthlyInfections);
 
 
         // Pobieram dane wygenerowane przez DataHoldera
@@ -85,7 +88,7 @@ public class CountryBriefFragment extends Fragment {
 
         infectionsChart = view.findViewById(R.id.infectionsChart);
         deathsChart = view.findViewById(R.id.deathsChart);
-        setUpCharts();
+        //setUpCharts();
 
         //DataHolder.setLatestInfectionDate();
 
@@ -173,6 +176,16 @@ public class CountryBriefFragment extends Fragment {
 
         int deathsDaily = Integer.parseInt(chosenRecord[NEW_DEATHS]);
         startCountAnimation(d, deathsDaily, "+");
+
+        int infectedWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
+        infectedWeekly -= infectedDaily;
+        if(infectedWeekly < 0) { infectedWeekly = 0; }
+        startCountAnimation(weeklyInfectionText, infectedWeekly, "Previous days of week\n");
+
+        int infectedMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_INFECTIONS]);
+        infectedMonthly -= infectedWeekly;
+        if(infectedMonthly < 0) { infectedMonthly = 0; }
+        startCountAnimation(monthlyInfectionText, infectedMonthly, "Previous weeks of month\n");
 
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
@@ -399,6 +412,8 @@ public class CountryBriefFragment extends Fragment {
         if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
         float weeklyMinusDaily = weeklyDeaths - newDeaths;
         if(weeklyMinusDaily < 0) { weeklyMinusDaily = 0; }
+
+
 
         pieEntries.add(new PieEntry(deaths - monthlyDeaths,"total"));
         pieEntries.add(new PieEntry(monthlyMinusWeekly, "monthly"));
