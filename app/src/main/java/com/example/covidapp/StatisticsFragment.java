@@ -265,6 +265,7 @@ public class StatisticsFragment extends Fragment {
         chart.animateY(1000);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.getXAxis().setDrawGridLines(false);
+
         chart.setAutoScaleMinMaxEnabled(false);
         chart.getAxisRight().setEnabled(false);
         chart.getLegend().setEnabled(false);
@@ -273,10 +274,22 @@ public class StatisticsFragment extends Fragment {
         chart.getAxisLeft().setEnabled(true);
         chart.getAxisLeft().setTextColor(Color.rgb(204,204,204));
 
+        //Nie chce dzialac i nie wiem dlaczego
+        if(!label.equals("day to day % growth"))
+        {
+            System.out.println("Weszlo");
+            chart.getAxisLeft().setAxisMinimum(0);
+        }
+        else
+        {
+            System.out.println("Kur*a");
+            chart.getAxisLeft().resetAxisMinimum();
+        }
+
         chart.setTouchEnabled(true);
         chart.setHighlightPerTapEnabled(true);
 
-        chart.getAxisLeft().setAxisMinimum(0);
+
     }
 
     public void setStatisticalData()
