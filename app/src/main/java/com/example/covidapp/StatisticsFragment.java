@@ -271,6 +271,11 @@ public class StatisticsFragment extends Fragment {
         barDataSet.setColor(Color.rgb(204,204,204));
         BarData barData = new BarData(barDataSet);
         barData.setDrawValues(false);
+
+        MyMarkerView mv = new MyMarkerView (getContext(), R.layout.my_marker_view_layout);
+        mv.setChartView(chart);
+        chart.setMarkerView(mv);
+
         chart.animateY(1000);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.getXAxis().setDrawGridLines(false);
@@ -286,12 +291,10 @@ public class StatisticsFragment extends Fragment {
         //Nie chce dzialac i nie wiem dlaczego
         if(!label.equals("day to day % growth"))
         {
-            System.out.println("Weszlo");
             chart.getAxisLeft().setAxisMinimum(0);
         }
         else
         {
-            System.out.println("Kur*a");
             chart.getAxisLeft().resetAxisMinimum();
         }
 
@@ -319,79 +322,99 @@ public class StatisticsFragment extends Fragment {
         ArrayList<BarEntry> list = new ArrayList<>();
         int startIndex = chosenCountryList.size()-2;
         int endIndex = chosenCountryList.size()-1;
+
         //Tutaj wyswietlimy sobie zakazenia dla ostatnigo tygodnia
         for (int i = 0; i <= chosenCountryList.size() - 1; i++)
         {
             if(chosenCountryList.get(i)[DATE].equals(chosenEndDate)) endIndex = i;
             if(chosenCountryList.get(i)[DATE].equals(chosenStartDate)) startIndex = i;
         }
+
         for(int i = startIndex; i <= endIndex ; i ++)
         {
+            boolean [] barDataList; //Przechowuje BOOLEAN, ktore wskazuja czy do tekstu ma byc dodany kolejno "%" oraz
+            //czy maja byc miejsca po przecinku w wyniku
             if(statisticalData == "new infections")
             {
-                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] )));
+                barDataList = new boolean[]{false,false};
+                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ), barDataList));
             }
             else if(statisticalData == "new deaths")
             {
-                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_DEATHS] )));
+                barDataList = new boolean[]{false,false};
+                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_DEATHS] ), barDataList));
             }
             else if(statisticalData == "new tests")
             {
+                barDataList = new boolean[]{false,false};
                 if(!chosenCountryList.get(i)[NEW_TESTS].equals(""))
                 {
-                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[NEW_TESTS] )));
+                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[NEW_TESTS] ),barDataList));
                 }
                 else
                 {
-                    list.add(new BarEntry(i, 0 ));
+                    list.add(new BarEntry(i, 0 ,barDataList));
                 }
             }
             else if(statisticalData == "total infections per 1 mln")
             {
+                barDataList = new boolean[]{false,true};
                 try
                 {
-                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[TOTAL_INFECTIONS_PER_MILLION])));
+                    list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[TOTAL_INFECTIONS_PER_MILLION]),barDataList));
                 }
                 catch (Exception e)
                 {
-                    list.add(new BarEntry(i, 0));
+                    list.add(new BarEntry(i, 0,barDataList));
                 }
             }
             else if(statisticalData == "total deaths per 1 mln")
             {
-                list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[TOTAL_DEATHS_PER_MILLION] )));
+                barDataList = new boolean[]{false,true};
+                list.add(new BarEntry(i, Float.parseFloat(chosenCountryList.get(i)[TOTAL_DEATHS_PER_MILLION] ),barDataList));
             }
             else if(statisticalData == "% of positive tests")
             {
+                barDataList = new boolean[]{true,true};
                 if(!chosenCountryList.get(i)[NEW_TESTS].equals(""))
                 {
                     list.add(new BarEntry(i, (Float) Float.parseFloat(chosenCountryList.get(i)[NEW_INFECTIONS] ) /
-                            Float.parseFloat(chosenCountryList.get(i)[NEW_TESTS] ) * 100 ));//lub 26
+                            Float.parseFloat(chosenCountryList.get(i)[NEW_TESTS] ) * 100 ,barDataList ));//lub 26
                 }
                 else
                 {
-                    list.add(new BarEntry(i,0));
+                    list.add(new BarEntry(i,0,barDataList));
                 }
             }
             else if(statisticalData == "day to day % growth")
             {
+                barDataList = new boolean[]{true,true};
                 try {
                     list.add(new BarEntry(i, (Float.parseFloat(chosenCountryList.get(i-1)[NEW_INFECTIONS]) /
-                            Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ) - 1 )* 100));
+                            Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ) - 1 )* 100, barDataList));
                 }
                 catch (Exception e)
                 {
-                    list.add(new BarEntry(i,0));
+                    list.add(new BarEntry(i,0,barDataList));
                 }
             }
             else if(statisticalData == "death rate")
             {
-                list.add(new BarEntry(i,(Float.parseFloat(chosenCountryList.get(i)[9]) /
-                        Float.parseFloat(chosenCountryList.get(i)[6]) * 100)));
+                barDataList = new boolean[]{false,true};
+                try{
+                    list.add(new BarEntry(i,(Float.parseFloat(chosenCountryList.get(i)[9]) /
+                            Float.parseFloat(chosenCountryList.get(i)[6]) * 100),barDataList));
+                }
+                catch (Exception e)
+                {
+                    list.add(new BarEntry(i,0,barDataList));
+                }
+
             }
             else
             {
-                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[5] )));
+                barDataList = new boolean[]{false,false};
+                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[5] ),barDataList));
             }
         }
         return list;

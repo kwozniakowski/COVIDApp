@@ -22,7 +22,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -64,7 +63,7 @@ public class WorldBriefFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_world_brief, container, false);
+        View view = inflater.inflate(R.layout.fragment_country_brief, container, false);
 
         totalInfectionsText = view.findViewById(R.id.totalInfectionsText);
         newInfectionsText = view.findViewById(R.id.newInfectionsText);
@@ -75,7 +74,7 @@ public class WorldBriefFragment extends Fragment {
         dateText = view.findViewById(R.id.dateButton);
         spinner = (Spinner)view.findViewById(R.id.header);
         statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
-        swipeRefreshLayout = view.findViewById(R.id.worldBriefRefresh);
+        swipeRefreshLayout = view.findViewById(R.id.countryBriefRefresh);
         weeklyInfectionText = view.findViewById(R.id.weeklyInfections);
         monthlyInfectionText = view.findViewById(R.id.monthlyInfections);
         weeklyDeathsText = view.findViewById(R.id.weeklyDeaths);
@@ -94,6 +93,7 @@ public class WorldBriefFragment extends Fragment {
         //setUpCharts();
 
         //DataHolder.setLatestInfectionDate();
+
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
@@ -137,6 +137,7 @@ public class WorldBriefFragment extends Fragment {
                 Runnable runnable = new Runnable() {
                     @Override
                     public void run() {
+                        //((MainActivity)getActivity()).deleteSomeFile("covid_data_file_info.txt");
                         DataHolder.isFragmentUpdateRequired = false;
                         ((MainActivity)getActivity()).checkForFileUpdates(false);
                         synchronized (DataHolder.updateLock) {
@@ -178,25 +179,25 @@ public class WorldBriefFragment extends Fragment {
         int deathsDaily = Integer.parseInt(chosenRecord[NEW_DEATHS]);
         startCountAnimation(d, deathsDaily, "+");
 
-        int infectedWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
-        infectedWeekly -= infectedDaily;
-        if(infectedWeekly < 0) { infectedWeekly = 0; }
-        startCountAnimation(weeklyInfectionText, infectedWeekly, "Previous days\nof week:\n");
+        int infectedWeekly = DataHolder.getWeeklyInfections();
+        /*infectedWeekly -= infectedDaily;
+        if(infectedWeekly < 0) { infectedWeekly = 0; }*/
+        startCountAnimation(weeklyInfectionText, infectedWeekly, "Last 7 days:\n+");
 
-        int infectedMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_INFECTIONS]);
-        infectedMonthly -= infectedWeekly;
-        if(infectedMonthly < 0) { infectedMonthly = 0; }
-        startCountAnimation(monthlyInfectionText, infectedMonthly, "Previous weeks\nof month:\n");
+        int infectedMonthly = DataHolder.getMonthlyInfections();
+        /*infectedMonthly -= infectedWeekly;
+        if(infectedMonthly < 0) { infectedMonthly = 0; }*/
+        startCountAnimation(monthlyInfectionText, infectedMonthly, "Last 30 days:\n+");
 
-        int deathsWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_DEATHS]);
-        deathsWeekly -= deathsDaily;
-        if(deathsWeekly < 0) { deathsWeekly = 0; }
-        startCountAnimation(weeklyDeathsText, deathsWeekly, "Previous days\nof week:\n");
+        int deathsWeekly = DataHolder.getWeeklyDeaths();
+        /*deathsWeekly -= deathsDaily;
+        if(deathsWeekly < 0) { deathsWeekly = 0; }*/
+        startCountAnimation(weeklyDeathsText, deathsWeekly, "Last 7 days:\n+");
 
-        int deathsMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_DEATHS]);
-        deathsMonthly -= deathsWeekly;
-        if(deathsMonthly < 0) { deathsMonthly = 0; }
-        startCountAnimation(monthlyDeathsText, deathsMonthly, "Previous weeks\nof month:\n");
+        int deathsMonthly = DataHolder.getMonthlyDeaths();
+        /*deathsMonthly -= deathsWeekly;
+        if(deathsMonthly < 0) { deathsMonthly = 0; }*/
+        startCountAnimation(monthlyDeathsText, deathsMonthly, "Last 30 days:\n+");
 
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
@@ -292,19 +293,24 @@ public class WorldBriefFragment extends Fragment {
 
     // Aktualizuje wartosci zmiennych
     public void updateChosenStuff() {
-        DATE = DataHolder.DATE;
-        TOTAL_INFECTIONS = DataHolder.TOTAL_CASES;
-        NEW_INFECTIONS = DataHolder.NEW_CASES;
-        TOTAL_DEATHS = DataHolder.TOTAL_DEATHS;
-        NEW_DEATHS = DataHolder.NEW_DEATHS;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DATE = DataHolder.DATE;
+                TOTAL_INFECTIONS = DataHolder.TOTAL_CASES;
+                NEW_INFECTIONS = DataHolder.NEW_CASES;
+                TOTAL_DEATHS = DataHolder.TOTAL_DEATHS;
+                NEW_DEATHS = DataHolder.NEW_DEATHS;
 
-        chosenCountryName = DataHolder.getChosenCountryName();
-        chosenCountryList = DataHolder.getChosenCountryList();
-        chosenDate = DataHolder.getChosenDate();
-        chosenRecord = DataHolder.getChosenRecord();
-        setTextsForCountry(totalInfectionsText,newInfectionsText,
-                totalDeathsText,newDeathsText,totalTestsText,newTestsText);
-        setUpCharts();
+                chosenCountryName = DataHolder.getChosenCountryName();
+                chosenCountryList = DataHolder.getChosenCountryList();
+                chosenDate = DataHolder.getChosenDate();
+                chosenRecord = DataHolder.getChosenRecord();
+                setTextsForCountry(totalInfectionsText,newInfectionsText,
+                        totalDeathsText,newDeathsText,totalTestsText,newTestsText);
+                setUpCharts();
+            }
+        });
     }
 
     public void updateChosenStuff(boolean isVisualUpdateRequired) {
@@ -361,7 +367,7 @@ public class WorldBriefFragment extends Fragment {
 
                 // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
                 // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
-                if(!(chosenDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[DATE]))) {
+                if(!(chosenDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[3]))) {
                     int[] parts = stringDateToInt(chosenDate);
                     datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
                 }
@@ -378,8 +384,8 @@ public class WorldBriefFragment extends Fragment {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         float infected = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_INFECTIONS]);
         float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[NEW_INFECTIONS]);
-        float weeklyInfected = Float.parseFloat(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
-        float monthlyInfected = Float.parseFloat(DataHolder.getMonthlyData()[TOTAL_INFECTIONS]);
+        int weeklyInfected = DataHolder.getWeeklyInfections();
+        float monthlyInfected = DataHolder.getMonthlyInfections();
         float monthlyMinusWeekly = monthlyInfected - weeklyInfected;
         if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
         float weeklyMinusDaily = weeklyInfected - newInfected;
@@ -412,8 +418,8 @@ public class WorldBriefFragment extends Fragment {
         //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
         float deaths = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_DEATHS]);
         float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[NEW_DEATHS]);
-        float weeklyDeaths = Float.parseFloat(DataHolder.getWeeklyData()[TOTAL_DEATHS]);
-        float monthlyDeaths = Float.parseFloat(DataHolder.getMonthlyData()[TOTAL_DEATHS]);
+        float weeklyDeaths = DataHolder.getWeeklyDeaths();
+        float monthlyDeaths = DataHolder.getMonthlyDeaths();
         float monthlyMinusWeekly = monthlyDeaths - weeklyDeaths;
         if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
         float weeklyMinusDaily = weeklyDeaths - newDeaths;

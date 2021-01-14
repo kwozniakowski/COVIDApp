@@ -2,6 +2,7 @@ package com.example.covidapp;
 
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -22,7 +23,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -180,25 +180,25 @@ public class CountryBriefFragment extends Fragment {
         int deathsDaily = Integer.parseInt(chosenRecord[NEW_DEATHS]);
         startCountAnimation(d, deathsDaily, "+");
 
-        int infectedWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
-        infectedWeekly -= infectedDaily;
-        if(infectedWeekly < 0) { infectedWeekly = 0; }
-        startCountAnimation(weeklyInfectionText, infectedWeekly, "Previous days\nof week:\n");
+        int infectedWeekly = DataHolder.getWeeklyInfections();
+        /*infectedWeekly -= infectedDaily;
+        if(infectedWeekly < 0) { infectedWeekly = 0; }*/
+        startCountAnimation(weeklyInfectionText, infectedWeekly, "Last 7 days:\n+");
 
-        int infectedMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_INFECTIONS]);
-        infectedMonthly -= infectedWeekly;
-        if(infectedMonthly < 0) { infectedMonthly = 0; }
-        startCountAnimation(monthlyInfectionText, infectedMonthly, "Previous weeks\nof month:\n");
+        int infectedMonthly = DataHolder.getMonthlyInfections();
+        /*infectedMonthly -= infectedWeekly;
+        if(infectedMonthly < 0) { infectedMonthly = 0; }*/
+        startCountAnimation(monthlyInfectionText, infectedMonthly, "Last 30 days:\n+");
 
-        int deathsWeekly = Integer.parseInt(DataHolder.getWeeklyData()[TOTAL_DEATHS]);
-        deathsWeekly -= deathsDaily;
-        if(deathsWeekly < 0) { deathsWeekly = 0; }
-        startCountAnimation(weeklyDeathsText, deathsWeekly, "Previous days\nof week:\n");
+        int deathsWeekly = DataHolder.getWeeklyDeaths();
+        /*deathsWeekly -= deathsDaily;
+        if(deathsWeekly < 0) { deathsWeekly = 0; }*/
+        startCountAnimation(weeklyDeathsText, deathsWeekly, "Last 7 days:\n+");
 
-        int deathsMonthly = Integer.parseInt(DataHolder.getMonthlyData()[TOTAL_DEATHS]);
-        deathsMonthly -= deathsWeekly;
-        if(deathsMonthly < 0) { deathsMonthly = 0; }
-        startCountAnimation(monthlyDeathsText, deathsMonthly, "Previous weeks\nof month:\n");
+        int deathsMonthly = DataHolder.getMonthlyDeaths();
+        /*deathsMonthly -= deathsWeekly;
+        if(deathsMonthly < 0) { deathsMonthly = 0; }*/
+        startCountAnimation(monthlyDeathsText, deathsMonthly, "Last 30 days:\n+");
 
         //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
         /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
@@ -385,8 +385,8 @@ public class CountryBriefFragment extends Fragment {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         float infected = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_INFECTIONS]);
         float newInfected = Float.parseFloat(DataHolder.getChosenRecord()[NEW_INFECTIONS]);
-        float weeklyInfected = Float.parseFloat(DataHolder.getWeeklyData()[TOTAL_INFECTIONS]);
-        float monthlyInfected = Float.parseFloat(DataHolder.getMonthlyData()[TOTAL_INFECTIONS]);
+        int weeklyInfected = DataHolder.getWeeklyInfections();
+        float monthlyInfected = DataHolder.getMonthlyInfections();
         float monthlyMinusWeekly = monthlyInfected - weeklyInfected;
         if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
         float weeklyMinusDaily = weeklyInfected - newInfected;
@@ -419,14 +419,12 @@ public class CountryBriefFragment extends Fragment {
         //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
         float deaths = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_DEATHS]);
         float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[NEW_DEATHS]);
-        float weeklyDeaths = Float.parseFloat(DataHolder.getWeeklyData()[TOTAL_DEATHS]);
-        float monthlyDeaths = Float.parseFloat(DataHolder.getMonthlyData()[TOTAL_DEATHS]);
+        float weeklyDeaths = DataHolder.getWeeklyDeaths();
+        float monthlyDeaths = DataHolder.getMonthlyDeaths();
         float monthlyMinusWeekly = monthlyDeaths - weeklyDeaths;
         if(monthlyMinusWeekly < 0) { monthlyMinusWeekly = 0; }
         float weeklyMinusDaily = weeklyDeaths - newDeaths;
         if(weeklyMinusDaily < 0) { weeklyMinusDaily = 0; }
-
-
 
         pieEntries.add(new PieEntry(deaths - monthlyDeaths,"total"));
         pieEntries.add(new PieEntry(monthlyMinusWeekly, "monthly"));
@@ -436,6 +434,7 @@ public class CountryBriefFragment extends Fragment {
         dataSet.setColors( Color.rgb(204,204,204), Color.rgb(255, 200, 0),
                 Color.rgb(255, 100, 0),Color.rgb(255,0,0));
         PieData data = new PieData(dataSet);
+
         deathsChart.setData(data);
         deathsChart.setDrawSliceText(false);
         deathsChart.getData().setDrawValues(false);

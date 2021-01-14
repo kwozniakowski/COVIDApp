@@ -524,12 +524,32 @@ public class DataHolder {
         return selectedRecord;
     }
 
-    public static String[] getWeeklyData() {
+    public static int getWeeklyInfections() {
         getChosenCountryList();
         getChosenDate();
 
-        String[] weeklyList = new String[chosenRecord.length];
+        /*String[] weeklyList = new String[chosenRecord.length];
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = simpleDateFormat.parse(chosenDate);*/
+        int sum = 0;
+        int index = 0;
+        for(int i = chosenCountryList.size()-1; i > 0 ;i --)
+        {
+            if(chosenCountryList.get(i)[3].equals(chosenDate))
+            {
+                index = i;
+            }
+        }
+        for (int i = index; i > index - 7 && i > 0; i --)
+        {
+            try {
+                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[5]);
+            }
+            catch (Exception e){
+            }
+        }
+
+        /*
         try {
             Date date = simpleDateFormat.parse(chosenDate);
             Calendar calendar = Calendar.getInstance();
@@ -574,7 +594,80 @@ public class DataHolder {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return weeklyList;
+        return weeklyList;*/
+        return sum;
+    }
+
+    public static int getWeeklyDeaths() {
+        getChosenCountryList();
+        getChosenDate();
+
+        int sum = 0;
+        int index = 30;
+        for(int i = chosenCountryList.size()-1; i > 0 ;i --)
+        {
+            if(chosenCountryList.get(i)[3].equals(chosenDate))
+            {
+                index = i;
+            }
+        }
+        for (int i = index; i > index - 7 && i > 0; i --)
+        {
+            try {
+                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[8]);
+            }
+            catch (Exception e){
+            }
+        }
+        return sum;
+    }
+
+    public static int getMonthlyInfections() {
+        getChosenCountryList();
+        getChosenDate();
+
+        int sum = 0;
+        int index = 0;
+        for(int i = chosenCountryList.size()-1; i > 0 ;i --)
+        {
+            if(chosenCountryList.get(i)[3].equals(chosenDate))
+            {
+                index = i;
+            }
+        }
+        for (int i = index; i > index - 30 && i > 0; i --)
+        {
+            try {
+                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[5]);
+            }
+            catch (Exception e){
+            }
+        }
+        return sum;
+    }
+
+    public static int getMonthlyDeaths() {
+        getChosenCountryList();
+        getChosenDate();
+
+        int sum = 0;
+        int index = 0;
+        for(int i = chosenCountryList.size()-1; i > 0 ;i --)
+        {
+            if(chosenCountryList.get(i)[3].equals(chosenDate))
+            {
+                index = i;
+            }
+        }
+        for (int i = index; i > index - 30 && i > 0; i --)
+        {
+            try {
+                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[8]);
+            }
+            catch (Exception e){
+            }
+        }
+        return sum;
     }
 
     public static String[] getMonthlyData() {
