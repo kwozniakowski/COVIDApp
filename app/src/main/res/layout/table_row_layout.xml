@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableHeader"
+    android:layout_width="fill_parent"
+    android:layout_height="0dp"
+    android:layout_margin="1dp"
+    android:layout_weight="1"
+    android:background="#103050">
+
+    <TextView
+        android:id="@+id/countryText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_column="0"
+        android:layout_margin="4dp"
+        android:layout_weight="0.6"
+        android:background="@drawable/main_spinner"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="Country"
+        android:textColor="#103050"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/valueText"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_column="2"
+        android:layout_margin="4dp"
+        android:layout_weight="0.4"
+        android:background="@drawable/main_spinner"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="%"
+        android:textColor="#103050"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+</TableRow>

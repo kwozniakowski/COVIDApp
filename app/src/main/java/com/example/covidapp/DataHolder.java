@@ -737,4 +737,29 @@ public class DataHolder {
         NEW_VACCINATIONS = getIndex("new_vaccinations");
         POPULATION = getIndex("population");
     }
+
+    public static ArrayList<ArrayList<String>> getAllRecentVaccinations() {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        for(String country : getCountryNameList())
+        {
+            String value = "";
+            chosenCountryName = country;
+            updateChosenCountryList();
+            String lastestDate = getLatestDateForParameter(34);
+
+            for(int i = getChosenCountryList().size() - 1; i >=0 ; i --)
+            {
+                if(getChosenCountryList().get(i)[3].equals(lastestDate))
+                {
+                    value = getChosenCountryList().get(i)[34];
+                }
+            }
+
+            list.add(new ArrayList<String>());
+            list.get(list.size()-1).add(chosenCountryName);
+            list.get(list.size()-1).add(value);
+
+        }
+        return list;
+    }
 }

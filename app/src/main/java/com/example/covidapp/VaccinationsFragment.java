@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -23,6 +25,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
 public class VaccinationsFragment extends Fragment {
@@ -59,10 +63,29 @@ public class VaccinationsFragment extends Fragment {
         TOTAL_VACCINATIONS = DataHolder.TOTAL_VACCINATIONS;
 
         setUpCharts();
-        //setUpDate();
 
-        //setUpChart1();
-        //setUpChart2();
+        ArrayList<ArrayList<String>> vaccinations = DataHolder.getAllRecentVaccinations();
+        Collections.sort(vaccinations, new Comparator<ArrayList<String>>() {
+            @Override
+            public int compare(ArrayList<String> o1, ArrayList<String> o2) {
+                return o2.get(1).compareTo(o1.get(1));
+            }
+        });
+        for (int i = 0; i<10; i++) {
+            final TableLayout mainTable = (TableLayout) view.findViewById(R.id.mainTable);
+            final TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_layout,null);
+            TextView countryText;
+            TextView valueText;
+
+            countryText = (TextView) tableRow.findViewById(R.id.countryText);
+            countryText.setText(vaccinations.get(i).get(0));
+
+            valueText = (TextView) tableRow.findViewById(R.id.valueText);
+            valueText.setText(vaccinations.get(i).get(1));
+
+            mainTable.addView(tableRow);
+        }
+
         spinner = view.findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countryNameList);
         spinner.setAdapter(adapter);
@@ -137,31 +160,6 @@ public class VaccinationsFragment extends Fragment {
         chart1.animateY(1000);
     }
 
-    /*public void setUpChart2()
-    {
-        ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
-        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
-        //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
-        float population = Float.parseFloat(DataHolder.getChosenRecord()[39]);
-        float vaccined = Float.parseFloat(DataHolder.getChosenRecord()[34]);
-        float infected = Float.parseFloat(DataHolder.getChosenRecord()[4]);
-        float possiblyInfected = infected * 9;
-        pieEntries.add(new PieEntry(population - vaccined - infected - possiblyInfected,"never infected"));
-        pieEntries.add(new PieEntry(vaccined,"vaccined"));
-        pieEntries.add(new PieEntry(infected,"infected"));
-        pieEntries.add(new PieEntry(possiblyInfected,"possibly infected"));
-        PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors( Color.rgb(200,200,200),Color.rgb(0,255,0),Color.rgb(255,0,0),Color.rgb(0,0,255));
-        PieData data = new PieData(dataSet);
-        chart2.setData(data);
-        chart2.setDrawSliceText(false);
-        chart2.getData().setDrawValues(false);
-        chart2.setDrawEntryLabels(false);
-        chart2.getDescription().setEnabled(false);
-        chart2.getLegend().setEnabled(false);
-        chart2.animateY(1000);
-    }*/
 
     private void updateChosenStuff() {
         POPULATION = DataHolder.POPULATION;
