@@ -64,11 +64,11 @@ public class VaccinationsFragment extends Fragment {
 
         setUpCharts();
 
-        ArrayList<ArrayList<String>> vaccinations = DataHolder.getAllRecentVaccinations();
-        Collections.sort(vaccinations, new Comparator<ArrayList<String>>() {
+        ArrayList<VaccinationDataRow> vaccinations = DataHolder.getAllRecentVaccinations();
+        Collections.sort(vaccinations, new Comparator<VaccinationDataRow>() {
             @Override
-            public int compare(ArrayList<String> o1, ArrayList<String> o2) {
-                return o2.get(1).compareTo(o1.get(1));
+            public int compare(VaccinationDataRow o1, VaccinationDataRow o2) {
+                return o1.compareTo(o2);
             }
         });
         for (int i = 0; i<10; i++) {
@@ -78,10 +78,10 @@ public class VaccinationsFragment extends Fragment {
             TextView valueText;
 
             countryText = (TextView) tableRow.findViewById(R.id.countryText);
-            countryText.setText(vaccinations.get(i).get(0));
+            countryText.setText(vaccinations.get(i).getCountry());
 
             valueText = (TextView) tableRow.findViewById(R.id.valueText);
-            valueText.setText(vaccinations.get(i).get(1));
+            valueText.setText(String.valueOf(vaccinations.get(i).getValue()));
 
             mainTable.addView(tableRow);
         }

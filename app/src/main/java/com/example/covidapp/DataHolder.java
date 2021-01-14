@@ -738,11 +738,12 @@ public class DataHolder {
         POPULATION = getIndex("population");
     }
 
-    public static ArrayList<ArrayList<String>> getAllRecentVaccinations() {
-        ArrayList<ArrayList<String>> list = new ArrayList<>();
+    public static ArrayList<VaccinationDataRow> getAllRecentVaccinations() {
+        ArrayList<VaccinationDataRow> list = new ArrayList<>();
         for(String country : getCountryNameList())
         {
             String value = "";
+            String population = "";
             chosenCountryName = country;
             updateChosenCountryList();
             String lastestDate = getLatestDateForParameter(34);
@@ -752,12 +753,14 @@ public class DataHolder {
                 if(getChosenCountryList().get(i)[3].equals(lastestDate))
                 {
                     value = getChosenCountryList().get(i)[34];
+                    population = getChosenCountryList().get(i)[POPULATION];
+
                 }
+                if(value.equals("")) value = "0";
+                if(population.equals("")) population = "1";
             }
 
-            list.add(new ArrayList<String>());
-            list.get(list.size()-1).add(chosenCountryName);
-            list.get(list.size()-1).add(value);
+            list.add(new VaccinationDataRow(chosenCountryName,Double.parseDouble(value)/Double.parseDouble(population)));
 
         }
         return list;
