@@ -55,92 +55,78 @@
                     android:layout_height="match_parent">
 
                     <Spinner
-                        android:id="@+id/chartSpinner1"
+                        android:id="@+id/chartSpinner2"
                         android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="40dp"
-                        android:layout_marginLeft="20dp"
+                        android:layout_height="36dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="40dp"
-                        android:layout_marginRight="40dp"
                         android:background="@drawable/main_spinner"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/chartSpinner1"
+                        app:layout_constraintTop_toBottomOf="@+id/chartSpinner1" />
+
+                    <Spinner
+                        android:id="@+id/chartSpinner1"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="40dp"
+                        android:background="@drawable/main_spinner"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textView11"
+                        app:layout_constraintTop_toBottomOf="@+id/combinedChart" />
+
+                    <com.github.mikephil.charting.charts.CombinedChart
+                        android:id="@+id/combinedChart"
+                        android:layout_width="0dp"
+                        android:layout_height="300dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+                    <TextView
+                        android:id="@+id/textView11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Bars >"
+                        android:textColor="#CCCCCC"
+                        android:textSize="30sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/chartSpinner1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/chartSpinner1" />
+
+                    <TextView
+                        android:id="@+id/textView13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="40dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Line >"
+                        android:textColor="#FF3232"
+                        android:textSize="30sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/chartSpinner2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/chartSpinner2" />
+
+                    <TextView
+                        android:id="@+id/textView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="Statistics"
+                        android:textColor="#CCCCCC"
+                        android:textSize="70sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <Spinner
-                        android:id="@+id/chartSpinner2"
-                        android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="40dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="40dp"
-                        android:layout_marginRight="40dp"
-                        android:background="@drawable/main_spinner"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/barChart1" />
-
-                    <Spinner
-                        android:id="@+id/chartSpinner3"
-                        android:layout_width="0dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="40dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="40dp"
-                        android:layout_marginRight="40dp"
-                        android:background="@drawable/main_spinner"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="1.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/barChart2" />
-
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/barChart1"
-                        android:layout_width="0dp"
-                        android:layout_height="300dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginRight="20dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/chartSpinner1" />
-
-
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/barChart2"
-                        android:layout_width="0dp"
-                        android:layout_height="300dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginRight="20dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/chartSpinner2" />
-
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/barChart3"
-                        android:layout_width="0dp"
-                        android:layout_height="300dp"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginRight="20dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/chartSpinner3" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>

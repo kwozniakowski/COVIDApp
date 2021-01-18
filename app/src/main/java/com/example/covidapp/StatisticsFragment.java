@@ -17,14 +17,16 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.MPPointF;
 
@@ -41,12 +43,12 @@ public class StatisticsFragment extends Fragment {
     int TOTAL_DEATHS_PER_MILLION;
 
     Spinner countrySpinner;
-    Spinner chartSpinner1, chartSpinner2,chartSpinner3;
+    Spinner chartSpinner1, chartSpinner2;
     ArrayList<ArrayList<String[]>> listDividedByCountries;
     ArrayList<String[]> chosenCountryList;
     String chosenCountryName;
     ArrayList<String> countryNameList;
-    BarChart barChart1, barChart2, barChart3;
+    CombinedChart combinedChart;
     ArrayList<String> statisticalData;
     TextView dateText1, dateText2;
     private int mDate, mMonth, mYear;
@@ -77,22 +79,15 @@ public class StatisticsFragment extends Fragment {
         countrySpinner = view.findViewById(R.id.header);
         chartSpinner1 = view.findViewById(R.id.chartSpinner1);
         chartSpinner2 = view.findViewById(R.id.chartSpinner2);
-        chartSpinner3 = view.findViewById(R.id.chartSpinner3);
 
         swipeRefreshLayout = view.findViewById(R.id.statisticsRefresh);
 
         //wykresy
-        barChart1 = view.findViewById(R.id.barChart1);
-        barChart2 = view.findViewById(R.id.barChart2);
-        barChart3 = view.findViewById(R.id.barChart3);
+        combinedChart = view.findViewById(R.id.combinedChart);
 
         //text kalendarza
         dateText1 = view.findViewById(R.id.dateText1);
         dateText2 = view.findViewById(R.id.dateText2);
-        //Funkcja odpowiedzialna za rysowanie wykresu
-        drawChart(barChart1, "new infections");
-        drawChart(barChart2, "new deaths");
-        drawChart(barChart3, "new tests");
 
         chosenEndDate = DataHolder.getChosenDate();
         chosenStartDate = subtractDaysFromDate(chosenEndDate, 7); //DataHolder.getChosenDate();
@@ -112,12 +107,9 @@ public class StatisticsFragment extends Fragment {
                 DataHolder.updateChosenCountryName(countrySpinner.getSelectedItem().toString());
                 chosenCountryName = DataHolder.getChosenCountryName();
                 updateChosenStuff();
-                drawChart(barChart1, "new infections");
-                drawChart(barChart2, "new deaths");
-                drawChart(barChart3, "new tests");
+                drawChart(combinedChart);
                 chartSpinner1.setSelection(0);
                 chartSpinner2.setSelection(1);
-                chartSpinner3.setSelection(2);
             }
 
             @Override
@@ -134,7 +126,7 @@ public class StatisticsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 DataHolder.updateChosenCountryName(countrySpinner.getSelectedItem().toString());
                 chosenCountryName = DataHolder.getChosenCountryName();
-                drawChart(barChart1, chartSpinner1.getSelectedItem().toString());
+                drawChart(combinedChart);
             }
 
             @Override
@@ -151,7 +143,7 @@ public class StatisticsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 DataHolder.updateChosenCountryName(countrySpinner.getSelectedItem().toString());
                 chosenCountryName = DataHolder.getChosenCountryName();
-                drawChart(barChart2, chartSpinner2.getSelectedItem().toString());
+                drawChart(combinedChart);
             }
 
             @Override
@@ -160,25 +152,11 @@ public class StatisticsFragment extends Fragment {
             }
         });
 
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, statisticalData);
-        chartSpinner3.setAdapter(adapter3);
-        chartSpinner3.setSelection(0);
-        chartSpinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                DataHolder.updateChosenCountryName(countrySpinner.getSelectedItem().toString());
-                chosenCountryName = DataHolder.getChosenCountryName();
-                drawChart(barChart3, chartSpinner3.getSelectedItem().toString());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        //Funkcja odpowiedzialna za rysowanie wykresu
+        drawChart(combinedChart);
 
         //Poniższe nie działa, trzeba zrobić żeby po naciśnięciu na słupek pokazywała się dokładna wartość z datą
-        barChart1.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+        combinedChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             protected RectF mOnValueSelectedRectF = new RectF();
             @Override
             public void onValueSelected(Entry e, Highlight h) {
@@ -187,15 +165,15 @@ public class StatisticsFragment extends Fragment {
 
                 RectF bounds = mOnValueSelectedRectF;
                 System.out.println(chosenCountryList.get((int)h.getX())[DATE]);
-                barChart1.getBarBounds((BarEntry) e, bounds);
-                MPPointF position = barChart1.getPosition(e, YAxis.AxisDependency.LEFT);
+                combinedChart.getClipBounds();//getBarBounds((BarEntry) e, bounds);
+                MPPointF position = combinedChart.getPosition(e, YAxis.AxisDependency.LEFT);
 
                 System.out.println("bounds"+ bounds.toString());
                 System.out.println("position"+ position.toString());
 
                 System.out.println("x-index" +
-                        "low: " + barChart1.getLowestVisibleX() + ", high: "
-                        + barChart1.getHighestVisibleX());
+                        "low: " + combinedChart.getLowestVisibleX() + ", high: "
+                        + combinedChart.getHighestVisibleX());
 
                 MPPointF.recycleInstance(position);
             }
@@ -236,11 +214,6 @@ public class StatisticsFragment extends Fragment {
     }
 
 
-
-
-
-
-
     private ArrayList<BarEntry> dataValues1()
     {
         ArrayList<String[]> chosenCountryList = DataHolder.getChosenCountryList();
@@ -264,32 +237,52 @@ public class StatisticsFragment extends Fragment {
         return list;
     }
 
-    private void drawChart(BarChart chart, String label)
+    private void drawChart(CombinedChart chart)
     {
-        BarDataSet barDataSet = new BarDataSet(dataValues(label),label);
+        String label1 = chartSpinner1.getSelectedItem().toString();
+        String label2 = chartSpinner2.getSelectedItem().toString();
+        BarDataSet barDataSet;
+        LineDataSet lineDataSet;
+        CombinedData combinedData = new CombinedData();
 
+        barDataSet = new BarDataSet(barDataValues(label1),label1);
         barDataSet.setColor(Color.rgb(204,204,204));
+        if(label1.equals("nothing")) barDataSet.setVisible(false);
+        barDataSet.setAxisDependency(chart.getAxisLeft().getAxisDependency());
         BarData barData = new BarData(barDataSet);
         barData.setDrawValues(false);
+        combinedData.setData(barData);
 
+        lineDataSet = new LineDataSet(lineDataValues(label2),label2);
+        lineDataSet.setColor(Color.rgb(255,50,50));
+        lineDataSet.setCircleColor(Color.rgb(255,50,50));
+        if(label2.equals("nothing")) lineDataSet.setVisible(false);
+        lineDataSet.setAxisDependency(chart.getAxisRight().getAxisDependency());
+        LineData lineData = new LineData(lineDataSet);
+        lineData.setDrawValues(false);
+
+        combinedData.setData(lineData);
         MyMarkerView mv = new MyMarkerView (getContext(), R.layout.my_marker_view_layout);
         mv.setChartView(chart);
         chart.setMarkerView(mv);
 
         chart.animateY(1000);
         chart.getAxisLeft().setDrawGridLines(false);
-        chart.getXAxis().setDrawGridLines(false);
+        chart.getAxisRight().setDrawGridLines(false);
+        chart.getAxisRight().setGranularity(10f);
+        chart.getAxisLeft().setGranularity(1f);
+        chart.getAxisLeft().setAxisMinimum(0f);
 
-        chart.setAutoScaleMinMaxEnabled(false);
-        chart.getAxisRight().setEnabled(false);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.setAutoScaleMinMaxEnabled(true);
         chart.getLegend().setEnabled(false);
         chart.getDescription().setEnabled(false);
         chart.getXAxis().setEnabled(false);
         chart.getAxisLeft().setEnabled(true);
         chart.getAxisLeft().setTextColor(Color.rgb(204,204,204));
+        chart.getAxisRight().setTextColor(Color.rgb(255,50,50));
 
-        //Nie chce dzialac i nie wiem dlaczego
-        if(!label.equals("day to day % growth"))
+        if(!label1.equals("day to day % growth"))
         {
             chart.getAxisLeft().setAxisMinimum(0);
         }
@@ -297,11 +290,18 @@ public class StatisticsFragment extends Fragment {
         {
             chart.getAxisLeft().resetAxisMinimum();
         }
+        if(!label2.equals("day to day % growth"))
+        {
+            chart.getAxisRight().setAxisMinimum(0);
+        }
+        else
+        {
+            chart.getAxisRight().resetAxisMinimum();
+        }
 
         chart.setTouchEnabled(true);
         chart.setHighlightPerTapEnabled(true);
-        chart.setData(barData);
-
+        chart.setData(combinedData);
 
     }
 
@@ -315,9 +315,10 @@ public class StatisticsFragment extends Fragment {
         statisticalData.add("% of positive tests");
         statisticalData.add("day to day % growth");
         statisticalData.add("death rate");
+        statisticalData.add("nothing");
     }
 
-    private ArrayList<BarEntry> dataValues(String statisticalData) {
+    private ArrayList<BarEntry> barDataValues(String statisticalData) {
         ArrayList<String[]> chosenCountryList = DataHolder.getChosenCountryList();
         ArrayList<BarEntry> list = new ArrayList<>();
         int startIndex = chosenCountryList.size()-2;
@@ -411,6 +412,11 @@ public class StatisticsFragment extends Fragment {
                 }
 
             }
+            else if(statisticalData == "nothing")
+            {
+                barDataList = new boolean[]{false,false};
+                list.add(new BarEntry(i,0,barDataList));
+            }
             else
             {
                 barDataList = new boolean[]{false,false};
@@ -419,6 +425,115 @@ public class StatisticsFragment extends Fragment {
         }
         return list;
     }
+
+    private ArrayList<Entry> lineDataValues(String statisticalData) {
+        ArrayList<String[]> chosenCountryList = DataHolder.getChosenCountryList();
+        ArrayList<Entry> list = new ArrayList<>();
+        int startIndex = chosenCountryList.size()-2;
+        int endIndex = chosenCountryList.size()-1;
+
+        //Tutaj wyswietlimy sobie zakazenia dla ostatnigo tygodnia
+        for (int i = 0; i <= chosenCountryList.size() - 1; i++)
+        {
+            if(chosenCountryList.get(i)[DATE].equals(chosenEndDate)) endIndex = i;
+            if(chosenCountryList.get(i)[DATE].equals(chosenStartDate)) startIndex = i;
+        }
+
+        for(int i = startIndex; i <= endIndex ; i ++)
+        {
+            boolean [] lineDataList; //Przechowuje BOOLEAN, ktore wskazuja czy do tekstu ma byc dodany kolejno "%" oraz
+            //czy maja byc miejsca po przecinku w wyniku
+            if(statisticalData == "new infections")
+            {
+                lineDataList = new boolean[]{false,false};
+                list.add(new Entry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ), lineDataList));
+            }
+            else if(statisticalData == "new deaths")
+            {
+                lineDataList = new boolean[]{false,false};
+                list.add(new Entry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_DEATHS] ), lineDataList));
+            }
+            else if(statisticalData == "new tests")
+            {
+                lineDataList = new boolean[]{false,false};
+                if(!chosenCountryList.get(i)[NEW_TESTS].equals(""))
+                {
+                    list.add(new Entry(i, Float.parseFloat(chosenCountryList.get(i)[NEW_TESTS] ),lineDataList));
+                }
+                else
+                {
+                    list.add(new Entry(i, 0 ,lineDataList));
+                }
+            }
+            else if(statisticalData == "total infections per 1 mln")
+            {
+                lineDataList = new boolean[]{false,true};
+                try
+                {
+                    list.add(new Entry(i, Float.parseFloat(chosenCountryList.get(i)[TOTAL_INFECTIONS_PER_MILLION]),lineDataList));
+                }
+                catch (Exception e)
+                {
+                    list.add(new Entry(i, 0,lineDataList));
+                }
+            }
+            else if(statisticalData == "total deaths per 1 mln")
+            {
+                lineDataList = new boolean[]{false,true};
+                list.add(new Entry(i, Float.parseFloat(chosenCountryList.get(i)[TOTAL_DEATHS_PER_MILLION] ),lineDataList));
+            }
+            else if(statisticalData == "% of positive tests")
+            {
+                lineDataList = new boolean[]{true,true};
+                if(!chosenCountryList.get(i)[NEW_TESTS].equals(""))
+                {
+                    list.add(new Entry(i, (Float) Float.parseFloat(chosenCountryList.get(i)[NEW_INFECTIONS] ) /
+                            Float.parseFloat(chosenCountryList.get(i)[NEW_TESTS] ) * 100 ,lineDataList ));//lub 26
+                }
+                else
+                {
+                    list.add(new Entry(i,0,lineDataList));
+                }
+            }
+            else if(statisticalData == "day to day % growth")
+            {
+                lineDataList = new boolean[]{true,true};
+                try {
+                    list.add(new Entry(i, (Float.parseFloat(chosenCountryList.get(i-1)[NEW_INFECTIONS]) /
+                            Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ) - 1 )* 100, lineDataList));
+                }
+                catch (Exception e)
+                {
+                    list.add(new Entry(i,0,lineDataList));
+                }
+            }
+            else if(statisticalData == "death rate")
+            {
+                lineDataList = new boolean[]{false,true};
+                try{
+                    list.add(new Entry(i,(Float.parseFloat(chosenCountryList.get(i)[9]) /
+                            Float.parseFloat(chosenCountryList.get(i)[6]) * 100),lineDataList));
+                }
+                catch (Exception e)
+                {
+                    list.add(new Entry(i,0,lineDataList));
+                }
+
+            }
+            else if(statisticalData == "nothing")
+            {
+                lineDataList = new boolean[]{false,false};
+                list.add(new Entry(i,0,lineDataList));
+            }
+            else
+            {
+                lineDataList = new boolean[]{false,false};
+                list.add(new Entry(i, Integer.parseInt(chosenCountryList.get(i)[5] ),lineDataList));
+            }
+        }
+        return list;
+    }
+
 
     private void setUpCalendar() {
         // Wyswietlanie kalendarza do wyboru daty
@@ -446,9 +561,9 @@ public class StatisticsFragment extends Fragment {
                         // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
                         // Dlatego tutaj tez trzeba zaktualizowac dane
                         updateChosenStuff();
-                        drawChart(barChart1,chartSpinner1.getSelectedItem().toString());
-                        drawChart(barChart2,chartSpinner2.getSelectedItem().toString());
-                        drawChart(barChart3,chartSpinner3.getSelectedItem().toString());
+                        drawChart(combinedChart);
+                        //drawChart(barChart2,chartSpinner2.getSelectedItem().toString());
+                        //drawChart(barChart3,chartSpinner3.getSelectedItem().toString());
 
                     }
                 }, mYear, mMonth, mDate);
@@ -490,9 +605,9 @@ public class StatisticsFragment extends Fragment {
                         // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
                         // Dlatego tutaj tez trzeba zaktualizowac dane
                         updateChosenStuff();
-                        drawChart(barChart1,chartSpinner1.getSelectedItem().toString());
-                        drawChart(barChart2,chartSpinner2.getSelectedItem().toString());
-                        drawChart(barChart3,chartSpinner3.getSelectedItem().toString());
+                        drawChart(combinedChart);
+                        //drawChart(barChart2,chartSpinner2.getSelectedItem().toString());
+                        //drawChart(barChart3,chartSpinner3.getSelectedItem().toString());
 
                     }
                 }, mYear, mMonth, mDate);
