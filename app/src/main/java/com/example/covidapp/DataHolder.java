@@ -498,15 +498,15 @@ public class DataHolder {
     }
 
     public static String getLatestVaccinationDate() {
-        return getLatestDateForParameter(34);
+        return getLatestDateForParameter(TOTAL_VACCINATIONS);
     }
 
     public static String getLatestInfectionDate() {
-        return getLatestDateForParameter(4);
+        return getLatestDateForParameter(TOTAL_CASES);
     }
 
     public static String getLatestPopulationDate() {
-        return getLatestDateForParameter(39);
+        return getLatestDateForParameter(POPULATION);
     }
 
     public static String[] getRecordForDate(String date) {
@@ -543,7 +543,7 @@ public class DataHolder {
         for (int i = index; i > index - 7 && i > 0; i --)
         {
             try {
-                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[5]);
+                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[NEW_CASES]);
             }
             catch (Exception e){
             }
@@ -614,7 +614,7 @@ public class DataHolder {
         for (int i = index; i > index - 7 && i > 0; i --)
         {
             try {
-                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[8]);
+                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[NEW_DEATHS]);
             }
             catch (Exception e){
             }
@@ -638,7 +638,7 @@ public class DataHolder {
         for (int i = index; i > index - 30 && i > 0; i --)
         {
             try {
-                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[5]);
+                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[NEW_CASES]);
             }
             catch (Exception e){
             }
@@ -662,7 +662,7 @@ public class DataHolder {
         for (int i = index; i > index - 30 && i > 0; i --)
         {
             try {
-                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[8]);
+                sum = sum + Integer.parseInt(getChosenCountryList().get(i)[NEW_DEATHS]);
             }
             catch (Exception e){
             }

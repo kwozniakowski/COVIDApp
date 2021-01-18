@@ -22,7 +22,7 @@ public class VaccinationDataRow implements Comparable<VaccinationDataRow> {
         double value = (double) o.getValue();
         /* For Ascending order*/
         double thisv = this.value;
-        return (int) value * 1000 - (int) thisv * 1000;
+        return Double.compare(value,thisv);
     }
 
 }

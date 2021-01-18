@@ -23,6 +23,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,17 +72,20 @@ public class VaccinationsFragment extends Fragment {
                 return o1.compareTo(o2);
             }
         });
-        for (int i = 0; i<10; i++) {
+        for (int i = 0; i<20; i++) {
             final TableLayout mainTable = (TableLayout) view.findViewById(R.id.mainTable);
             final TableRow tableRow = (TableRow) getLayoutInflater().inflate(R.layout.table_row_layout,null);
             TextView countryText;
             TextView valueText;
 
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(2);
+
             countryText = (TextView) tableRow.findViewById(R.id.countryText);
             countryText.setText(vaccinations.get(i).getCountry());
 
             valueText = (TextView) tableRow.findViewById(R.id.valueText);
-            valueText.setText(String.valueOf(vaccinations.get(i).getValue()));
+            valueText.setText(String.valueOf(df.format(vaccinations.get(i).getValue() * 100) ));
 
             mainTable.addView(tableRow);
         }
@@ -185,7 +189,7 @@ public class VaccinationsFragment extends Fragment {
         String infectionDate = DataHolder.getLatestInfectionDate();
         String vaccinationDate = DataHolder.getLatestVaccinationDate();
         String populationDate = DataHolder.getLatestPopulationDate();
-        if(infectionDate.isEmpty() || vaccinationDate.isEmpty() || populationDate.isEmpty()) {
+        if(infectionDate.equals("") || vaccinationDate.equals("") || populationDate.equals("")) {
             return false;
         } else {
             String minDate = infectionDate;

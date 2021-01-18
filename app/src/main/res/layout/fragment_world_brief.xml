@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -17,9 +18,9 @@
         app:layout_constraintTop_toBottomOf="@+id/dateButton">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/worldBriefRefresh"
+            android:id="@+id/countryBriefRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <ScrollView
                 android:id="@+id/scrollView2"
@@ -31,7 +32,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="700dp">
+                    android:layout_height="match_parent">
 
                     <view
                         android:id="@+id/infectionsChart"
@@ -41,34 +42,37 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.495"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView2"
-                        />
+                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
                     <TextView
                         android:id="@+id/weeklyInfections"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Previous days of week"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@drawable/weekly_rounded_corner"
                         android:padding="10px"
-                        android:textStyle="bold"
+                        android:text="Last 7 days:"
                         android:textAlignment="center"
-                        app:layout_constraintEnd_toStartOf="@id/monthlyInfections"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@id/monthlyDeaths"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/infectionsChart"/>
+                        app:layout_constraintTop_toBottomOf="@id/infectionsChart" />
 
                     <TextView
                         android:id="@+id/monthlyInfections"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Previous weeks of month"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@drawable/monthly_rounded_corner"
                         android:padding="10px"
-                        android:textStyle="bold"
+                        android:text="Last 30 days:"
                         android:textAlignment="center"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/weeklyInfections"
-                        app:layout_constraintTop_toBottomOf="@id/infectionsChart"/>
+                        app:layout_constraintTop_toBottomOf="@id/infectionsChart" />
 
                     <view
                         android:id="@+id/deathsChart"
@@ -84,34 +88,34 @@
                         android:id="@+id/weeklyDeaths"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Previous days of week"
                         android:background="@drawable/weekly_rounded_corner"
                         android:padding="10px"
-                        android:textStyle="bold"
+                        android:text="Previous days of week"
                         android:textAlignment="center"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@id/monthlyDeaths"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/deathsChart"/>
+                        app:layout_constraintTop_toBottomOf="@id/deathsChart" />
 
                     <TextView
                         android:id="@+id/monthlyDeaths"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Previous weeks of month"
                         android:background="@drawable/monthly_rounded_corner"
                         android:padding="10px"
-                        android:textStyle="bold"
+                        android:text="Previous weeks of month"
                         android:textAlignment="center"
+                        android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/weeklyDeaths"
-                        app:layout_constraintTop_toBottomOf="@id/deathsChart"/>
+                        app:layout_constraintTop_toBottomOf="@id/deathsChart" />
 
                     <TextView
                         android:id="@+id/newInfectionsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="30dp"
+                        android:layout_marginBottom="50dp"
                         android:fontFamily="sans-serif-condensed"
                         android:text="New Infections"
                         android:textColor="#FF0000"
@@ -126,7 +130,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="50dp"
                         android:fontFamily="sans-serif-condensed"
                         android:text="Total Infections"
                         android:textColor="#000000"
@@ -141,7 +145,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="50dp"
                         android:fontFamily="sans-serif-condensed"
                         android:text="Total deaths"
                         android:textColor="#000000"
@@ -156,7 +160,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="30dp"
+                        android:layout_marginBottom="50dp"
                         android:fontFamily="sans-serif-condensed"
                         android:text="New deaths"
                         android:textColor="#FF0000"
@@ -204,6 +208,54 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/weeklyDeaths" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="new:"
+                        android:textColor="#FF0000"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/newInfectionsText"
+                        app:layout_constraintStart_toStartOf="@+id/newInfectionsText" />
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="total:"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/totalInfectionsText"
+                        app:layout_constraintStart_toStartOf="@+id/totalInfectionsText" />
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="total:"
+                        android:textColor="#000000"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/totalDeathsText"
+                        app:layout_constraintStart_toStartOf="@+id/totalDeathsText" />
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="25dp"
+                        android:fontFamily="sans-serif-condensed"
+                        android:text="new:"
+                        android:textColor="#FF0000"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/newDeathsText"
+                        app:layout_constraintStart_toStartOf="@+id/newDeathsText" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
