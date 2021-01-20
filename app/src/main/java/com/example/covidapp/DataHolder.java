@@ -460,6 +460,7 @@ public class DataHolder {
         isDividedListReady = false;
         isCountryNameListReady = false;
         isChosenCountryListReady = false;
+        isChosenDateReady = false;
         updateChosenRecord();
     }
 
