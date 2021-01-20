@@ -399,7 +399,7 @@ public class CountryBriefFragment extends Fragment {
         pieEntries.add(new PieEntry(weeklyMinusDaily, "weekly"));
         pieEntries.add(new PieEntry(newInfected,"new"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors( Color.rgb(204,204,204), Color.rgb(255, 200, 0),
+        dataSet.setColors( Color.rgb(38,89,141), Color.rgb(255, 200, 0),
                 Color.rgb(255, 100, 0),Color.rgb(255,0,0));
         PieData data = new PieData(dataSet);
         infectionsChart.setData(data);
@@ -431,7 +431,7 @@ public class CountryBriefFragment extends Fragment {
         pieEntries.add(new PieEntry(weeklyMinusDaily, "weekly"));
         pieEntries.add(new PieEntry(newDeaths,"new"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors( Color.rgb(204,204,204), Color.rgb(255, 200, 0),
+        dataSet.setColors( Color.rgb(38,89,141), Color.rgb(255, 200, 0),
                 Color.rgb(255, 100, 0),Color.rgb(255,0,0));
         PieData data = new PieData(dataSet);
 
