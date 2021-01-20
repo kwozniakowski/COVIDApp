@@ -83,8 +83,10 @@ public class VaccinationsFragment extends Fragment {
 
             countryText = (TextView) tableRow.findViewById(R.id.countryText);
             countryText.setText(vaccinations.get(i).getCountry());
+            countryText.setTextColor(Color.rgb(204,204,204));
 
             valueText = (TextView) tableRow.findViewById(R.id.valueText);
+            valueText.setTextColor(Color.rgb(204,204,204));
             valueText.setText(String.valueOf(df.format(vaccinations.get(i).getValue() * 100) ));
 
             mainTable.addView(tableRow);
