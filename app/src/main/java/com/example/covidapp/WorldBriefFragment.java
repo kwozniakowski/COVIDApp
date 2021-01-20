@@ -35,7 +35,7 @@ public class WorldBriefFragment extends Fragment {
 
     int DATE, TOTAL_INFECTIONS, NEW_INFECTIONS, TOTAL_DEATHS, NEW_DEATHS;
 
-    Spinner spinner;
+    //Spinner spinner;
     Button statisticsActivityButton;
     TextView totalInfectionsText;
     TextView newInfectionsText;
@@ -63,7 +63,7 @@ public class WorldBriefFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_country_brief, container, false);
+        View view = inflater.inflate(R.layout.fragment_world_brief, container, false);
 
         totalInfectionsText = view.findViewById(R.id.totalInfectionsText);
         newInfectionsText = view.findViewById(R.id.newInfectionsText);
@@ -72,7 +72,7 @@ public class WorldBriefFragment extends Fragment {
         //totalTestsText = findViewById(R.id.totalTestsText);
         //newTestsText = findViewById(R.id.newTestsText);
         dateText = view.findViewById(R.id.dateButton);
-        spinner = (Spinner)view.findViewById(R.id.header);
+        //spinner = (Spinner)view.findViewById(R.id.header);
         statisticsActivityButton = view.findViewById(R.id.statisticsActivityButton);
         swipeRefreshLayout = view.findViewById(R.id.countryBriefRefresh);
         weeklyInfectionText = view.findViewById(R.id.weeklyInfections);
@@ -86,18 +86,19 @@ public class WorldBriefFragment extends Fragment {
         countryNameList = DataHolder.getCountryNameList();
 
         // Tu pobieram pozostale dane (czesto bede to robic, wiec zrobilem do tego funkcje)
-        updateChosenStuff(false);
+        //updateChosenStuff(false);
 
         infectionsChart = view.findViewById(R.id.infectionsChart);
         deathsChart = view.findViewById(R.id.deathsChart);
         //setUpCharts();
+        updateChosenStuff();
 
         //DataHolder.setLatestInfectionDate();
 
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
+        /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
         spinner.setAdapter(adapter);
 
         // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci
@@ -117,7 +118,7 @@ public class WorldBriefFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
 
         // Ustawiam wszystko co potrzebne, zeby dzialal kalendarz
         // kodu jest sporo, wiec wrzucilem to wszystko do funkcji

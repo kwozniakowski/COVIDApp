@@ -53,6 +53,7 @@ public class VaccinationsFragment extends Fragment {
         vaccinedNumberText = view.findViewById(R.id.vaccinedNumberText);
         noDataText = view.findViewById(R.id.noDataText);
         vaccinationsDateText = view.findViewById(R.id.vaccinationsDateText);
+        vaccinationsDateText.setText(DataHolder.getLatestVaccinationDate());
 
         //chart2 = view.findViewById(R.id.chart2);
         chosenCountryList = DataHolder.getChosenCountryList();

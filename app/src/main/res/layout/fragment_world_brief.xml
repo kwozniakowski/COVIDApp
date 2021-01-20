@@ -27,12 +27,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:paddingTop="5dp">
+                android:paddingTop="5dp"
+                android:background="#103050">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#103050">
+                    android:layout_height="match_parent">
 
                     <view
                         android:id="@+id/infectionsChart"
@@ -268,15 +268,17 @@
 
     </LinearLayout>
 
-    <Spinner
+    <TextView
         android:id="@+id/header"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/main_spinner"
-        android:elevation="2dp"
+        android:text="World"
+        android:textColor="#CCCCCC"
+        android:textSize="20dp"
+        android:gravity="center"
         app:layout_constraintEnd_toStartOf="@+id/dateButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -27,12 +27,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:paddingTop="5dp">
+                android:paddingTop="5dp"
+                android:background="#103050">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#103050">
+                    android:layout_height="match_parent">
 
                     <view
                         android:id="@+id/infectionsChart"
