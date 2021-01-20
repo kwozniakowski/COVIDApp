@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#021C35"
+    android:background="#1A3A64"
     tools:context=".CountryBriefFragment">
 
     <LinearLayout
@@ -27,12 +27,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="#103050"
                 android:paddingTop="5dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="#103050">
 
                     <view
                         android:id="@+id/infectionsChart"
@@ -202,12 +202,13 @@
 
                     <Button
                         android:id="@+id/statisticsActivityButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"
-                        android:text="More..."
-                        android:theme="@style/AppTheme.defaultButton.smallVersion"
+                        android:text="More Data"
+                        android:background="@drawable/main_spinner"
+                        android:textColor="#CCCCCC"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

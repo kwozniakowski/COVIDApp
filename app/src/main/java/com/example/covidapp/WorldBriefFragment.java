@@ -398,8 +398,8 @@ public class WorldBriefFragment extends Fragment {
         pieEntries.add(new PieEntry(weeklyMinusDaily, "weekly"));
         pieEntries.add(new PieEntry(newInfected,"new"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors( Color.rgb(38,89,141), Color.rgb(255, 200, 0),
-                Color.rgb(255, 100, 0),Color.rgb(255,0,0));
+        dataSet.setColors( Color.rgb(38,89,141), Color.rgb(235, 180, 0),
+                Color.rgb(235, 80, 0),Color.rgb(235,0,0));
         PieData data = new PieData(dataSet);
         infectionsChart.setData(data);
         infectionsChart.setDrawSliceText(false);
@@ -430,8 +430,8 @@ public class WorldBriefFragment extends Fragment {
         pieEntries.add(new PieEntry(weeklyMinusDaily, "weekly"));
         pieEntries.add(new PieEntry(newDeaths,"new"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors( Color.rgb(38,89,141), Color.rgb(255, 200, 0),
-                Color.rgb(255, 100, 0),Color.rgb(255,0,0));
+        dataSet.setColors( Color.rgb(38,89,141), Color.rgb(235, 180, 0),
+                Color.rgb(235, 80, 0),Color.rgb(235,0,0));
         PieData data = new PieData(dataSet);
         deathsChart.setData(data);
         deathsChart.setDrawSliceText(false);
