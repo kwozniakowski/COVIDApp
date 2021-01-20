@@ -39,7 +39,7 @@ public class VaccinationsFragment extends Fragment {
     String chosenCountryName;
     ArrayList<String> countryNameList;
     Spinner spinner;
-    TextView vaccinedText, vaccinedNumberText, noDataText;
+    TextView vaccinedText, vaccinedNumberText, noDataText, vaccinationsDateText;
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -52,6 +52,7 @@ public class VaccinationsFragment extends Fragment {
         vaccinedText= view.findViewById(R.id.vaccinedText);
         vaccinedNumberText = view.findViewById(R.id.vaccinedNumberText);
         noDataText = view.findViewById(R.id.noDataText);
+        vaccinationsDateText = view.findViewById(R.id.vaccinationsDateText);
 
         //chart2 = view.findViewById(R.id.chart2);
         chosenCountryList = DataHolder.getChosenCountryList();
@@ -103,6 +104,7 @@ public class VaccinationsFragment extends Fragment {
                 chosenCountryName = DataHolder.getChosenCountryName();
                 updateChosenStuff();
                 setUpCharts();
+                vaccinationsDateText.setText(DataHolder.getLatestVaccinationDate());
                 //setUpChart1();
                 //setUpChart2();
             }

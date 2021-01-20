@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#021C35"
+    android:background="#1A3A64"
     tools:context=".VaccinationsFragment">
 
     <Spinner
@@ -18,6 +18,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/vaccinationsDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2021-01-01"
+        android:textColor="#CCCCCC"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/vaccinationsRefresh"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/vaccinationsRefresh"
@@ -35,7 +49,8 @@
                 android:id="@+id/constraintLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@+id/countryBriefRefresh">
+                app:layout_constraintTop_toTopOf="@+id/countryBriefRefresh"
+                android:background="#103050">
 
                 <view
                     android:id="@+id/chart1"
@@ -146,7 +161,7 @@
                     android:layout_marginTop="30dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="TextView"
-                    android:textColor="#008000"
+                    android:textColor="#009600"
                     android:textSize="40dp"
                     app:layout_constraintBottom_toBottomOf="@+id/chart1"
                     app:layout_constraintEnd_toEndOf="@+id/chart1"
@@ -160,7 +175,7 @@
                     android:layout_marginBottom="30dp"
                     android:fontFamily="sans-serif-condensed"
                     android:text="TextView"
-                    android:textColor="#80008000"
+                    android:textColor="#99009600"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@+id/chart1"
                     app:layout_constraintEnd_toEndOf="@+id/chart1"
