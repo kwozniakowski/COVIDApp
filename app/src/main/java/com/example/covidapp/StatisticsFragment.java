@@ -256,6 +256,7 @@ public class StatisticsFragment extends Fragment {
         lineDataSet = new LineDataSet(lineDataValues(label2),label2);
         lineDataSet.setColor(Color.rgb(255,50,50));
         lineDataSet.setCircleColor(Color.rgb(255,50,50));
+        lineDataSet.setLineWidth(4);
         if(label2.equals("nothing")) lineDataSet.setVisible(false);
         lineDataSet.setAxisDependency(chart.getAxisRight().getAxisDependency());
         LineData lineData = new LineData(lineDataSet);
