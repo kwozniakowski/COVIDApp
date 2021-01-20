@@ -99,6 +99,7 @@ public class CountryBriefFragment extends Fragment {
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown);
         spinner.setAdapter(adapter);
 
         // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci

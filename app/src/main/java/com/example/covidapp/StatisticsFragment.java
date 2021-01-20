@@ -99,6 +99,7 @@ public class StatisticsFragment extends Fragment {
         setUpCalendar();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown);
         countrySpinner.setAdapter(adapter);
         countrySpinner.setSelection(countryNameList.indexOf(chosenCountryName));
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -119,6 +120,7 @@ public class StatisticsFragment extends Fragment {
         });
 
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_black_font, statisticalData);
+        adapter1.setDropDownViewResource(R.layout.spinner_dropdown);
         chartSpinner1.setAdapter(adapter1);
         chartSpinner1.setSelection(0);
         chartSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -136,6 +138,7 @@ public class StatisticsFragment extends Fragment {
         });
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_black_font, statisticalData);
+        adapter2.setDropDownViewResource(R.layout.spinner_dropdown);
         chartSpinner2.setAdapter(adapter2);
         chartSpinner2.setSelection(0);
         chartSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
