@@ -91,7 +91,7 @@ public class VaccinationsFragment extends Fragment {
         }
 
         spinner = view.findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countryNameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
         spinner.setAdapter(adapter);
         spinner.setSelection(countryNameList.indexOf(chosenCountryName));
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

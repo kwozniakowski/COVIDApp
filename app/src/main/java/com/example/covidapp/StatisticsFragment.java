@@ -98,7 +98,7 @@ public class StatisticsFragment extends Fragment {
 
         setUpCalendar();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countryNameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
         countrySpinner.setAdapter(adapter);
         countrySpinner.setSelection(countryNameList.indexOf(chosenCountryName));
         countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -118,7 +118,7 @@ public class StatisticsFragment extends Fragment {
             }
         });
 
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, statisticalData);
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_black_font, statisticalData);
         chartSpinner1.setAdapter(adapter1);
         chartSpinner1.setSelection(0);
         chartSpinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -135,7 +135,7 @@ public class StatisticsFragment extends Fragment {
             }
         });
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item, statisticalData);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_black_font, statisticalData);
         chartSpinner2.setAdapter(adapter2);
         chartSpinner2.setSelection(0);
         chartSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -246,7 +246,7 @@ public class StatisticsFragment extends Fragment {
         CombinedData combinedData = new CombinedData();
 
         barDataSet = new BarDataSet(barDataValues(label1),label1);
-        barDataSet.setColor(Color.rgb(204,204,204));
+        barDataSet.setColor(Color.rgb(76,191,220));
         if(label1.equals("nothing")) barDataSet.setVisible(false);
         barDataSet.setAxisDependency(chart.getAxisLeft().getAxisDependency());
         BarData barData = new BarData(barDataSet);
@@ -280,7 +280,9 @@ public class StatisticsFragment extends Fragment {
         chart.getXAxis().setEnabled(false);
         chart.getAxisLeft().setEnabled(true);
         chart.getAxisLeft().setTextColor(Color.rgb(204,204,204));
-        chart.getAxisRight().setTextColor(Color.rgb(255,50,50));
+        chart.getAxisLeft().setTextSize(11);
+        chart.getAxisRight().setTextColor(Color.rgb(255,80,80));
+        chart.getAxisRight().setTextSize(11);
 
         if(!label1.equals("day to day % growth"))
         {

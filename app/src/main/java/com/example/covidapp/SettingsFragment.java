@@ -35,7 +35,7 @@ public class SettingsFragment extends Fragment {
 
         // Spinner (dropdown-menu)
         // Przekazuje spinnerowi nazwy krajow
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countryNameList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
         countrySettingSpinner.setAdapter(adapter);
 
         System.out.println("Wybrany nr indeksu: " + countryNameList.indexOf(DataHolder.getDefaultCountryName()));

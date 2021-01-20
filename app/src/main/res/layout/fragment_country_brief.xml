@@ -55,7 +55,7 @@
                         android:text="Last 7 days:"
                         android:textAlignment="center"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@id/monthlyDeaths"
+                        app:layout_constraintEnd_toStartOf="@id/monthlyInfections"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/infectionsChart" />
 
@@ -86,8 +86,10 @@
 
                     <TextView
                         android:id="@+id/weeklyDeaths"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@drawable/weekly_rounded_corner"
                         android:padding="10px"
                         android:text="Previous days of week"
@@ -99,8 +101,10 @@
 
                     <TextView
                         android:id="@+id/monthlyDeaths"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="20dp"
                         android:background="@drawable/monthly_rounded_corner"
                         android:padding="10px"
                         android:text="Previous weeks of month"
@@ -286,7 +290,7 @@
         android:background="@drawable/main_spinner"
         android:padding="5dp"
         android:text="2020-01-01"
-        android:textColor="#B2000000"
+        android:textColor="#CCCCCC"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/header"
