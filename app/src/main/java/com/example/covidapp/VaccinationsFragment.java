@@ -107,8 +107,7 @@ public class VaccinationsFragment extends Fragment {
                 updateChosenStuff();
                 setUpCharts();
                 vaccinationsDateText.setText(DataHolder.getLatestVaccinationDate());
-                //setUpChart1();
-                //setUpChart2();
+
             }
 
             @Override
@@ -154,8 +153,6 @@ public class VaccinationsFragment extends Fragment {
         startCountAnimation1(vaccinedNumberText, vaccined ," doses");
         startCountAnimation2(vaccinedText,vaccined/population * 100,"%");
 
-        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
-        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
         pieEntries.add(new PieEntry(population - vaccined,"population"));
         pieEntries.add(new PieEntry(vaccined,"vaccined"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");

@@ -93,35 +93,6 @@ public class WorldBriefFragment extends Fragment {
         //setUpCharts();
         updateChosenStuff();
 
-        //DataHolder.setLatestInfectionDate();
-
-
-        // Spinner (dropdown-menu)
-        // Przekazuje spinnerowi nazwy krajow
-        /*ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
-        spinner.setAdapter(adapter);
-
-        // Tu ustawiam spinnerowi nazwe kraju, ktora ma ustawic przy uruchomieniu tej aktywnosci
-        // Jest to zwiazane z tym, ze MainActivity przekazuje tutaj nazwe regionu, ktory ma byc wybrany
-        // (np. world lub kraj w ktorym znajduje sie uzytkownik).
-        spinner.setSelection(countryNameList.indexOf(chosenCountryName));
-
-        // Update danych jesli zostal zmieniony kraj
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                DataHolder.updateChosenCountryName(spinner.getSelectedItem().toString());
-                updateChosenStuff();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });*/
-
-        // Ustawiam wszystko co potrzebne, zeby dzialal kalendarz
-        // kodu jest sporo, wiec wrzucilem to wszystko do funkcji
         setUpCalendar();
 
         statisticsActivityButton.setOnClickListener(new View.OnClickListener() {
@@ -200,11 +171,6 @@ public class WorldBriefFragment extends Fragment {
         if(deathsMonthly < 0) { deathsMonthly = 0; }*/
         startCountAnimation(monthlyDeathsText, deathsMonthly, "Last 30 days:\n+");
 
-        //Nasz plik nie ma danych dla nowych testow dla ostatnich dób, dlatego raczej zrezygnujemy z tego
-        /*String eStr = removeFloatingPointFromString(scoreList.get(i)[24]);
-        e.setText(eStr);
-        String fStr = removeFloatingPointFromString(scoreList.get(i)[25]);
-        f.setText("+" + fStr);*/
     }
 
     // Funkcja pobiera najstarsza date dostepna dla obecnie wybranego kraju i zwraca ja
@@ -269,17 +235,6 @@ public class WorldBriefFragment extends Fragment {
     // Funkcja odpowiadajaca za animacje liczb
     private void startCountAnimation(final TextView textView, final int finalValue, final String additionalText) {
         ValueAnimator animator = ValueAnimator.ofInt(0, finalValue);
-        /*if(finalValue > 1000000) {
-            animator.setDuration(3000);
-        } else if(finalValue > 100000) {
-            animator.setDuration(2000);
-        }  else if(finalValue > 1000) {
-            animator.setDuration(1000);
-        } else if(finalValue > 20) {
-            animator.setDuration(500);
-        } else {
-            animator.setDuration(100);
-        }*/
         animator.setDuration(1000);
         final NumberFormat numberFormat = NumberFormat.getNumberInstance(Locale.UK);
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -392,8 +347,6 @@ public class WorldBriefFragment extends Fragment {
         float weeklyMinusDaily = weeklyInfected - newInfected;
         if(weeklyMinusDaily < 0) { weeklyMinusDaily = 0; }
 
-        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
-        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
         pieEntries.add(new PieEntry(infected - monthlyInfected,"total"));
         pieEntries.add(new PieEntry(monthlyMinusWeekly, "monthly"));
         pieEntries.add(new PieEntry(weeklyMinusDaily, "weekly"));
@@ -414,9 +367,6 @@ public class WorldBriefFragment extends Fragment {
     public void setUpChart2()
     {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        //float population = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[39]);
-        //float vaccined = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[34]);
-        //float infected = Float.parseFloat(chosenCountryList.get(chosenCountryList.size()-1)[4]);
         float deaths = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_DEATHS]);
         float newDeaths = Float.parseFloat(DataHolder.getChosenRecord()[NEW_DEATHS]);
         float weeklyDeaths = DataHolder.getWeeklyDeaths();

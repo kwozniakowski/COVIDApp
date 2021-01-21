@@ -310,17 +310,7 @@ public class DataHolder {
                 break;
             }
         }
-            /*}
-            // Tu nie wywoluje updateChosenCountryList, poniewaz funkcja updateChosenCountryName
-            // sama to zrobi, o ile uda jej sie odswiezyc chosenCountryName
-            else {
-                updateChosenCountryName();
-            }
-        }
-        else {
-            divideListIntoCountries();
-            updateChosenCountryList();
-        }*/
+
     }
 
     private static void removeFloatingPointsFromList() {
@@ -340,10 +330,7 @@ public class DataHolder {
         if(text.isEmpty()) {
             text = "0";
         }
-        /*if(text.length() > 3 && text.indexOf(",") < 0) {
-            int number = Integer.parseInt(text);
-            text = String.format("%,d", number);
-        }*/
+
         return text;
     }
 
@@ -373,7 +360,7 @@ public class DataHolder {
     // W tym przypadku zostanie przypisana najnowsza data z wybranego kraju,
     // o ile kraj zostal wybrany
     private static void updateChosenDate() {
-        // System.out.println("Wywolano metode updateChosenDate2");
+
         if(isChosenCountryListReady) {
             chosenDate = chosenCountryList.get(chosenCountryList.size() - 1)[3];
             isChosenDateReady = true;
@@ -382,19 +369,15 @@ public class DataHolder {
     }
 
     private static void updateChosenCountryName() {
-        // System.out.println("Wywolano metode updateChosenCountryName2");
+
         getCountryNameList();
 
         // Na wypadek gdyby podano bledna nazwe kraju (nie ma jej w liscie)
-        //if(isCountryNameListReady) {
+
             chosenCountryName = defaultCountryName;//countryNameList.get(0);
             isChosenCountryNameReady = true;
             updateChosenCountryList();
-        /*}
-        else {
-            updateCountryNames();
-            updateChosenCountryName();
-        }*/
+
     }
 
     private static void updateChosenRecord() {
@@ -402,8 +385,7 @@ public class DataHolder {
         getChosenCountryList();
         getChosenDate();
 
-        /*if(isChosenCountryListReady) {
-            if(isChosenDateReady) {*/
+
                 for(String[] record:chosenCountryList) {
                     String currentRecordDate = record[3];
                     if(currentRecordDate.equals(chosenDate)) {
@@ -412,16 +394,6 @@ public class DataHolder {
                         break;
                     }
                 }
-            /*}
-            // Nie wywoluje tu updateChosenRecord, bo funkcja updateChosenDate() sama to zrobi,
-            // o ile uda jej sie odswiezyc date
-            else {
-                updateChosenDate();
-            }
-        }
-        else {
-            updateChosenCountryList();
-        }*/
     }
 
     private static void checkScoreList() throws Exception {
@@ -480,18 +452,6 @@ public class DataHolder {
             String parameter = record[index];
             String date = record[3];
             if(!parameter.isEmpty()) {
-                // Jesli chcemy sprawdzic infekcje, to sprawa jest troche trudniejsza, bo
-                // wczesniej (reformatString()) wpisuje 0 tam gdzie nie ma danych
-                /*if(index == 4 && recordNr == lastRecordIndexNr) {
-                    String[] previousRecord = chosenCountryList.get(recordNr-1);
-                    String previousInfections = previousRecord[index];
-                    String previousDate = previousRecord[3];
-                    if(previousInfections.compareTo(parameter) > 0) {
-                        return previousDate;
-                    } else {
-                        return date;
-                    }
-                }*/
                 return date;
             }
         }
@@ -529,9 +489,6 @@ public class DataHolder {
         getChosenCountryList();
         getChosenDate();
 
-        /*String[] weeklyList = new String[chosenRecord.length];
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = simpleDateFormat.parse(chosenDate);*/
         int sum = 0;
         int index = 0;
         for(int i = chosenCountryList.size()-1; i > 0 ;i --)
@@ -550,52 +507,6 @@ public class DataHolder {
             }
         }
 
-        /*
-        try {
-            Date date = simpleDateFormat.parse(chosenDate);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
-            int days_to_subtract = calendar.get(calendar.DAY_OF_WEEK);
-            if(days_to_subtract < 0) { days_to_subtract = 7; }
-            calendar.add(calendar.DATE, -1*days_to_subtract);
-            String previousDate = simpleDateFormat.format(calendar.getTime());
-            boolean isDateInRange = (previousDate.equals(isDateInChosenCountry(previousDate)));
-            previousDate = isDateInChosenCountry(previousDate);
-            String[] previousRecord = getRecordForDate(previousDate);
-            for(int index = 0; index < chosenRecord.length; index++) {
-                String currentParameter = chosenRecord[index];
-                String previousParameter = previousRecord[index];
-                if(currentParameter == null || previousParameter == null) {
-                    weeklyList[index] = null;
-                } else {
-                    try {
-                        float test = Float.parseFloat(currentParameter);
-                        if(currentParameter.indexOf('.') >= 0 || previousParameter.indexOf('.') >= 0) {
-                            float resultParameter;
-                            if(isDateInRange) {
-                                resultParameter = Float.parseFloat(currentParameter) - Float.parseFloat(previousParameter);
-                            } else {
-                                resultParameter = Float.parseFloat(currentParameter);
-                            }
-                            weeklyList[index] = Float.toString(resultParameter);
-                        } else {
-                            int resultParameter;
-                            if(isDateInRange) {
-                                resultParameter = Integer.parseInt(currentParameter) - Integer.parseInt(previousParameter);
-                            } else {
-                                resultParameter = Integer.parseInt(currentParameter);
-                            }
-                            weeklyList[index] = Integer.toString(resultParameter);
-                        }
-                    } catch(NumberFormatException e) {
-                        weeklyList[index] = currentParameter;
-                    }
-                }
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return weeklyList;*/
         return sum;
     }
 
