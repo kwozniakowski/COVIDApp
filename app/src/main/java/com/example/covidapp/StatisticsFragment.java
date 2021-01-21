@@ -13,8 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -51,6 +54,7 @@ public class StatisticsFragment extends Fragment {
     CombinedChart combinedChart;
     ArrayList<String> statisticalData;
     TextView dateText1, dateText2;
+    Switch switchButton;
     private int mDate, mMonth, mYear;
     String chosenDate, chosenStartDate, chosenEndDate;
     String[] chosenRecord;
@@ -79,6 +83,8 @@ public class StatisticsFragment extends Fragment {
         countrySpinner = view.findViewById(R.id.header);
         chartSpinner1 = view.findViewById(R.id.chartSpinner1);
         chartSpinner2 = view.findViewById(R.id.chartSpinner2);
+        switchButton = view.findViewById(R.id.switch2);
+        switchButton.setChecked(true);
 
         swipeRefreshLayout = view.findViewById(R.id.statisticsRefresh);
 
@@ -97,6 +103,13 @@ public class StatisticsFragment extends Fragment {
         setStatisticalData();
 
         setUpCalendar();
+
+        switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                drawChart(combinedChart);
+            }
+        });
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item, countryNameList);
         adapter.setDropDownViewResource(R.layout.spinner_dropdown);
@@ -251,7 +264,7 @@ public class StatisticsFragment extends Fragment {
         barDataSet = new BarDataSet(barDataValues(label1),label1);
         barDataSet.setColor(Color.rgb(76,191,220));
         if(label1.equals("nothing")) barDataSet.setVisible(false);
-        barDataSet.setAxisDependency(chart.getAxisLeft().getAxisDependency());
+        if(switchButton.isChecked()) barDataSet.setAxisDependency(chart.getAxisLeft().getAxisDependency());
         BarData barData = new BarData(barDataSet);
         barData.setDrawValues(false);
         combinedData.setData(barData);
@@ -261,7 +274,7 @@ public class StatisticsFragment extends Fragment {
         lineDataSet.setCircleColor(Color.rgb(255,50,50));
         lineDataSet.setLineWidth(4);
         if(label2.equals("nothing")) lineDataSet.setVisible(false);
-        lineDataSet.setAxisDependency(chart.getAxisRight().getAxisDependency());
+        if(switchButton.isChecked()) lineDataSet.setAxisDependency(chart.getAxisRight().getAxisDependency());
         LineData lineData = new LineData(lineDataSet);
         lineData.setDrawValues(false);
 
@@ -397,8 +410,8 @@ public class StatisticsFragment extends Fragment {
             {
                 barDataList = new boolean[]{true,true};
                 try {
-                    list.add(new BarEntry(i, (Float.parseFloat(chosenCountryList.get(i-1)[NEW_INFECTIONS]) /
-                            Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ) - 1 )* 100, barDataList));
+                    list.add(new BarEntry(i, ( (Float.parseFloat(chosenCountryList.get(i)[NEW_INFECTIONS]) /
+                            Float.parseFloat(chosenCountryList.get(i-1)[NEW_INFECTIONS] )  ) - 1 ) * 100, barDataList));
                 }
                 catch (Exception e)
                 {
@@ -505,8 +518,8 @@ public class StatisticsFragment extends Fragment {
             {
                 lineDataList = new boolean[]{true,true};
                 try {
-                    list.add(new Entry(i, (Float.parseFloat(chosenCountryList.get(i-1)[NEW_INFECTIONS]) /
-                            Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ) - 1 )* 100, lineDataList));
+                    list.add(new Entry(i,  ( (Float.parseFloat(chosenCountryList.get(i)[NEW_INFECTIONS]) /
+                            Float.parseFloat(chosenCountryList.get(i-1)[NEW_INFECTIONS] )  ) - 1 ) * 100, lineDataList));
                 }
                 catch (Exception e)
                 {
@@ -559,17 +572,19 @@ public class StatisticsFragment extends Fragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int date) {
                         // Ta czesc wykona sie po wybraniu daty
+                        try {
+                            // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
+                            String newDate = calendarDateToString(year, month, date);
+                            // Zmieniam wybrana date w DataHolderze
+                            chosenStartDate = newDate;
+                            // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
+                            // Dlatego tutaj tez trzeba zaktualizowac dane
+                            updateChosenStuff();
+                            drawChart(combinedChart);
+                        }
+                        catch(Exception e) {
 
-                        // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
-                        String newDate = calendarDateToString(year, month, date);
-                        // Zmieniam wybrana date w DataHolderze
-                        chosenStartDate = newDate;
-                        // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
-                        // Dlatego tutaj tez trzeba zaktualizowac dane
-                        updateChosenStuff();
-                        drawChart(combinedChart);
-                        //drawChart(barChart2,chartSpinner2.getSelectedItem().toString());
-                        //drawChart(barChart3,chartSpinner3.getSelectedItem().toString());
+                        }
 
                     }
                 }, mYear, mMonth, mDate);
@@ -598,37 +613,33 @@ public class StatisticsFragment extends Fragment {
                 // Pobieram minimalna i maksymalna date dostepna dla obecnie wybranego kraju
                 long minDate = getChosenCountryMinTime();
                 long maxDate = getChosenCountryMaxTime();
-
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int date) {
-                        // Ta czesc wykona sie po wybraniu daty
+                        @Override
+                        public void onDateSet(DatePicker datePicker, int year, int month, int date) {
+                            // Ta czesc wykona sie po wybraniu daty
 
-                        // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
-                        String newDate = calendarDateToString(year, month, date);
-                        // Zmieniam wybrana date w DataHolderze
-                        chosenEndDate = newDate;
-                        // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
-                        // Dlatego tutaj tez trzeba zaktualizowac dane
-                        updateChosenStuff();
-                        drawChart(combinedChart);
-                        //drawChart(barChart2,chartSpinner2.getSelectedItem().toString());
-                        //drawChart(barChart3,chartSpinner3.getSelectedItem().toString());
+                            // Zamieniam date wybrana w kalendarzu do postaci stringa ("yyyy-MM-dd")
+                            String newDate = calendarDateToString(year, month, date);
+                            // Zmieniam wybrana date w DataHolderze
+                            chosenEndDate = newDate;
+                            // Zmieniajac date w DataHolderze, zmienil sie tam tez chosenRecord
+                            // Dlatego tutaj tez trzeba zaktualizowac dane
+                            updateChosenStuff();
+                            drawChart(combinedChart);
+                        }
+                    }, mYear, mMonth, mDate);
 
+                    // Ustawiam minimalna i maksymalna date, ktore wczesniej pobralem
+                    datePickerDialog.getDatePicker().setMinDate(minDate);
+                    datePickerDialog.getDatePicker().setMaxDate(maxDate);
+
+                    // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
+                    // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
+                    if (!(chosenEndDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[DATE]))) {
+                        int[] parts = stringDateToInt(chosenEndDate);
+                        datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
                     }
-                }, mYear, mMonth, mDate);
-
-                // Ustawiam minimalna i maksymalna date, ktore wczesniej pobralem
-                datePickerDialog.getDatePicker().setMinDate(minDate);
-                datePickerDialog.getDatePicker().setMaxDate(maxDate);
-
-                // Jesli zmieniono date z najnowszej na inna, zapisze ten wybor,
-                // bo inaczej gdyby zostal zmieniony kraj, data z powrotem bedzie najnowsza
-                if(!(chosenEndDate.equals(chosenCountryList.get(chosenCountryList.size() - 1)[DATE]))) {
-                    int[] parts = stringDateToInt(chosenEndDate);
-                    datePickerDialog.getDatePicker().init(parts[0], parts[1], parts[2], null);
-                }
-                datePickerDialog.show();
+                    datePickerDialog.show();
             }
         });
     }

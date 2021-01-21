@@ -59,14 +59,12 @@
                         android:id="@+id/chartSpinner2"
                         android:layout_width="0dp"
                         android:layout_height="36dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="10dp"
                         android:layout_marginEnd="40dp"
-                        android:layout_marginBottom="20dp"
                         android:background="#DC4C4C"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/chartSpinner1"
-                        app:layout_constraintTop_toBottomOf="@+id/chartSpinner1"
-                        app:layout_constraintBottom_toBottomOf="parent"/>
+                        app:layout_constraintTop_toBottomOf="@+id/chartSpinner1" />
 
                     <Spinner
                         android:id="@+id/chartSpinner1"
@@ -129,6 +127,20 @@
                         android:textSize="70sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <Switch
+                        android:id="@+id/switch2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="Autoscale axes"
+                        android:textColor="#CCCCCC"
+                        android:textSize="30sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/chartSpinner2"
+                        app:layout_constraintTop_toBottomOf="@+id/chartSpinner2"
+                        app:layout_constraintVertical_bias="0.0" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
