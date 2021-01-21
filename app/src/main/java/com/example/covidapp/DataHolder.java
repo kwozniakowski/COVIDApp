@@ -41,7 +41,7 @@ public class DataHolder {
     public static Object updateLock = new Object();
     public static boolean isFragmentUpdateRequired = false;
 
-    public static int LOCATION, DATE, TOTAL_CASES, NEW_CASES, TOTAL_DEATHS, NEW_DEATHS;
+    public static int LOCATION, DATE, TOTAL_CASES, NEW_CASES, TOTAL_DEATHS, NEW_DEATHS, NEW_CASES_SMOOTHED, NEW_DEATHS_SMOOTHED;
     public static int TOTAL_CASES_PER_MILLION, TOTAL_DEATHS_PER_MILLION, TOTAL_TESTS, NEW_TESTS;
     public static int TOTAL_VACCINATIONS, NEW_VACCINATIONS, POPULATION;
 
@@ -737,6 +737,8 @@ public class DataHolder {
         TOTAL_VACCINATIONS = getIndex("total_vaccinations");
         NEW_VACCINATIONS = getIndex("new_vaccinations");
         POPULATION = getIndex("population");
+        NEW_CASES_SMOOTHED = getIndex("new_cases_smoothed");
+        NEW_DEATHS_SMOOTHED = getIndex("new_deaths_smoothed");
     }
 
     public static ArrayList<VaccinationDataRow> getAllRecentVaccinations() {

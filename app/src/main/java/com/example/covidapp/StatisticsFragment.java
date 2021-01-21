@@ -42,7 +42,7 @@ import java.util.Date;
 
 public class StatisticsFragment extends Fragment {
 
-    int DATE, NEW_INFECTIONS, NEW_DEATHS, NEW_TESTS, TOTAL_INFECTIONS_PER_MILLION;
+    int DATE, NEW_INFECTIONS, NEW_DEATHS, NEW_TESTS, TOTAL_INFECTIONS_PER_MILLION, NEW_CASES_SMOOTHED, NEW_DEATHS_SMOOTHED;
     int TOTAL_DEATHS_PER_MILLION;
 
     Spinner countrySpinner;
@@ -73,6 +73,8 @@ public class StatisticsFragment extends Fragment {
         NEW_TESTS = DataHolder.NEW_TESTS;
         TOTAL_INFECTIONS_PER_MILLION = DataHolder.TOTAL_CASES_PER_MILLION;
         TOTAL_DEATHS_PER_MILLION = DataHolder.TOTAL_DEATHS_PER_MILLION;
+        NEW_CASES_SMOOTHED = DataHolder.NEW_CASES_SMOOTHED;
+        NEW_DEATHS_SMOOTHED = DataHolder.NEW_DEATHS_SMOOTHED;
 
         listDividedByCountries = DataHolder.getListDividedByCountries();
         countryNameList = DataHolder.getCountryNameList();
@@ -123,7 +125,7 @@ public class StatisticsFragment extends Fragment {
                 updateChosenStuff();
                 drawChart(combinedChart);
                 chartSpinner1.setSelection(0);
-                chartSpinner2.setSelection(1);
+                chartSpinner2.setSelection(2);
             }
 
             @Override
@@ -153,7 +155,7 @@ public class StatisticsFragment extends Fragment {
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getActivity(), R.layout.spinner_item_black_font, statisticalData);
         adapter2.setDropDownViewResource(R.layout.spinner_dropdown);
         chartSpinner2.setAdapter(adapter2);
-        chartSpinner2.setSelection(0);
+        chartSpinner2.setSelection(2);
         chartSpinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -326,8 +328,10 @@ public class StatisticsFragment extends Fragment {
 
     public void setStatisticalData()
     {
-        statisticalData.add("new infections");
+        statisticalData.add("new cases");
+        statisticalData.add("new cases smoothed");
         statisticalData.add("new deaths");
+        statisticalData.add("new deaths smoothed");
         statisticalData.add("new tests");
         statisticalData.add("total infections per 1 mln");
         statisticalData.add("total deaths per 1 mln");
@@ -354,7 +358,7 @@ public class StatisticsFragment extends Fragment {
         {
             boolean [] barDataList; //Przechowuje BOOLEAN, ktore wskazuja czy do tekstu ma byc dodany kolejno "%" oraz
             //czy maja byc miejsca po przecinku w wyniku
-            if(statisticalData == "new infections")
+            if(statisticalData == "new cases")
             {
                 barDataList = new boolean[]{false,false};
                 list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ), barDataList));
@@ -376,7 +380,7 @@ public class StatisticsFragment extends Fragment {
                     list.add(new BarEntry(i, 0 ,barDataList));
                 }
             }
-            else if(statisticalData == "total infections per 1 mln")
+            else if(statisticalData == "total cases per 1 mln")
             {
                 barDataList = new boolean[]{false,true};
                 try
@@ -436,10 +440,20 @@ public class StatisticsFragment extends Fragment {
                 barDataList = new boolean[]{false,false};
                 list.add(new BarEntry(i,0,barDataList));
             }
+            else if(statisticalData == "new cases smoothed")
+            {
+                barDataList = new boolean[]{false,false};
+                list.add(new BarEntry(i,Float.parseFloat(chosenCountryList.get(i)[NEW_CASES_SMOOTHED]) ,barDataList));
+            }
+            else if(statisticalData == "new deaths smoothed")
+            {
+                barDataList = new boolean[]{false,false};
+                list.add(new BarEntry(i,Float.parseFloat(chosenCountryList.get(i)[NEW_DEATHS_SMOOTHED]) ,barDataList));
+            }
             else
             {
                 barDataList = new boolean[]{false,false};
-                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[5] ),barDataList));
+                list.add(new BarEntry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ),barDataList));
             }
         }
         return list;
@@ -462,7 +476,7 @@ public class StatisticsFragment extends Fragment {
         {
             boolean [] lineDataList; //Przechowuje BOOLEAN, ktore wskazuja czy do tekstu ma byc dodany kolejno "%" oraz
             //czy maja byc miejsca po przecinku w wyniku
-            if(statisticalData == "new infections")
+            if(statisticalData == "new cases")
             {
                 lineDataList = new boolean[]{false,false};
                 list.add(new Entry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ), lineDataList));
@@ -484,7 +498,7 @@ public class StatisticsFragment extends Fragment {
                     list.add(new Entry(i, 0 ,lineDataList));
                 }
             }
-            else if(statisticalData == "total infections per 1 mln")
+            else if(statisticalData == "total cases per 1 mln")
             {
                 lineDataList = new boolean[]{false,true};
                 try
@@ -544,10 +558,20 @@ public class StatisticsFragment extends Fragment {
                 lineDataList = new boolean[]{false,false};
                 list.add(new Entry(i,0,lineDataList));
             }
+            else if(statisticalData == "new cases smoothed")
+            {
+                lineDataList = new boolean[]{false,false};
+                list.add(new Entry(i,Float.parseFloat(chosenCountryList.get(i)[NEW_CASES_SMOOTHED]) ,lineDataList));
+            }
+            else if(statisticalData == "new deaths smoothed")
+            {
+                lineDataList = new boolean[]{false,false};
+                list.add(new Entry(i,Float.parseFloat(chosenCountryList.get(i)[NEW_DEATHS_SMOOTHED]) ,lineDataList));
+            }
             else
             {
                 lineDataList = new boolean[]{false,false};
-                list.add(new Entry(i, Integer.parseInt(chosenCountryList.get(i)[5] ),lineDataList));
+                list.add(new Entry(i, Integer.parseInt(chosenCountryList.get(i)[NEW_INFECTIONS] ),lineDataList));
             }
         }
         return list;
