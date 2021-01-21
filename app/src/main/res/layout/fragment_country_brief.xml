@@ -27,8 +27,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:paddingTop="5dp"
-                android:background="#103050">
+                android:background="#103050"
+                android:paddingTop="5dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -49,11 +49,12 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
-                        android:layout_marginEnd="20dp"
-                        android:background="@drawable/weekly_rounded_corner"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/main_spinner"
                         android:padding="10px"
                         android:text="Last 7 days:"
-                        android:textAlignment="center"
+                        android:textAlignment="viewStart"
+                        android:textColor="#CCCCCC"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toStartOf="@id/monthlyInfections"
                         app:layout_constraintStart_toStartOf="parent"
@@ -63,12 +64,13 @@
                         android:id="@+id/monthlyInfections"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginEnd="20dp"
-                        android:background="@drawable/monthly_rounded_corner"
+                        android:background="@drawable/main_spinner"
                         android:padding="10px"
                         android:text="Last 30 days:"
-                        android:textAlignment="center"
+                        android:textAlignment="viewStart"
+                        android:textColor="#CCCCCC"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/weeklyInfections"
@@ -206,8 +208,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"
-                        android:text="More Data"
                         android:background="@drawable/main_spinner"
+                        android:text="More Data"
                         android:textColor="#CCCCCC"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -261,6 +263,53 @@
                         android:textSize="18sp"
                         app:layout_constraintBottom_toBottomOf="@+id/newDeathsText"
                         app:layout_constraintStart_toStartOf="@+id/newDeathsText" />
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/red_legend_circle"
+                        app:layout_constraintBottom_toBottomOf="@+id/weeklyInfections"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                        app:layout_constraintTop_toTopOf="@+id/weeklyInfections" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/orange_legend_circle"
+                        app:layout_constraintBottom_toBottomOf="@+id/weeklyInfections"
+                        app:layout_constraintEnd_toEndOf="@+id/weeklyInfections"
+                        app:layout_constraintTop_toTopOf="@+id/weeklyInfections" />
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginEnd="5dp"
+                        android:src="@drawable/yellow_legend_circle"
+                        app:layout_constraintBottom_toBottomOf="@+id/monthlyInfections"
+                        app:layout_constraintEnd_toEndOf="@+id/monthlyInfections"
+                        app:layout_constraintTop_toTopOf="@+id/monthlyInfections" />
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/orange_legend_circle"
+                        app:layout_constraintBottom_toBottomOf="@+id/monthlyInfections"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+                        app:layout_constraintTop_toTopOf="@+id/monthlyInfections" />
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/red_legend_circle"
+                        app:layout_constraintBottom_toBottomOf="@+id/monthlyInfections"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+                        app:layout_constraintTop_toTopOf="@+id/monthlyInfections" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </ScrollView>
