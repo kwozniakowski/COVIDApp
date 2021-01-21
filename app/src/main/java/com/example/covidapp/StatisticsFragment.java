@@ -566,7 +566,16 @@ public class StatisticsFragment extends Fragment {
                 mYear = calendar.get(Calendar.YEAR);
                 // Pobieram minimalna i maksymalna date dostepna dla obecnie wybranego kraju
                 long minDate = getChosenCountryMinTime();
-                long maxDate = getChosenCountryMaxTime();
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String maxDateStr = chosenEndDate + " 00:00:00";
+                long maxDate = 0; // = getChosenCountryMaxTime();
+                try {
+                    maxDate = sdf.parse(maxDateStr).getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
 
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -611,8 +620,16 @@ public class StatisticsFragment extends Fragment {
                 mMonth = calendar.get(Calendar.MONTH);
                 mYear = calendar.get(Calendar.YEAR);
                 // Pobieram minimalna i maksymalna date dostepna dla obecnie wybranego kraju
-                long minDate = getChosenCountryMinTime();
                 long maxDate = getChosenCountryMaxTime();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String minDateStr = chosenStartDate + " 00:00:00";
+                long minDate = 0; // getChosenCountryMinTime();
+                try {
+                    minDate = sdf.parse(minDateStr).getTime();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker datePicker, int year, int month, int date) {
