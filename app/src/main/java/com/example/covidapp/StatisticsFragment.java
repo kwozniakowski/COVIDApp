@@ -302,6 +302,8 @@ public class StatisticsFragment extends Fragment {
         chart.getAxisLeft().setTextSize(11);
         chart.getAxisRight().setTextColor(Color.rgb(255,80,80));
         chart.getAxisRight().setTextSize(11);
+        chart.getXAxis().setSpaceMin(0.5f);
+        chart.getXAxis().setSpaceMax(0.5f);
 
         if(!label1.equals("day to day % growth"))
         {
