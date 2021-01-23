@@ -51,7 +51,7 @@
                 android:layout_marginRight="40dp"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/main_spinner"
-                android:popupBackground="#E6609AAC"
+                android:popupBackground="#ED20487E"
                 android:elevation="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

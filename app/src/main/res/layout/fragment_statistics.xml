@@ -17,6 +17,7 @@
         android:layout_marginEnd="40dp"
         android:layout_marginRight="40dp"
         android:background="@drawable/main_spinner"
+        android:popupBackground="#ED20487E"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +62,8 @@
                         android:layout_height="36dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="40dp"
-                        android:background="#DC4C4C"
+                        android:background="@drawable/spinner_item_second_parameter"
+                        android:popupBackground="#ED20487E"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/chartSpinner1"
                         app:layout_constraintTop_toBottomOf="@+id/chartSpinner1" />
@@ -73,7 +75,8 @@
                         android:layout_marginStart="40dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginEnd="40dp"
-                        android:background="#38ABC8"
+                        android:background="@drawable/spinner_item_first_parameter"
+                        android:popupBackground="#ED20487E"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/combinedChart" />
@@ -123,7 +126,7 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="sans-serif-condensed"
                         android:text="Statistics"
-                        android:textColor="#CCCCCC"
+                        android:textColor="#001C3C"
                         android:textSize="70sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
