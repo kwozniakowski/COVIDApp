@@ -156,7 +156,7 @@ public class VaccinationsFragment extends Fragment {
         pieEntries.add(new PieEntry(population - vaccined,"population"));
         pieEntries.add(new PieEntry(vaccined,"vaccined"));
         PieDataSet dataSet = new PieDataSet(pieEntries,"");
-        dataSet.setColors( Color.rgb(46,78,120),Color.rgb(50,178,50));
+        dataSet.setColors( Color.rgb(38,89,141),Color.rgb(50,178,50));
         PieData data = new PieData(dataSet);
         chart1.setData(data);
         chart1.setDrawSliceText(false);

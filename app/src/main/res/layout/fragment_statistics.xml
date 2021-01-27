@@ -126,7 +126,7 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="sans-serif-condensed"
                         android:text="Statistics"
-                        android:textColor="#001C3C"
+                        android:textColor="#CCCCCC"
                         android:textSize="70sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
