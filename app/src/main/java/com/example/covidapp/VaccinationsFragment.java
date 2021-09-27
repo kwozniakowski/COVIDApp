@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ import java.util.Comparator;
 import java.util.Locale;
 
 public class VaccinationsFragment extends Fragment {
-    int POPULATION, TOTAL_VACCINATIONS;
+    int POPULATION, TOTAL_VACCINATIONS, PEOPLE_FULLY_VACCINATED;
 
     PieChart chart1, chart2;
     ArrayList<ArrayList<String[]>> listDividedByCountries;
@@ -64,6 +65,7 @@ public class VaccinationsFragment extends Fragment {
 
         POPULATION = DataHolder.POPULATION;
         TOTAL_VACCINATIONS = DataHolder.TOTAL_VACCINATIONS;
+        PEOPLE_FULLY_VACCINATED = DataHolder.PEOPLE_FULLY_VACCINATED;
 
         setUpCharts();
 
@@ -149,7 +151,7 @@ public class VaccinationsFragment extends Fragment {
     {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         float population = Float.parseFloat(DataHolder.getChosenRecord()[POPULATION]);
-        float vaccined = Float.parseFloat(DataHolder.getChosenRecord()[TOTAL_VACCINATIONS]);
+        float vaccined = Float.parseFloat(DataHolder.getChosenRecord()[PEOPLE_FULLY_VACCINATED]);
         startCountAnimation1(vaccinedNumberText, vaccined ," doses");
         startCountAnimation2(vaccinedText,vaccined/population * 100,"%");
 

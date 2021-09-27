@@ -43,7 +43,7 @@ public class DataHolder {
 
     public static int LOCATION, DATE, TOTAL_CASES, NEW_CASES, TOTAL_DEATHS, NEW_DEATHS, NEW_CASES_SMOOTHED, NEW_DEATHS_SMOOTHED;
     public static int TOTAL_CASES_PER_MILLION, TOTAL_DEATHS_PER_MILLION, TOTAL_TESTS, NEW_TESTS;
-    public static int TOTAL_VACCINATIONS, NEW_VACCINATIONS, POPULATION;
+    public static int TOTAL_VACCINATIONS, NEW_VACCINATIONS, POPULATION, PEOPLE_FULLY_VACCINATED;
 
 
 
@@ -648,6 +648,7 @@ public class DataHolder {
         TOTAL_VACCINATIONS = getIndex("total_vaccinations");
         NEW_VACCINATIONS = getIndex("new_vaccinations");
         POPULATION = getIndex("population");
+        PEOPLE_FULLY_VACCINATED = getIndex("people_fully_vaccinated");
         NEW_CASES_SMOOTHED = getIndex("new_cases_smoothed");
         NEW_DEATHS_SMOOTHED = getIndex("new_deaths_smoothed");
     }
@@ -660,15 +661,21 @@ public class DataHolder {
             String population = "";
             chosenCountryName = country;
             updateChosenCountryList();
-            String lastestDate = getLatestDateForParameter(34);
+            String lastestDate = getLatestDateForParameter(PEOPLE_FULLY_VACCINATED);
 
             for(int i = getChosenCountryList().size() - 1; i >=0 ; i --)
             {
                 if(getChosenCountryList().get(i)[3].equals(lastestDate))
                 {
-                    value = getChosenCountryList().get(i)[34];
-                    population = getChosenCountryList().get(i)[POPULATION];
-
+                    value = getChosenCountryList().get(i)[PEOPLE_FULLY_VACCINATED];
+                    try {
+                        population = getChosenCountryList().get(i)[POPULATION];
+                    }
+                    catch (IndexOutOfBoundsException e)
+                    {
+                        System.out.println(e.toString());
+                        population = "";
+                    }
                 }
                 if(value.equals("")) value = "0";
                 if(population.equals("")) population = "1";

@@ -5,8 +5,10 @@ public class VaccinationDataRow implements Comparable<VaccinationDataRow> {
     private double value;
 
     public VaccinationDataRow(String country, double value) {
+
         this.country = country;
-        this.value = value;
+        if(value > 100) this.value = 1;
+        else this.value = value;
     }
 
     public double getValue(){
